@@ -1,0 +1,19 @@
+{
+  "action_id": "act_19efdd71",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "context-switches,cpu-migrations,page-faults,mem_inst_retired.lock_loads",
+    "--",
+    "examples/bin/multithread_cpu_demo",
+    "4",
+    "400",
+    "18000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0966,
+  "error_message": null
+}

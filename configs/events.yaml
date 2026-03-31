@@ -1,0 +1,128 @@
+baseline_runtime:
+  preferred_tools:
+    - time
+  mode: runtime
+
+instruction_efficiency:
+  preferred_tools:
+    - perf_stat
+  preferred_events:
+    - cycles
+    - instructions
+    - task-clock
+    - cpu-clock
+    - slots
+  fallback_events:
+    - cycles
+    - instructions
+    - task-clock
+  mode: stat
+
+temporal_behavior:
+  preferred_tools:
+    - perf_stat
+  preferred_events:
+    - cycles
+    - instructions
+    - cache-misses
+    - context-switches
+    - topdown-fe-bound
+    - topdown-be-bound
+  fallback_events:
+    - cycles
+    - instructions
+    - context-switches
+  mode: stat
+
+branch_behavior:
+  preferred_tools:
+    - perf_stat
+  preferred_events:
+    - branches
+    - branch-misses
+  fallback_events:
+    - branches
+    - branch-misses
+  mode: stat
+
+cache_memory_pressure:
+  preferred_tools:
+    - perf_stat
+  preferred_events:
+    - topdown-be-bound
+    - tma_memory_bound
+    - cache-references
+    - cache-misses
+    - longest_lat_cache.miss
+    - l2_rqsts.miss
+    - mem_load_completed.l1_miss_any
+    - stalled-cycles-backend
+    - stalled-cycles-frontend
+  fallback_events:
+    - cache-misses
+    - cache-references
+    - stalled-cycles-backend
+  mode: stat
+
+frontend_backend_bound:
+  preferred_tools:
+    - perf_stat
+  preferred_events:
+    - slots
+    - topdown-retiring
+    - topdown-bad-spec
+    - stalled-cycles-frontend
+    - stalled-cycles-backend
+    - topdown-fe-bound
+    - topdown-be-bound
+    - tma_fetch_latency
+    - tma_fetch_bandwidth
+    - tma_memory_bound
+    - tma_branch_mispredicts
+    - cycles
+    - instructions
+  fallback_events:
+    - stalled-cycles-backend
+    - stalled-cycles-frontend
+    - cycles
+    - instructions
+  mode: stat
+
+scheduler_context:
+  preferred_tools:
+    - perf_stat
+    - pidstat
+    - mpstat
+  preferred_events:
+    - context-switches
+    - cpu-migrations
+    - page-faults
+    - mem_inst_retired.lock_loads
+  fallback_events:
+    - context-switches
+    - cpu-migrations
+  mode: system
+
+io_wait_detail:
+  preferred_tools:
+    - pidstat
+    - iostat
+  mode: system
+
+hot_function_callgraph:
+  preferred_tools:
+    - perf_record
+  mode: record
+  call_graph_modes:
+    - fp
+    - dwarf
+    - lbr
+
+source_correlation:
+  preferred_tools:
+    - perf_record
+  mode: record
+  call_graph_modes:
+    - fp
+    - dwarf
+    - lbr

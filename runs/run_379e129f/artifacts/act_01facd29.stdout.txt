@@ -1,0 +1,1 @@
+1,234.56 task-clock\n98.7% CPUs utilized\n4,200,000,000 cycles\n2,100,000,000 instructions\n0.50 insn per cycle\n12,500 cache-misses\n

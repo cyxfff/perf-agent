@@ -1,0 +1,19 @@
+{
+  "action_id": "act_426a62b2",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "topdown-be-bound,tma_memory_bound,cache-references,cache-misses,longest_lat_cache.miss,l2_rqsts.miss,mem_load_completed.l1_miss_any",
+    "--",
+    "examples/bin/multithread_cpu_demo",
+    "4",
+    "400",
+    "18000"
+  ],
+  "exit_code": 129,
+  "success": false,
+  "duration_sec": 0.0078,
+  "error_message": null
+}

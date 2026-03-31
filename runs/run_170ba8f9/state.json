@@ -1,0 +1,293 @@
+{
+  "run_id": "run_170ba8f9",
+  "goal": "Diagnose a CPU intensive workload with high user time.",
+  "target": {
+    "label": "cpu_bound_demo",
+    "command": "python demo_cpu.py",
+    "cwd": null,
+    "env": {},
+    "collection_profile": [
+      "perf_stat",
+      "pidstat",
+      "mpstat"
+    ],
+    "mock_outputs": {
+      "perf_stat": "1,234.56 task-clock\\n98.7% CPUs utilized\\n4,200,000,000 cycles\\n2,100,000,000 instructions\\n0.50 insn per cycle\\n12,500 cache-misses\\n",
+      "pidstat": "Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command\\nAverage:        0      1000   94.00    4.00    0.00    1.00   98.00     2  demo_cpu\\n",
+      "mpstat": "avg_cpu=98.0\\niowait=1.0\\ncswch_per_sec=1500\\n"
+    }
+  },
+  "phase": "completed",
+  "current_iteration": 1,
+  "max_iterations": 2,
+  "plan": [
+    {
+      "id": "act_f4ad3049",
+      "kind": "collect",
+      "title": "Collect metrics with perf_stat",
+      "rationale": "Baseline collection for Diagnose a CPU intensive workload with high user time.",
+      "tool_name": "perf_stat",
+      "parser_name": "perf_stat_parser",
+      "status": "completed",
+      "raw_output": "1,234.56 task-clock\\n98.7% CPUs utilized\\n4,200,000,000 cycles\\n2,100,000,000 instructions\\n0.50 insn per cycle\\n12,500 cache-misses\\n",
+      "stderr": "",
+      "exit_code": 0,
+      "metadata": {
+        "command": [
+          "mock",
+          "perf_stat"
+        ],
+        "parsed": true
+      }
+    },
+    {
+      "id": "act_d781e51f",
+      "kind": "collect",
+      "title": "Collect metrics with pidstat",
+      "rationale": "Baseline collection for Diagnose a CPU intensive workload with high user time.",
+      "tool_name": "pidstat",
+      "parser_name": "pidstat_parser",
+      "status": "completed",
+      "raw_output": "Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command\\nAverage:        0      1000   94.00    4.00    0.00    1.00   98.00     2  demo_cpu\\n",
+      "stderr": "",
+      "exit_code": 0,
+      "metadata": {
+        "command": [
+          "mock",
+          "pidstat"
+        ],
+        "parsed": true
+      }
+    },
+    {
+      "id": "act_56bfbb5b",
+      "kind": "collect",
+      "title": "Collect metrics with mpstat",
+      "rationale": "Baseline collection for Diagnose a CPU intensive workload with high user time.",
+      "tool_name": "mpstat",
+      "parser_name": "generic_parser",
+      "status": "completed",
+      "raw_output": "avg_cpu=98.0\\niowait=1.0\\ncswch_per_sec=1500\\n",
+      "stderr": "",
+      "exit_code": 0,
+      "metadata": {
+        "command": [
+          "mock",
+          "mpstat"
+        ],
+        "parsed": true
+      }
+    }
+  ],
+  "observations": [
+    {
+      "id": "obs_b4e9d7f1",
+      "source": "perf_stat",
+      "category": "cpu",
+      "name": "perf_stat_summary",
+      "summary": "CPU utilization 98.7%, IPC 0.5, cache misses 12500",
+      "metrics": {
+        "task_clock_ms": 1234.56,
+        "cpus_utilized_pct": 98.7,
+        "cycles": 4200000000,
+        "instructions": 2100000000,
+        "ipc": 0.5,
+        "cache_misses": 12500
+      },
+      "raw_artifact": "act_f4ad3049",
+      "supporting_lines": [
+        "1,234.56 task-clock\\n98.7% CPUs utilized\\n4,200,000,000 cycles\\n2,100,000,000 instructions\\n0.50 insn per cycle\\n12,500 cache-misses\\n"
+      ],
+      "tags": []
+    },
+    {
+      "id": "obs_1fb24a59",
+      "source": "pidstat",
+      "category": "cpu",
+      "name": "pidstat_summary",
+      "summary": "demo_cpu\\n used 94.0% user CPU, 4.0% system CPU, and waited 1.0%.",
+      "metrics": {
+        "usr_pct": 94.0,
+        "system_pct": 4.0,
+        "wait_pct": 1.0,
+        "cpu_pct": 98.0
+      },
+      "raw_artifact": "act_d781e51f",
+      "supporting_lines": [
+        "Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command\\nAverage:        0      1000   94.00    4.00    0.00    1.00   98.00     2  demo_cpu\\n"
+      ],
+      "tags": []
+    },
+    {
+      "id": "obs_48258164",
+      "source": "mpstat",
+      "category": "cpu",
+      "name": "mpstat_metrics",
+      "summary": "mpstat reported avg_cpu=98.0\\niowait=1.0\\ncswch_per_sec=1500\\n",
+      "metrics": {
+        "avg_cpu": "98.0\\niowait=1.0\\ncswch_per_sec=1500\\n"
+      },
+      "raw_artifact": "act_56bfbb5b",
+      "supporting_lines": [
+        "avg_cpu=98.0\\niowait=1.0\\ncswch_per_sec=1500\\n"
+      ],
+      "tags": []
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "hyp_7c921581",
+      "bottleneck": "cpu",
+      "statement": "The workload is likely CPU bound with high active CPU utilization.",
+      "confidence": 0.84,
+      "supporting_observation_ids": [
+        "obs_b4e9d7f1",
+        "obs_1fb24a59",
+        "obs_48258164"
+      ],
+      "missing_evidence": [],
+      "suggestions": [
+        "Collect call stacks with perf record to find the hottest functions.",
+        "Inspect instruction mix and cache behavior before code-level tuning."
+      ],
+      "status": "analyzed"
+    }
+  ],
+  "report": {
+    "summary": "The strongest current signal points to a cpu bottleneck with confidence 0.84.",
+    "findings": [
+      {
+        "phenomenon": "The workload is likely CPU bound with high active CPU utilization.",
+        "evidence": [
+          "perf_stat: CPU utilization 98.7%, IPC 0.5, cache misses 12500",
+          "pidstat: demo_cpu\\n used 94.0% user CPU, 4.0% system CPU, and waited 1.0%.",
+          "mpstat: mpstat reported avg_cpu=98.0\\niowait=1.0\\ncswch_per_sec=1500\\n"
+        ],
+        "inference": "The strongest current signal points to a cpu bottleneck with confidence 0.84.",
+        "recommendation": "Collect call stacks with perf record to find the hottest functions.",
+        "supporting_observation_ids": [
+          "obs_b4e9d7f1",
+          "obs_1fb24a59",
+          "obs_48258164"
+        ]
+      }
+    ],
+    "next_actions": [
+      "Collect call stacks with perf record to find the hottest functions."
+    ],
+    "markdown": "# Performance Analysis Report\n\nSummary: The strongest current signal points to a cpu bottleneck with confidence 0.84.\n\n## Finding 1\n- Phenomenon: The workload is likely CPU bound with high active CPU utilization.\n- Evidence: perf_stat: CPU utilization 98.7%, IPC 0.5, cache misses 12500; pidstat: demo_cpu\\n used 94.0% user CPU, 4.0% system CPU, and waited 1.0%.; mpstat: mpstat reported avg_cpu=98.0\\niowait=1.0\\ncswch_per_sec=1500\\n\n- Inference: The strongest current signal points to a cpu bottleneck with confidence 0.84.\n- Recommendation: Collect call stacks with perf record to find the hottest functions.\n"
+  },
+  "artifacts": {},
+  "rule_hits": [
+    "cpu_bound"
+  ],
+  "audit_log": [
+    {
+      "timestamp": "2026-03-31T13:37:10.154500Z",
+      "node": "planner",
+      "message": "created initial collection plan",
+      "details": {
+        "tools": [
+          "perf_stat",
+          "pidstat",
+          "mpstat"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:37:10.155178Z",
+      "node": "collector",
+      "message": "tool execution finished",
+      "details": {
+        "tool_name": "perf_stat",
+        "success": true,
+        "exit_code": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:37:10.155212Z",
+      "node": "collector",
+      "message": "tool execution finished",
+      "details": {
+        "tool_name": "pidstat",
+        "success": true,
+        "exit_code": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:37:10.155231Z",
+      "node": "collector",
+      "message": "tool execution finished",
+      "details": {
+        "tool_name": "mpstat",
+        "success": true,
+        "exit_code": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:37:10.155969Z",
+      "node": "parser",
+      "message": "parsed tool output",
+      "details": {
+        "action_id": "act_f4ad3049",
+        "parser_name": "perf_stat_parser",
+        "observation_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:37:10.156019Z",
+      "node": "parser",
+      "message": "parsed tool output",
+      "details": {
+        "action_id": "act_d781e51f",
+        "parser_name": "pidstat_parser",
+        "observation_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:37:10.375834Z",
+      "node": "parser",
+      "message": "parsed tool output",
+      "details": {
+        "action_id": "act_56bfbb5b",
+        "parser_name": "generic_parser",
+        "observation_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:37:10.376221Z",
+      "node": "rules",
+      "message": "classified observations",
+      "details": {
+        "rule_hits": [
+          "cpu_bound"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:37:10.376960Z",
+      "node": "analyzer",
+      "message": "refined rule-based hypotheses",
+      "details": {
+        "hypothesis_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:37:10.377180Z",
+      "node": "verifier",
+      "message": "evidence deemed sufficient",
+      "details": {
+        "top_hypothesis": "cpu"
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:37:10.377380Z",
+      "node": "reporter",
+      "message": "generated final report",
+      "details": {
+        "finding_count": 1
+      }
+    }
+  ],
+  "errors": []
+}

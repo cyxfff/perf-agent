@@ -1,0 +1,64 @@
+[
+  {
+    "id": "act_3e25e802",
+    "tool": "time",
+    "command": [
+      "/usr/bin/time",
+      "-v",
+      "python",
+      "demo_cpu.py"
+    ],
+    "reason": "collect baseline process resource usage",
+    "expected_output": "verbose time summary",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_5931036b",
+    "tool": "perf_stat",
+    "command": [
+      "perf",
+      "stat",
+      "-d",
+      "--",
+      "python",
+      "demo_cpu.py"
+    ],
+    "reason": "collect baseline hardware counters",
+    "expected_output": "perf stat summary",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_78904c8b",
+    "tool": "pidstat",
+    "command": [
+      "pidstat",
+      "-dur",
+      "-h",
+      "1",
+      "1"
+    ],
+    "reason": "collect process CPU and wait breakdown",
+    "expected_output": "pidstat process summary",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_4e8aab67",
+    "tool": "mpstat",
+    "command": [
+      "mpstat",
+      "1",
+      "1"
+    ],
+    "reason": "add system CPU context for CPU-heavy workload",
+    "expected_output": "mpstat CPU summary",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  }
+]

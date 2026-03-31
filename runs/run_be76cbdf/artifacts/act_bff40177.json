@@ -1,0 +1,14 @@
+{
+  "action_id": "act_bff40177",
+  "tool": "time",
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "python",
+    "bench.py"
+  ],
+  "exit_code": 2,
+  "success": false,
+  "duration_sec": 0.08,
+  "error_message": null
+}

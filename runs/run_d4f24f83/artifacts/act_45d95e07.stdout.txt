@@ -1,0 +1,271 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 836  of event 'cpu_core/cycles/'
+# Event count (approx.): 1122605944
+#
+# Children      Self  Symbol                                                                                                              IPC   [IPC Coverage]
+# ........  ........  ..................................................................................................................  ....................
+#
+    99.31%     0.00%  [.] __libc_start_main@@GLIBC_2.34                                                                                   -      -            
+            |
+            ---__libc_start_call_main
+               |          
+               |--85.50%--main
+               |          |          
+               |          |--37.93%--__cos_fma
+               |          |          
+               |           --35.32%--__sin_fma
+               |          
+               |--3.35%--__sqrt
+               |          
+               |--2.77%--__sin_fma
+               |          
+               |--2.56%--0x55b3cb577290
+               |          
+               |--1.40%--0x55b3cb577320
+               |          
+               |--1.37%--__cos_fma
+               |          
+               |--1.24%--__sqrt_finite@GLIBC_2.15
+               |          
+                --1.13%--0x55b3cb577480
+
+    99.31%     0.00%  [.] __libc_start_call_main                                                                                          -      -            
+            |          
+            |--85.50%--main
+            |          |          
+            |          |--37.93%--__cos_fma
+            |          |          
+            |           --35.32%--__sin_fma
+            |          
+            |--3.35%--__sqrt
+            |          
+            |--2.77%--__sin_fma
+            |          
+            |--2.56%--0x55b3cb577290
+            |          
+            |--1.40%--0x55b3cb577320
+            |          
+            |--1.37%--__cos_fma
+            |          
+            |--1.24%--__sqrt_finite@GLIBC_2.15
+            |          
+             --1.13%--0x55b3cb577480
+
+    88.99%     0.00%  [.] _start                                                                                                          -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               |          
+               |--76.85%--main
+               |          |          
+               |          |--33.57%--__cos_fma
+               |          |          
+               |           --31.83%--__sin_fma
+               |          
+               |--3.16%--__sqrt
+               |          
+               |--2.30%--0x55b3cb577290
+               |          
+               |--1.86%--__sin_fma
+               |          
+               |--1.37%--__cos_fma
+               |          
+               |--1.24%--0x55b3cb577320
+               |          
+               |--1.13%--0x55b3cb577480
+               |          
+                --1.08%--__sqrt_finite@GLIBC_2.15
+
+    81.53%    12.20%  [.] main                                                                                                            -      -            
+            |          
+            |--69.33%--main
+            |          |          
+            |          |--33.57%--__cos_fma
+            |          |          
+            |           --31.83%--__sin_fma
+            |          
+             --12.20%--_start
+                       __libc_start_main@@GLIBC_2.34
+                       __libc_start_call_main
+                       |          
+                       |--7.53%--main
+                       |          
+                       |--2.30%--0x55b3cb577290
+                       |          
+                       |--1.24%--0x55b3cb577320
+                       |          
+                        --1.13%--0x55b3cb577480
+
+    40.82%    39.45%  [.] __cos_fma                                                                                                       -      -            
+            |          
+            |--39.45%--_start
+            |          __libc_start_main@@GLIBC_2.34
+            |          __libc_start_call_main
+            |          main
+            |          |          
+            |           --37.93%--__cos_fma
+            |          
+             --1.37%--__cos_fma
+
+    39.39%    38.62%  [.] __sin_fma                                                                                                       -      -            
+            |          
+            |--38.62%--_start
+            |          __libc_start_main@@GLIBC_2.34
+            |          __libc_start_call_main
+            |          |          
+            |          |--36.61%--main
+            |          |          |          
+            |          |           --35.32%--__sin_fma
+            |          |          
+            |           --2.01%--__sin_fma
+            |          
+             --0.76%--__sin_fma
+
+    10.32%     0.00%  [.] _start                                                                                                          -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               |          
+               |--8.65%--main
+               |          |          
+               |          |--4.36%--__cos_fma
+               |          |          
+               |           --3.50%--__sin_fma
+               |          
+                --0.91%--__sin_fma
+
+     9.06%     0.89%  [.] main                                                                                                            -      -            
+            |          
+            |--8.17%--main
+            |          |          
+            |          |--4.36%--__cos_fma
+            |          |          
+            |           --3.50%--__sin_fma
+            |          
+             --0.89%--_start
+                       __libc_start_main@@GLIBC_2.34
+                       __libc_start_call_main
+
+     4.59%     3.05%  [.] __sqrt                                                                                                          -      -            
+            |          
+            |--3.05%--_start
+            |          __libc_start_main@@GLIBC_2.34
+            |          __libc_start_call_main
+            |          |          
+            |          |--1.81%--__sqrt
+            |          |          
+            |           --1.24%--__sqrt_finite@GLIBC_2.15
+            |          
+             --1.53%--__sqrt
+
+     2.56%     0.00%  [.] 0x000055b3cb577290                                                                                              -      -            
+     2.49%     1.25%  [.] __sqrt_finite@GLIBC_2.15                                                                                        -      -            
+            |          
+            |--1.25%--_start
+            |          __libc_start_main@@GLIBC_2.34
+            |          __libc_start_call_main
+            |          main
+            |          
+             --1.24%--__sqrt_finite@GLIBC_2.15
+
+     1.53%     1.53%  [.] 0x0000000000002324                                                                                              -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               __sqrt
+
+     1.40%     0.00%  [.] 0x000055b3cb577320                                                                                              -      -            
+     1.37%     1.37%  [.] 0x0000000000002484                                                                                              -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               __cos_fma
+
+     1.13%     0.00%  [.] 0x000055b3cb577480                                                                                              -      -            
+     0.85%     0.00%  [k] asm_exc_page_fault                                                                                              -      -            
+            |
+            ---exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               |          
+                --0.79%--do_fault
+                          |          
+                           --0.55%--do_read_fault
+                                     filemap_map_pages
+
+     0.85%     0.00%  [k] exc_page_fault                                                                                                  -      -            
+            |
+            ---do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               |          
+                --0.79%--do_fault
+                          |          
+                           --0.55%--do_read_fault
+                                     filemap_map_pages
+
+     0.85%     0.00%  [k] do_user_addr_fault                                                                                              -      -            
+            |
+            ---handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               |          
+                --0.79%--do_fault
+                          |          
+                           --0.55%--do_read_fault
+                                     filemap_map_pages
+
+     0.85%     0.00%  [k] handle_mm_fault                                                                                                 -      -            
+            |
+            ---__handle_mm_fault
+               handle_pte_fault
+               |          
+                --0.79%--do_fault
+                          |          
+                           --0.55%--do_read_fault
+                                     filemap_map_pages
+
+     0.85%     0.00%  [k] __handle_mm_fault                                                                                               -      -            
+            |
+            ---handle_pte_fault
+               |          
+                --0.79%--do_fault
+                          |          
+                           --0.55%--do_read_fault
+                                     filemap_map_pages
+
+     0.85%     0.00%  [k] handle_pte_fault                                                                                                -      -            
+            |          
+             --0.79%--do_fault
+                       |          
+                        --0.55%--do_read_fault
+                                  filemap_map_pages
+
+     0.79%     0.00%  [k] do_fault                                                                                                        -      -            
+            |          
+             --0.55%--do_read_fault
+                       filemap_map_pages
+
+     0.76%     0.76%  [.] 0x0000000000002294                                                                                              -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               __sin_fma
+
+     0.55%     0.00%  [k] do_read_fault                                                                                                   -      -            
+            |
+            ---filemap_map_pages
+
+     0.55%     0.00%  [k] filemap_map_pages                                                                                               -      -            
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

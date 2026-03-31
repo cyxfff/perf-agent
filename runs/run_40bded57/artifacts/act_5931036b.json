@@ -1,0 +1,16 @@
+{
+  "action_id": "act_5931036b",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-d",
+    "--",
+    "python",
+    "demo_cpu.py"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0,
+  "error_message": null
+}

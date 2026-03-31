@@ -1,0 +1,19 @@
+{
+  "action_id": "act_4b9fde28",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "cycles,Instructions,task-clock,cpu-clock,SLOTS",
+    "--",
+    "examples/bin/multithread_cpu_demo",
+    "4",
+    "400",
+    "18000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0971,
+  "error_message": null
+}

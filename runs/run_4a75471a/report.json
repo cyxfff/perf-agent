@@ -1,0 +1,51 @@
+{
+  "executive_summary": "\u5f53\u524d\u6700\u53ef\u80fd\u7684\u74f6\u9888\u65b9\u5411\u662f \u672a\u77e5\u74f6\u9888\uff0c\u7f6e\u4fe1\u5ea6\u4e3a 0.32\u3002",
+  "target": {
+    "command": [
+      "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+      "6",
+      "120000"
+    ],
+    "executable_path": "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+    "source_dir": "/home/tchen/agent/perf_agent/examples/cpp",
+    "source_file_count": 2,
+    "runtime_notes": [
+      "verification_rounds=2",
+      "actions_executed=7"
+    ]
+  },
+  "detected_bottlenecks": [
+    "unknown"
+  ],
+  "supporting_evidence": [
+    "\u672a\u77e5\u74f6\u9888: time.user_time_sec=0.02"
+  ],
+  "rejected_alternatives": [],
+  "source_findings": [],
+  "confidence_overall": 0.32,
+  "recommended_next_steps": [
+    "\u5efa\u8bae\u8865\u5145\u4e00\u8f6e\u57fa\u7ebf\u91c7\u6837\u540e\u518d\u505a\u7ed3\u8bba\u3002"
+  ],
+  "artifacts": [
+    "runs/run_4a75471a/artifacts/act_59c88de1.json",
+    "runs/run_4a75471a/artifacts/act_59c88de1.stderr.txt",
+    "runs/run_4a75471a/artifacts/act_59c88de1.stdout.txt",
+    "runs/run_4a75471a/artifacts/act_65e935ee.json",
+    "runs/run_4a75471a/artifacts/act_65e935ee.stdout.txt",
+    "runs/run_4a75471a/artifacts/act_6bcc69dc.json",
+    "runs/run_4a75471a/artifacts/act_6bcc69dc.stderr.txt",
+    "runs/run_4a75471a/artifacts/act_6bcc69dc.stdout.txt",
+    "runs/run_4a75471a/artifacts/act_9f785997.json",
+    "runs/run_4a75471a/artifacts/act_9f785997.stderr.txt",
+    "runs/run_4a75471a/artifacts/act_9f785997.stdout.txt",
+    "runs/run_4a75471a/artifacts/act_c301857d.json",
+    "runs/run_4a75471a/artifacts/act_c301857d.stderr.txt",
+    "runs/run_4a75471a/artifacts/act_c301857d.stdout.txt",
+    "runs/run_4a75471a/artifacts/act_c84cba57.json",
+    "runs/run_4a75471a/artifacts/act_c84cba57.stdout.txt",
+    "runs/run_4a75471a/artifacts/act_eab33183.json",
+    "runs/run_4a75471a/artifacts/act_eab33183.stdout.txt",
+    "runs/run_4a75471a/source_manifest.json",
+    "runs/run_4a75471a/target.json"
+  ]
+}

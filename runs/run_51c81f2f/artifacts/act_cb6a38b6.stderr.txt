@@ -1,0 +1,14 @@
+
+ Performance counter stats for '/home/tchen/agent/perf_agent/examples/bin/multiprocess_fanout_demo 3 250 24000':
+
+            125930      cpu_core/cache-references/                                              (99.92%)
+             59318      cpu_atom/cache-references/                                              (23.25%)
+             27538      cpu_core/cache-misses/                                                  (99.92%)
+              7019      cpu_atom/cache-misses/                                                  (23.25%)
+
+       0.072296648 seconds time elapsed
+
+       0.214551000 seconds user
+       0.000469000 seconds sys
+
+

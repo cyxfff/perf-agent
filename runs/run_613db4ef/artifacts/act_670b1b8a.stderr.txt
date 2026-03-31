@@ -1,0 +1,16 @@
+
+ Performance counter stats for '/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo 700 18000':
+
+         763054676      cpu_core/cycles/                 #    5.016 G/sec                     
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+        2941673320      cpu_core/instructions/           #   19.335 G/sec                     
+     <not counted>      cpu_atom/instructions/                                                  (0.00%)
+            152.14 msec task-clock                       #    0.999 CPUs utilized             
+            152.14 msec cpu-clock                        #    0.999 CPUs utilized             
+
+       0.152289682 seconds time elapsed
+
+       0.152316000 seconds user
+       0.000000000 seconds sys
+
+

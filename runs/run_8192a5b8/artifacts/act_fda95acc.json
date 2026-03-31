@@ -1,0 +1,18 @@
+{
+  "action_id": "act_fda95acc",
+  "tool": "perf_record",
+  "command": [
+    "perf",
+    "record",
+    "-g",
+    "--",
+    "python",
+    "app.py",
+    "--input",
+    "data.txt"
+  ],
+  "exit_code": 2,
+  "success": false,
+  "duration_sec": 1.1495,
+  "error_message": null
+}

@@ -1,0 +1,1 @@
+900.00 task-clock\n65.0% CPUs utilized\n900,000,000 cycles\n500,000,000 instructions\n0.56 insn per cycle\nlock_wait_pct=18.0\n

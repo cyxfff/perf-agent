@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>性能分析报告</title>
+  <style>
+    :root {
+      --panel: #fffdf8;
+      --ink: #1f2937;
+      --muted: #5b6470;
+      --accent: #c55b3c;
+      --line: #e8ddce;
+      --code: #fff7ee;
+      --chip: #f6eadb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Iowan Old Style", serif;
+      color: var(--ink);
+      background: radial-gradient(circle at top right, #f9e7db, transparent 28%), linear-gradient(180deg, #f7f1e7 0%, #efe7db 100%);
+    }
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+    .hero, .card, table {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 30px rgba(71, 48, 29, 0.06);
+    }
+    .hero {
+      border-radius: 20px;
+      padding: 28px;
+    }
+    h1, h2, h3, h4 { margin: 0 0 12px; }
+    p, li, td, th { line-height: 1.6; }
+    ul { margin: 0; padding-left: 20px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .card {
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .card + .card { margin-top: 16px; }
+    .source-card {
+      padding: 20px;
+    }
+    .bar {
+      height: 10px;
+      background: #efe5d9;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0 14px;
+    }
+    .bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #e38e62);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      vertical-align: top;
+    }
+    th {
+      background: #fbf5ed;
+      color: var(--muted);
+    }
+    .section { margin-top: 24px; }
+    .muted { color: var(--muted); }
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--chip);
+      color: #7a4a31;
+      font-size: 12px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .code {
+      background: var(--code);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      overflow-x: auto;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+    }
+    .inline-code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      background: #f7efe4;
+      padding: 1px 6px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    @media (max-width: 880px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <p class="muted">自动化实验设计型性能分析</p>
+      <h1><span title='当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。'>当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。</span></h1>
+      <div class="grid">
+        <div class="card">
+          <h3>分析目标</h3>
+          <p><span title='examples/bin/multithread_cpu_demo 4 400 18000'>examples/bin/multithread_cpu_demo 4 400 18000</span></p>
+          <p class="muted">可执行文件: <span title='examples/bin/multithread_cpu_demo'>examples/bin/multithread_cpu_demo</span></p>
+        </div>
+        <div class="card">
+          <h3>最高置信度</h3>
+          <div class="bar"><span style="width:95%"></span></div>
+          <p>0.95</p>
+        </div>
+        <div class="card">
+          <h3>源码上下文</h3>
+          <p><strong>源码目录:</strong> <span title='examples/cpp'>examples/cpp</span></p><p><strong>已索引源码文件:</strong> 4</p><p><strong>语言:</strong> <span title='cpp'>cpp</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section two-col">
+      <div>
+        <div class="card">
+          <h2>运行环境</h2>
+          <ul>
+            <li><span title='架构: x86_64'>架构: x86_64</span></li>
+<li><span title='内核: 6.2.0-37-generic'>内核: 6.2.0-37-generic</span></li>
+<li><span title='CPU: 13th Gen Intel(R) Core(TM) i5-13600K'>CPU: 13th Gen Intel(R) Core(TM) i5-13600K</span></li>
+<li><span title='逻辑核数: 20'>逻辑核数: 20</span></li>
+<li><span title='perf: 可用 perf version 6.2.16'>perf: 可用 perf version 6.2.16</span></li>
+<li><span title='可用事件数: 856'>可用事件数: 856</span></li>
+<li><span title='调用栈模式: fp, dwarf, lbr'>调用栈模式: fp, dwarf, lbr</span></li>
+<li><span title='hybrid PMU: cpu_atom, cpu_core'>hybrid PMU: cpu_atom, cpu_core</span></li>
+<li><span title='Top-Down/TMA: topdown 事件 50 个，TMA 指标 125 个'>Top-Down/TMA: topdown 事件 50 个，TMA 指标 125 个</span></li>
+<li><span title='addr2line: 可用'>addr2line: 可用</span></li>
+<li><span title='perf_event_paranoid: -1'>perf_event_paranoid: -1</span></li>
+<li><span title='检测到 top-down / TMA 相关事件，后续实验会优先尝试更细粒度的前后端拆分。'>检测到 top-down / TMA 相关事件，后续实验会优先尝试更细粒度的前后端拆分。</span></li>
+<li><span title='检测到 hybrid PMU: cpu_atom, cpu_core。事件映射会优先选择通用别名，不足时再退化到具体 PMU。'>检测到 hybrid PMU: cpu_atom, cpu_core。事件映射会优先选择通用别名，不足时再退化到具体 PMU。</span></li>
+<li><span title='检测到 addr2line，可在符号和地址可用时尝试映射到源码行号。'>检测到 addr2line，可在符号和地址可用时尝试映射到源码行号。</span></li>
+          </ul>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h2>实验设计与执行</h2>
+          <ul>
+            <li><span title='第 1 轮 [baseline] /usr/bin/time / 运行时基线: 用 /usr/bin/time -v 建立程序运行基线。'>第 1 轮 [baseline] /usr/bin/time / 运行时基线: 用 /usr/bin/time -v 建立程序运行基线。</span></li>
+<li><span title='第 1 轮 [baseline] perf stat / 指令效率: 判断 cycles、instructions 和 IPC 的健康度。当前使用首选事件组合。 事件为 cycles, Instructions, task-clock, cpu-clock, SLOTS。'>第 1 轮 [baseline] perf stat / 指令效率: 判断 cyc...ask-clock, cpu-clock, SLOTS。</span></li>
+<li><span title='第 1 轮 [baseline] perf stat / 缓存与内存压力: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 topdown-be-bound, cache-references, cache-misses, longest_lat_cache.miss, l2_rqsts.miss, mem_load_completed.l1_miss_any。，已退化到当前机器可用方案'>第 1 轮 [baseline] perf stat / 缓存与内存压力: 判断 ...ed.l1_miss_any。，已退化到当前机器可用方案</span></li>
+<li><span title='第 1 轮 [baseline] perf stat / 前后端停顿: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 SLOTS, topdown-retiring, topdown-bad-spec, topdown-fe-bound, topdown-be-bound, cycles, Instructions。，已退化到当前机器可用方案'>第 1 轮 [baseline] perf stat / 前后端停顿: 判断 ca..., Instructions。，已退化到当前机器可用方案</span></li>
+<li><span title='第 1 轮 [baseline] perf stat / 调度上下文: 判断调度切换、迁移与系统级 CPU 上下文。当前使用首选事件组合。 事件为 context-switches, cpu-migrations, page-faults, mem_inst_retired.lock_loads。'>第 1 轮 [baseline] perf stat / 调度上下文: 判断调度切...mem_inst_retired.lock_loads。</span></li>
+<li><span title='第 1 轮 [baseline] pidstat / 调度上下文: 补充进程级 CPU 与等待拆分。'>第 1 轮 [baseline] pidstat / 调度上下文: 补充进程级 CPU 与等待拆分。</span></li>
+<li><span title='第 1 轮 [baseline] mpstat / 调度上下文: 补充系统级 CPU 与调度上下文。'>第 1 轮 [baseline] mpstat / 调度上下文: 补充系统级 CPU 与调度上下文。</span></li>
+<li><span title='第 1 轮 [baseline] iostat / I/O 等待: 用 iostat 看设备利用率和等待延迟。'>第 1 轮 [baseline] iostat / I/O 等待: 用 iostat 看设备利用率和等待延迟。</span></li>
+<li><span title='第 2 轮 [verification] perf record / 热点函数调用链: 使用 perf record 采样热点函数和调用链，调用栈模式为 fp。'>第 2 轮 [verification] perf record / 热点函数调用...record 采样热点函数和调用链，调用栈模式为 fp。</span></li>
+<li><span title='第 2 轮 [verification] perf stat / 时间序列行为: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。'>第 2 轮 [verification] perf stat / 时间序列行为: ...de 观察 IPC、cache 和调度指标随时间的波动。</span></li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h2>证据摘要</h2>
+          <ul>
+            <li><span title='第 2 轮后，当前最强规则候选为 cpu_bound。 重点 observation 数量 10，热点符号 6 个，时间序列指标 4 个，进程拆账 1 条，线程拆账 5 条。'>第 2 轮后，当前最强规则候选为 cpu_bound。 重点 observatio...间序列指标 4 个，进程拆账 1 条，线程拆账 5 条。</span></li>
+<li><span title='重点指标: cache_misses, context_switches, voluntary_context_switches, hot_symbol_pct'>重点指标: cache_misses, context_switches, vol...ext_switches, hot_symbol_pct</span></li>
+<li><span title='热点符号: clone3, start_thread, std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run, __cos_fma, __sin_fma'>热点符号: clone3, start_thread, std::thread::..._M_run, __cos_fma, __sin_fma</span></li>
+<li><span title='时间序列指标: cache_misses, context_switches, cycles, instructions'>时间序列指标: cache_misses, context_switches, cycles, instructions</span></li>
+<li><span title='进程级样本拆账: multithread_cpu pid=70 100.00%'>进程级样本拆账: multithread_cpu pid=70 100.00%</span></li>
+<li><span title='线程级样本拆账: multithread_cpu pid/tid=70/74 25.11%, multithread_cpu pid/tid=70/75 25.11%, multithread_cpu pid/tid=70/72 24.89%, multithread_cpu pid/tid=70/73 24.74%'>线程级样本拆账: multithread_cpu pid/tid=70/74 25...ead_cpu pid/tid=70/73 24.74%</span></li>
+<li><span title='观测到 CPU 利用率超过 100%，说明存在多线程或多进程并发执行。'>观测到 CPU 利用率超过 100%，说明存在多线程或多进程并发执行。</span></li>
+<li><span title='源码中存在并发工作函数入口，建议结合热点和调度证据一起判断线程或子进程的贡献。'>源码中存在并发工作函数入口，建议结合热点和调度证据一起判断线程或子进程的贡献。</span></li>
+<li><span title='是否需要进一步区分 cpu_bound 与其他候选瓶颈。'>是否需要进一步区分 cpu_bound 与其他候选瓶颈。</span></li>
+          </ul>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h2>候选瓶颈</h2>
+          <div class='card hypothesis'><h3><span title='CPU 瓶颈'>CPU 瓶颈</span></h3><div class='bar'><span style='width:95%'></span></div><p><span title='活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。'>活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。</span></p><p><strong>置信度:</strong> 0.95</p><p><strong>支持证据:</strong> <span title='obs_259e2359, obs_d1f64327, obs_cd34e333, obs_5fe041e2, obs_25a950ee, obs_3f304e85, obs_59397aa1'>obs_259e2359, obs_d1f64327, obs_cd34e333, obs_5f...950ee, obs_3f304e85, obs_59397aa1</span></p><p><strong>验证状态:</strong> 证据已基本充分</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>证据图表</h2>
+      <div class="grid">
+        <div class='card'><h3><span title='候选瓶颈置信度对比'>候选瓶颈置信度对比</span></h3><p class='muted'><span title='所有报告都应先展示当前最主要的瓶颈候选及其相对置信度。'>所有报告都应先展示当前最主要的瓶颈候选及其相对置信度。</span></p><div style='margin:10px 0'><div style='font-size:13px'><span title='CPU 瓶颈'>CPU 瓶颈</span> 0.95</div><div class='bar'><span style='width:95%'></span></div></div></div>
+<div class='card'><h3><span title='进程级样本拆账'>进程级样本拆账</span></h3><p class='muted'><span title='并发程序需要先看每个进程或子进程贡献了多少热点样本。'>并发程序需要先看每个进程或子进程贡献了多少热点样本。</span></p><div style='margin:10px 0'><div style='font-size:13px' title='multithread_cpu / pid 70'><span title='multithread_cpu / pid 70'>multithread_cpu / pid 70</span> 100.00%</div><div class='bar'><span style='width:100%'></span></div></div></div>
+<div class='card'><h3><span title='线程级样本拆账'>线程级样本拆账</span></h3><p class='muted'><span title='多线程程序需要拆出主线程与工作线程的样本占比。'>多线程程序需要拆出主线程与工作线程的样本占比。</span></p><div style='margin:10px 0'><div style='font-size:13px' title='multithread_cpu / 70:74'><span title='multithread_cpu / 70:74'>multithread_cpu / 70:74</span> 25.11%</div><div class='bar'><span style='width:25%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px' title='multithread_cpu / 70:75'><span title='multithread_cpu / 70:75'>multithread_cpu / 70:75</span> 25.11%</div><div class='bar'><span style='width:25%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px' title='multithread_cpu / 70:72'><span title='multithread_cpu / 70:72'>multithread_cpu / 70:72</span> 24.89%</div><div class='bar'><span style='width:24%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px' title='multithread_cpu / 70:73'><span title='multithread_cpu / 70:73'>multithread_cpu / 70:73</span> 24.74%</div><div class='bar'><span style='width:24%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px' title='multithread_cpu / 70:70'><span title='multithread_cpu / 70:70'>multithread_cpu / 70:70</span> 0.15%</div><div class='bar'><span style='width:8%'></span></div></div></div>
+<div class='card'><h3><span title='热点函数占比'>热点函数占比</span></h3><p class='muted'><span title='已经拿到热点函数样本后，应展示最热函数分布，帮助验证热点是否集中。'>已经拿到热点函数样本后，应展示最热函数分布，帮助验证热点是否集中。</span></p><div style='margin:10px 0'><div style='font-size:13px' title='clone3'><span title='clone3'>clone3</span> 99.55%</div><div class='bar'><span style='width:99%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px' title='start_thread'><span title='start_thread'>start_thread</span> 99.42%</div><div class='bar'><span style='width:99%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px' title='0x00007fee8faecdb4'><span title='0x00007fee8faecdb4'>0x00007fee8faecdb4</span> 99.42%</div><div class='bar'><span style='width:99%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px' title='std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run'><span title='std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run'>std::thread::_State_impl&lt;std::th...bda()#1}&gt; &gt; &gt;::_M_run</span> 94.97%</div><div class='bar'><span style='width:94%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px' title='__cos_fma'><span title='__cos_fma'>__cos_fma</span> 48.68%</div><div class='bar'><span style='width:48%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px' title='__sin_fma'><span title='__sin_fma'>__sin_fma</span> 36.47%</div><div class='bar'><span style='width:36%'></span></div></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>源码定位与片段</h2>
+      <div class="grid">
+        <div class='card source-card'><h3><span title='addr2line 热点定位'>addr2line 热点定位</span></h3><p class='muted'><span title='/home/tchen/agent/perf_agent/examples/cpp/multithread_cpu_demo.cpp'>/home/tchen/agent/perf_agent/examples/cpp/multithread_cpu_demo.cpp</span>:14-16</p><p><span class='pill'><span title='CPU 瓶颈'>CPU 瓶颈</span></span><span class='pill'><span title='addr2line'>addr2line</span></span><span class='pill'>置信度 0.01</span></p><p><span title='perf record 样本中 std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run 占 0.75%，地址 0x2e72 通过 addr2line 映射到该源码位置。'>perf record 样本中 std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run 占 0.75%，地址 0x2e72 通过 addr2line 映射到该源码位置。</span></p><div class='code'>  12 |     for (std::size_t round = 0; round &lt; outer_loops; ++round) {
+  13 |         for (std::size_t i = 0; i &lt; inner_loops; ++i) {
+  14 |             const double x = static_cast&lt;double&gt;((round + seed + 1) * (i + 7));
+  15 |             values[i] = std::sin(x) + std::cos(x / 5.0) + std::sqrt(x + 17.0);
+  16 |             checksum += values[i];</div></div>
+<div class='card source-card'><h3><span title='addr2line 热点定位'>addr2line 热点定位</span></h3><p class='muted'><span title='/home/tchen/agent/perf_agent/examples/cpp/multithread_cpu_demo.cpp'>/home/tchen/agent/perf_agent/examples/cpp/multithread_cpu_demo.cpp</span>:15-17</p><p><span class='pill'><span title='CPU 瓶颈'>CPU 瓶颈</span></span><span class='pill'><span title='addr2line'>addr2line</span></span><span class='pill'>置信度 0.01</span></p><p><span title='perf record 样本中 std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run 占 0.67%，地址 0x2e1d 通过 addr2line 映射到该源码位置。'>perf record 样本中 std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run 占 0.67%，地址 0x2e1d 通过 addr2line 映射到该源码位置。</span></p><div class='code'>  13 |         for (std::size_t i = 0; i &lt; inner_loops; ++i) {
+  14 |             const double x = static_cast&lt;double&gt;((round + seed + 1) * (i + 7));
+  15 |             values[i] = std::sin(x) + std::cos(x / 5.0) + std::sqrt(x + 17.0);
+  16 |             checksum += values[i];
+  17 |         }</div></div>
+<div class='card source-card'><h3><span title='并发工作函数'>并发工作函数</span></h3><p class='muted'><span title='/home/tchen/agent/perf_agent/examples/cpp/multithread_cpu_demo.cpp'>/home/tchen/agent/perf_agent/examples/cpp/multithread_cpu_demo.cpp</span>:9-11</p><p><span class='pill'><span title='CPU 瓶颈'>CPU 瓶颈</span></span><span class='pill'><span title='heuristic'>heuristic</span></span><span class='pill'>置信度 0.35</span></p><p><span title='检测到并发工作单元入口，CPU 消耗可能分散在多个线程或子进程。'>检测到并发工作单元入口，CPU 消耗可能分散在多个线程或子进程。</span></p><div class='code'>   7 | namespace {
+   8 | 
+   9 | double worker(std::size_t outer_loops, std::size_t inner_loops, std::size_t seed) {
+  10 |     std::vector&lt;double&gt; values(inner_loops, 0.0);
+  11 |     double checksum = 0.0;</div></div>
+<div class='card source-card'><h3><span title='大规模向量处理'>大规模向量处理</span></h3><p class='muted'><span title='/home/tchen/agent/perf_agent/examples/cpp/multithread_cpu_demo.cpp'>/home/tchen/agent/perf_agent/examples/cpp/multithread_cpu_demo.cpp</span>:10-12</p><p><span class='pill'><span title='CPU 瓶颈'>CPU 瓶颈</span></span><span class='pill'><span title='heuristic'>heuristic</span></span><span class='pill'>置信度 0.35</span></p><p><span title='检测到可能参与高频数据处理的容器代码。'>检测到可能参与高频数据处理的容器代码。</span></p><div class='code'>   8 | 
+   9 | double worker(std::size_t outer_loops, std::size_t inner_loops, std::size_t seed) {
+  10 |     std::vector&lt;double&gt; values(inner_loops, 0.0);
+  11 |     double checksum = 0.0;
+  12 |     for (std::size_t round = 0; round &lt; outer_loops; ++round) {</div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>关键观测</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>来源</th>
+            <th>指标</th>
+            <th>值</th>
+            <th>范围</th>
+            <th>标签</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span title='obs_689207ca'>obs_689207ca</span></td><td><span title='mpstat'>mpstat</span></td><td><span title='03'>03</span></td><td><span title='06:34 CPU %usr %nice %sys %iowait %irq %soft %steal %guest %gnice %idle'>06:34 CPU %usr %nice %sy...st %gnice %idle</span></td><td><span title='system'>system</span></td><td><span title='action_id=act_9e9ae6ae, source=mpstat'>action_id=act_9e9ae6ae, source=mpstat</span></td></tr>
+<tr><td><span title='obs_619fa8d6'>obs_619fa8d6</span></td><td><span title='mpstat'>mpstat</span></td><td><span title='03'>03</span></td><td><span title='06:35 all 0.30 0.00 0.35 0.10 0.00 0.05 0.00 0.00 0.00 99.20'>06:35 all 0.30 0.00 0.35...0.00 0.00 99.20</span></td><td><span title='system'>system</span></td><td><span title='action_id=act_9e9ae6ae, source=mpstat'>action_id=act_9e9ae6ae, source=mpstat</span></td></tr>
+<tr><td><span title='obs_b81f2aee'>obs_b81f2aee</span></td><td><span title='mpstat'>mpstat</span></td><td><span title='average'>average</span></td><td><span title='all 0.30 0.00 0.35 0.10 0.00 0.05 0.00 0.00 0.00 99.20'>all 0.30 0.00 0.35 0.10 ...0.00 0.00 99.20</span></td><td><span title='system'>system</span></td><td><span title='action_id=act_9e9ae6ae, source=mpstat'>action_id=act_9e9ae6ae, source=mpstat</span></td></tr>
+<tr><td><span title='obs_55bec6f8'>obs_55bec6f8</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='callgraph_samples'>callgraph_samples</span></td><td><span title='1344'>1344</span></td><td><span title='callchain'>callchain</span></td><td><span title='action_id=act_f11bbe94'>action_id=act_f11bbe94</span></td></tr>
+<tr><td><span title='obs_1db7cd55'>obs_1db7cd55</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_frame_sample_pct'>hot_frame_sample_pct</span></td><td><span title='3.8893'>3.8893</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bb1e, comm=multithread_cpu, pid=70, tid=74, rank=1'>action_id=act_f11bbe94, symbol=__cos_fma, dso=/u...hread_cpu, pid=70, tid=74, rank=1</span></td></tr>
+<tr><td><span title='obs_21e871bf'>obs_21e871bf</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_frame_sample_pct'>hot_frame_sample_pct</span></td><td><span title='0.8975'>0.8975</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b2f9, comm=multithread_cpu, pid=70, tid=72, rank=2'>action_id=act_f11bbe94, symbol=__sin_fma, dso=/u...hread_cpu, pid=70, tid=72, rank=2</span></td></tr>
+<tr><td><span title='obs_e5f1b1e0'>obs_e5f1b1e0</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_frame_sample_pct'>hot_frame_sample_pct</span></td><td><span title='0.7479'>0.7479</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b4b6, comm=multithread_cpu, pid=70, tid=73, rank=3'>action_id=act_f11bbe94, symbol=__sin_fma, dso=/u...hread_cpu, pid=70, tid=73, rank=3</span></td></tr>
+<tr><td><span title='obs_344c1061'>obs_344c1061</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_frame_sample_pct'>hot_frame_sample_pct</span></td><td><span title='0.7479'>0.7479</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run, dso=/home/tchen/agent/perf_agent/examples/bin/multithread_cpu_demo, ip=2e72, comm=multithread_cpu, pid=70, tid=75, rank=4'>action_id=act_f11bbe94, symbol=std::thread::_Sta...hread_cpu, pid=70, tid=75, rank=4</span></td></tr>
+<tr><td><span title='obs_4af0a324'>obs_4af0a324</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_frame_sample_pct'>hot_frame_sample_pct</span></td><td><span title='0.6731'>0.6731</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bd99, comm=multithread_cpu, pid=70, tid=73, rank=5'>action_id=act_f11bbe94, symbol=__cos_fma, dso=/u...hread_cpu, pid=70, tid=73, rank=5</span></td></tr>
+<tr><td><span title='obs_05b5224a'>obs_05b5224a</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_frame_sample_pct'>hot_frame_sample_pct</span></td><td><span title='0.6731'>0.6731</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bb0a, comm=multithread_cpu, pid=70, tid=73, rank=6'>action_id=act_f11bbe94, symbol=__cos_fma, dso=/u...hread_cpu, pid=70, tid=73, rank=6</span></td></tr>
+<tr><td><span title='obs_4793831e'>obs_4793831e</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_frame_sample_pct'>hot_frame_sample_pct</span></td><td><span title='0.6731'>0.6731</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run, dso=/home/tchen/agent/perf_agent/examples/bin/multithread_cpu_demo, ip=2e1d, comm=multithread_cpu, pid=70, tid=72, rank=7'>action_id=act_f11bbe94, symbol=std::thread::_Sta...hread_cpu, pid=70, tid=72, rank=7</span></td></tr>
+<tr><td><span title='obs_acd877d6'>obs_acd877d6</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_frame_sample_pct'>hot_frame_sample_pct</span></td><td><span title='0.6731'>0.6731</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=[unknown], dso=/home/tchen/agent/perf_agent/examples/bin/multithread_cpu_demo, ip=2260, comm=multithread_cpu, pid=70, tid=73, rank=8'>action_id=act_f11bbe94, symbol=[unknown], dso=/h...hread_cpu, pid=70, tid=73, rank=8</span></td></tr>
+<tr><td><span title='obs_7f2cb153'>obs_7f2cb153</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_frame_sample_pct'>hot_frame_sample_pct</span></td><td><span title='0.5984'>0.5984</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run, dso=/home/tchen/agent/perf_agent/examples/bin/multithread_cpu_demo, ip=2e1d, comm=multithread_cpu, pid=70, tid=73, rank=9'>action_id=act_f11bbe94, symbol=std::thread::_Sta...hread_cpu, pid=70, tid=73, rank=9</span></td></tr>
+<tr><td><span title='obs_b1782406'>obs_b1782406</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_frame_sample_pct'>hot_frame_sample_pct</span></td><td><span title='0.5984'>0.5984</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bad0, comm=multithread_cpu, pid=70, tid=75, rank=10'>action_id=act_f11bbe94, symbol=__cos_fma, dso=/u...read_cpu, pid=70, tid=75, rank=10</span></td></tr>
+<tr><td><span title='obs_766349b3'>obs_766349b3</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_symbol_pct'>hot_symbol_pct</span></td><td><span title='99.55'>99.55</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=clone3, rank=1'>action_id=act_f11bbe94, symbol=clone3, rank=1</span></td></tr>
+<tr><td><span title='obs_d0f7a019'>obs_d0f7a019</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_symbol_pct'>hot_symbol_pct</span></td><td><span title='99.42'>99.42</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=start_thread, rank=2'>action_id=act_f11bbe94, symbol=start_thread, rank=2</span></td></tr>
+<tr><td><span title='obs_352bcc80'>obs_352bcc80</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_symbol_pct'>hot_symbol_pct</span></td><td><span title='99.42'>99.42</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=0x00007fee8faecdb4, rank=3'>action_id=act_f11bbe94, symbol=0x00007fee8faecdb4, rank=3</span></td></tr>
+<tr><td><span title='obs_9867af9c'>obs_9867af9c</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_symbol_pct'>hot_symbol_pct</span></td><td><span title='94.97'>94.97</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=std::thread::_State_impl&lt;std::thread::_Invoker&lt;std::tuple&lt;main::{lambda()#1}&gt; &gt; &gt;::_M_run, rank=4'>action_id=act_f11bbe94, symbol=std::thread::_Sta...{lambda()#1}&gt; &gt; &gt;::_M_run, rank=4</span></td></tr>
+<tr><td><span title='obs_f81f5157'>obs_f81f5157</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_symbol_pct'>hot_symbol_pct</span></td><td><span title='48.68'>48.68</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=__cos_fma, rank=5'>action_id=act_f11bbe94, symbol=__cos_fma, rank=5</span></td></tr>
+<tr><td><span title='obs_030f5105'>obs_030f5105</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_symbol_pct'>hot_symbol_pct</span></td><td><span title='36.47'>36.47</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=__sin_fma, rank=6'>action_id=act_f11bbe94, symbol=__sin_fma, rank=6</span></td></tr>
+<tr><td><span title='obs_0a4bec24'>obs_0a4bec24</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_symbol_pct'>hot_symbol_pct</span></td><td><span title='1.94'>1.94</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=0x000056335cbb4430, rank=7'>action_id=act_f11bbe94, symbol=0x000056335cbb4430, rank=7</span></td></tr>
+<tr><td><span title='obs_498c4b59'>obs_498c4b59</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='hot_symbol_pct'>hot_symbol_pct</span></td><td><span title='1.62'>1.62</span></td><td><span title='function'>function</span></td><td><span title='action_id=act_f11bbe94, symbol=0x000056335cbb4260, rank=8'>action_id=act_f11bbe94, symbol=0x000056335cbb4260, rank=8</span></td></tr>
+<tr><td><span title='obs_21e9113e'>obs_21e9113e</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='process_sample_count'>process_sample_count</span></td><td><span title='1338'>1338</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, rank=1, relation=primary'>action_id=act_f11bbe94, comm=multithread_cpu, pid=70, rank=1, relation=primary</span></td></tr>
+<tr><td><span title='obs_d1f64327'>obs_d1f64327</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='process_sample_pct'>process_sample_pct</span></td><td><span title='100.0'>100.0</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, rank=1, relation=primary'>action_id=act_f11bbe94, comm=multithread_cpu, pid=70, rank=1, relation=primary</span></td></tr>
+<tr><td><span title='obs_96c7bd77'>obs_96c7bd77</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='thread_sample_count'>thread_sample_count</span></td><td><span title='336'>336</span></td><td><span title='thread'>thread</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, tid=74, rank=1, thread_role=worker_thread'>action_id=act_f11bbe94, comm=multithread_cpu, pi...rank=1, thread_role=worker_thread</span></td></tr>
+<tr><td><span title='obs_68ec1862'>obs_68ec1862</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='thread_sample_count'>thread_sample_count</span></td><td><span title='336'>336</span></td><td><span title='thread'>thread</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, tid=75, rank=2, thread_role=worker_thread'>action_id=act_f11bbe94, comm=multithread_cpu, pi...rank=2, thread_role=worker_thread</span></td></tr>
+<tr><td><span title='obs_d079e1a3'>obs_d079e1a3</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='thread_sample_count'>thread_sample_count</span></td><td><span title='333'>333</span></td><td><span title='thread'>thread</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, tid=72, rank=3, thread_role=worker_thread'>action_id=act_f11bbe94, comm=multithread_cpu, pi...rank=3, thread_role=worker_thread</span></td></tr>
+<tr><td><span title='obs_3f18ba96'>obs_3f18ba96</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='thread_sample_count'>thread_sample_count</span></td><td><span title='331'>331</span></td><td><span title='thread'>thread</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, tid=73, rank=4, thread_role=worker_thread'>action_id=act_f11bbe94, comm=multithread_cpu, pi...rank=4, thread_role=worker_thread</span></td></tr>
+<tr><td><span title='obs_36b5e73e'>obs_36b5e73e</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='thread_sample_count'>thread_sample_count</span></td><td><span title='2'>2</span></td><td><span title='thread'>thread</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, tid=70, rank=5, thread_role=main_thread'>action_id=act_f11bbe94, comm=multithread_cpu, pi..., rank=5, thread_role=main_thread</span></td></tr>
+<tr><td><span title='obs_cd34e333'>obs_cd34e333</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='thread_sample_pct'>thread_sample_pct</span></td><td><span title='25.1121'>25.1121</span></td><td><span title='thread'>thread</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, tid=74, rank=1, thread_role=worker_thread'>action_id=act_f11bbe94, comm=multithread_cpu, pi...rank=1, thread_role=worker_thread</span></td></tr>
+<tr><td><span title='obs_5fe041e2'>obs_5fe041e2</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='thread_sample_pct'>thread_sample_pct</span></td><td><span title='25.1121'>25.1121</span></td><td><span title='thread'>thread</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, tid=75, rank=2, thread_role=worker_thread'>action_id=act_f11bbe94, comm=multithread_cpu, pi...rank=2, thread_role=worker_thread</span></td></tr>
+<tr><td><span title='obs_25a950ee'>obs_25a950ee</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='thread_sample_pct'>thread_sample_pct</span></td><td><span title='24.8879'>24.8879</span></td><td><span title='thread'>thread</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, tid=72, rank=3, thread_role=worker_thread'>action_id=act_f11bbe94, comm=multithread_cpu, pi...rank=3, thread_role=worker_thread</span></td></tr>
+<tr><td><span title='obs_3f304e85'>obs_3f304e85</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='thread_sample_pct'>thread_sample_pct</span></td><td><span title='24.7384'>24.7384</span></td><td><span title='thread'>thread</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, tid=73, rank=4, thread_role=worker_thread'>action_id=act_f11bbe94, comm=multithread_cpu, pi...rank=4, thread_role=worker_thread</span></td></tr>
+<tr><td><span title='obs_59397aa1'>obs_59397aa1</span></td><td><span title='perf_record'>perf_record</span></td><td><span title='thread_sample_pct'>thread_sample_pct</span></td><td><span title='0.1495'>0.1495</span></td><td><span title='thread'>thread</span></td><td><span title='action_id=act_f11bbe94, comm=multithread_cpu, pid=70, tid=70, rank=5, thread_role=main_thread'>action_id=act_f11bbe94, comm=multithread_cpu, pi..., rank=5, thread_role=main_thread</span></td></tr>
+<tr><td><span title='obs_0875413e'>obs_0875413e</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='cache_misses'>cache_misses</span></td><td><span title='38116'>38116</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_40f9fb4c, event_name=cache-misses, raw_event_name=cpu_core/cache-misses'>action_id=act_40f9fb4c, event_name=cache-misses,..._event_name=cpu_core/cache-misses</span></td></tr>
+<tr><td><span title='obs_6c56528c'>obs_6c56528c</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='cache_misses'>cache_misses</span></td><td><span title='42384'>42384</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_a9b2a591, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.088'>action_id=act_a9b2a591, event_name=cache-misses,...e=timeline, time_bucket_sec=0.088</span></td></tr>
+<tr><td><span title='obs_eba59020'>obs_eba59020</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='cache_references'>cache_references</span></td><td><span title='145565'>145565</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_40f9fb4c, event_name=cache-references, raw_event_name=cpu_core/cache-references'>action_id=act_40f9fb4c, event_name=cache-referen...nt_name=cpu_core/cache-references</span></td></tr>
+<tr><td><span title='obs_0639e85b'>obs_0639e85b</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='context_switches'>context_switches</span></td><td><span title='35'>35</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_19efdd71, event_name=context-switches, raw_event_name=context-switches'>action_id=act_19efdd71, event_name=context-switches, raw_event_name=context-switches</span></td></tr>
+<tr><td><span title='obs_3c860b64'>obs_3c860b64</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='context_switches'>context_switches</span></td><td><span title='27'>27</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_a9b2a591, event_name=context-switches, series_type=timeline, time_bucket_sec=0.088'>action_id=act_a9b2a591, event_name=context-switc...e=timeline, time_bucket_sec=0.088</span></td></tr>
+<tr><td><span title='obs_617ce98d'>obs_617ce98d</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='cpu_migrations'>cpu_migrations</span></td><td><span title='4'>4</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_19efdd71, event_name=cpu-migrations, raw_event_name=cpu-migrations'>action_id=act_19efdd71, event_name=cpu-migrations, raw_event_name=cpu-migrations</span></td></tr>
+<tr><td><span title='obs_70f4f519'>obs_70f4f519</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='cycles'>cycles</span></td><td><span title='1755336932'>1755336932</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_a12b5cb6, event_name=cycles, raw_event_name=cpu_core/cycles'>action_id=act_a12b5cb6, event_name=cycles, raw_event_name=cpu_core/cycles</span></td></tr>
+<tr><td><span title='obs_fe46d904'>obs_fe46d904</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='cycles'>cycles</span></td><td><span title='1751854488'>1751854488</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_7530acd8, event_name=cycles, raw_event_name=cpu_core/cycles'>action_id=act_7530acd8, event_name=cycles, raw_event_name=cpu_core/cycles</span></td></tr>
+<tr><td><span title='obs_b5786387'>obs_b5786387</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='cycles'>cycles</span></td><td><span title='1757613838'>1757613838</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_a9b2a591, event_name=cycles, series_type=timeline, time_bucket_sec=0.088'>action_id=act_a9b2a591, event_name=cycles, serie...e=timeline, time_bucket_sec=0.088</span></td></tr>
+<tr><td><span title='obs_b197a651'>obs_b197a651</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='instructions'>instructions</span></td><td><span title='6719383605'>6719383605</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_a12b5cb6, event_name=cpu_core/Instructions, raw_event_name=cpu_core/Instructions'>action_id=act_a12b5cb6, event_name=cpu_core/Inst..._event_name=cpu_core/Instructions</span></td></tr>
+<tr><td><span title='obs_65379fc0'>obs_65379fc0</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='instructions'>instructions</span></td><td><span title='6719473577'>6719473577</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_7530acd8, event_name=cpu_core/Instructions, raw_event_name=cpu_core/Instructions'>action_id=act_7530acd8, event_name=cpu_core/Inst..._event_name=cpu_core/Instructions</span></td></tr>
+<tr><td><span title='obs_a7674544'>obs_a7674544</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='instructions'>instructions</span></td><td><span title='6719381984'>6719381984</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_a9b2a591, event_name=cpu_core/Instructions/, series_type=timeline, time_bucket_sec=0.088'>action_id=act_a9b2a591, event_name=cpu_core/Inst...e=timeline, time_bucket_sec=0.088</span></td></tr>
+<tr><td><span title='obs_6cf80e38'>obs_6cf80e38</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='l1_miss_count'>l1_miss_count</span></td><td><span title='150048'>150048</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_40f9fb4c, event_name=mem_load_completed.l1_miss_any, raw_event_name=cpu_core/mem_load_completed.l1_miss_any'>action_id=act_40f9fb4c, event_name=mem_load_comp...re/mem_load_completed.l1_miss_any</span></td></tr>
+<tr><td><span title='obs_b848fb95'>obs_b848fb95</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='l2_miss_count'>l2_miss_count</span></td><td><span title='166389'>166389</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_40f9fb4c, event_name=l2_rqsts.miss, raw_event_name=cpu_core/l2_rqsts.miss'>action_id=act_40f9fb4c, event_name=l2_rqsts.miss...event_name=cpu_core/l2_rqsts.miss</span></td></tr>
+<tr><td><span title='obs_b1cbb456'>obs_b1cbb456</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='llc_miss_count'>llc_miss_count</span></td><td><span title='38116'>38116</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_40f9fb4c, event_name=longest_lat_cache.miss, raw_event_name=cpu_core/longest_lat_cache.miss'>action_id=act_40f9fb4c, event_name=longest_lat_c...e=cpu_core/longest_lat_cache.miss</span></td></tr>
+<tr><td><span title='obs_d8f951de'>obs_d8f951de</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='lock_loads'>lock_loads</span></td><td><span title='14419'>14419</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_19efdd71, event_name=mem_inst_retired.lock_loads, raw_event_name=cpu_core/mem_inst_retired.lock_loads'>action_id=act_19efdd71, event_name=mem_inst_reti..._core/mem_inst_retired.lock_loads</span></td></tr>
+<tr><td><span title='obs_a040bfd6'>obs_a040bfd6</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='msec'>msec</span></td><td><span title='344.13'>344.13</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_a12b5cb6, event_name=msec, raw_event_name=msec'>action_id=act_a12b5cb6, event_name=msec, raw_event_name=msec</span></td></tr>
+<tr><td><span title='obs_a88b8baa'>obs_a88b8baa</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='page_faults'>page_faults</span></td><td><span title='293'>293</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_19efdd71, event_name=page-faults, raw_event_name=page-faults'>action_id=act_19efdd71, event_name=page-faults, raw_event_name=page-faults</span></td></tr>
+<tr><td><span title='obs_f1917b9d'>obs_f1917b9d</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='seconds'>seconds</span></td><td><span title='0.086765805'>0.086765805</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_a12b5cb6, event_name=seconds, raw_event_name=seconds'>action_id=act_a12b5cb6, event_name=seconds, raw_event_name=seconds</span></td></tr>
+<tr><td><span title='obs_66976ec3'>obs_66976ec3</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='seconds'>seconds</span></td><td><span title='0.087026678'>0.087026678</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_40f9fb4c, event_name=seconds, raw_event_name=seconds'>action_id=act_40f9fb4c, event_name=seconds, raw_event_name=seconds</span></td></tr>
+<tr><td><span title='obs_f503ca86'>obs_f503ca86</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='seconds'>seconds</span></td><td><span title='0.086564924'>0.086564924</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_7530acd8, event_name=seconds, raw_event_name=seconds'>action_id=act_7530acd8, event_name=seconds, raw_event_name=seconds</span></td></tr>
+<tr><td><span title='obs_0b57f815'>obs_0b57f815</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='seconds'>seconds</span></td><td><span title='0.087044899'>0.087044899</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_19efdd71, event_name=seconds, raw_event_name=seconds'>action_id=act_19efdd71, event_name=seconds, raw_event_name=seconds</span></td></tr>
+<tr><td><span title='obs_5236ab9f'>obs_5236ab9f</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='slots'>slots</span></td><td><span title='10499414778'>10499414778</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_a12b5cb6, event_name=cpu_core/SLOTS, raw_event_name=cpu_core/SLOTS'>action_id=act_a12b5cb6, event_name=cpu_core/SLOTS, raw_event_name=cpu_core/SLOTS</span></td></tr>
+<tr><td><span title='obs_f40d751c'>obs_f40d751c</span></td><td><span title='perf_stat'>perf_stat</span></td><td><span title='slots'>slots</span></td><td><span title='10504369062'>10504369062</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_7530acd8, event_name=cpu_core/SLOTS, raw_event_name=cpu_core/SLOTS'>action_id=act_7530acd8, event_name=cpu_core/SLOTS, raw_event_name=cpu_core/SLOTS</span></td></tr>
+<tr><td><span title='obs_259e2359'>obs_259e2359</span></td><td><span title='time'>time</span></td><td><span title='cpu_utilization_pct'>cpu_utilization_pct</span></td><td><span title='398'>398</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_9e998ca6'>action_id=act_9e998ca6</span></td></tr>
+<tr><td><span title='obs_f33b2b15'>obs_f33b2b15</span></td><td><span title='time'>time</span></td><td><span title='elapsed_time_sec'>elapsed_time_sec</span></td><td><span title='0.08'>0.08</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_9e998ca6'>action_id=act_9e998ca6</span></td></tr>
+<tr><td><span title='obs_f242797c'>obs_f242797c</span></td><td><span title='time'>time</span></td><td><span title='involuntary_context_switches'>involuntary_context_switches</span></td><td><span title='5'>5</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_9e998ca6'>action_id=act_9e998ca6</span></td></tr>
+<tr><td><span title='obs_705f4c02'>obs_705f4c02</span></td><td><span title='time'>time</span></td><td><span title='major_faults'>major_faults</span></td><td><span title='0'>0</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_9e998ca6'>action_id=act_9e998ca6</span></td></tr>
+<tr><td><span title='obs_ce3b1d13'>obs_ce3b1d13</span></td><td><span title='time'>time</span></td><td><span title='max_rss_kb'>max_rss_kb</span></td><td><span title='4000'>4000</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_9e998ca6'>action_id=act_9e998ca6</span></td></tr>
+<tr><td><span title='obs_7ebb188d'>obs_7ebb188d</span></td><td><span title='time'>time</span></td><td><span title='system_time_sec'>system_time_sec</span></td><td><span title='0.0'>0.0</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_9e998ca6'>action_id=act_9e998ca6</span></td></tr>
+<tr><td><span title='obs_adbe2cae'>obs_adbe2cae</span></td><td><span title='time'>time</span></td><td><span title='user_time_sec'>user_time_sec</span></td><td><span title='0.34'>0.34</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_9e998ca6'>action_id=act_9e998ca6</span></td></tr>
+<tr><td><span title='obs_18f60477'>obs_18f60477</span></td><td><span title='time'>time</span></td><td><span title='voluntary_context_switches'>voluntary_context_switches</span></td><td><span title='22'>22</span></td><td><span title='process'>process</span></td><td><span title='action_id=act_9e998ca6'>action_id=act_9e998ca6</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

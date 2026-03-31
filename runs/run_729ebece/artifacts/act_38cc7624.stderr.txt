@@ -1,0 +1,16 @@
+
+ Performance counter stats for '/home/tchen/agent/perf_agent/examples/bin/multithread_cpu_demo 4 400 18000':
+
+        1728337829      cpu_core/cycles/                 #    5.101 G/sec                     
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+        6719416632      cpu_core/instructions/           #   19.831 G/sec                     
+     <not counted>      cpu_atom/instructions/                                                  (0.00%)
+            338.83 msec task-clock                       #    3.964 CPUs utilized             
+            338.83 msec cpu-clock                        #    3.964 CPUs utilized             
+
+       0.085471463 seconds time elapsed
+
+       0.338986000 seconds user
+       0.000000000 seconds sys
+
+

@@ -1,0 +1,13 @@
+{
+  "tool": "time",
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "python",
+    "demo_cpu.py"
+  ],
+  "success": true,
+  "exit_code": 0,
+  "started_at": "2026-03-31T13:51:40.719719+00:00",
+  "finished_at": "2026-03-31T13:51:40.719721+00:00"
+}

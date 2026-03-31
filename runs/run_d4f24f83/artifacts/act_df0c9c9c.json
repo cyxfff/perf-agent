@@ -1,0 +1,16 @@
+{
+  "action_id": "act_df0c9c9c",
+  "tool": "time",
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "examples/bin/multiprocess_fanout_demo",
+    "3",
+    "250",
+    "24000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0749,
+  "error_message": null
+}

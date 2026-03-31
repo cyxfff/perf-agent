@@ -1,0 +1,11 @@
+{"timestamp": "2026-03-31T13:37:10.154500Z", "node": "planner", "message": "created initial collection plan", "details": {"tools": ["perf_stat", "pidstat", "mpstat"]}}
+{"timestamp": "2026-03-31T13:37:10.155178Z", "node": "collector", "message": "tool execution finished", "details": {"tool_name": "perf_stat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:37:10.155212Z", "node": "collector", "message": "tool execution finished", "details": {"tool_name": "pidstat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:37:10.155231Z", "node": "collector", "message": "tool execution finished", "details": {"tool_name": "mpstat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:37:10.155969Z", "node": "parser", "message": "parsed tool output", "details": {"action_id": "act_f4ad3049", "parser_name": "perf_stat_parser", "observation_count": 1}}
+{"timestamp": "2026-03-31T13:37:10.156019Z", "node": "parser", "message": "parsed tool output", "details": {"action_id": "act_d781e51f", "parser_name": "pidstat_parser", "observation_count": 1}}
+{"timestamp": "2026-03-31T13:37:10.375834Z", "node": "parser", "message": "parsed tool output", "details": {"action_id": "act_56bfbb5b", "parser_name": "generic_parser", "observation_count": 1}}
+{"timestamp": "2026-03-31T13:37:10.376221Z", "node": "rules", "message": "classified observations", "details": {"rule_hits": ["cpu_bound"]}}
+{"timestamp": "2026-03-31T13:37:10.376960Z", "node": "analyzer", "message": "refined rule-based hypotheses", "details": {"hypothesis_count": 1}}
+{"timestamp": "2026-03-31T13:37:10.377180Z", "node": "verifier", "message": "evidence deemed sufficient", "details": {"top_hypothesis": "cpu"}}
+{"timestamp": "2026-03-31T13:37:10.377380Z", "node": "reporter", "message": "generated final report", "details": {"finding_count": 1}}

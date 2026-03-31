@@ -1,0 +1,12 @@
+[
+  {
+    "id": "act_33c777a1",
+    "tool": "perf_record",
+    "command": [],
+    "reason": "collect call stacks for hotspot and callgraph verification",
+    "expected_output": "perf record callgraph samples",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "pending"
+  }
+]

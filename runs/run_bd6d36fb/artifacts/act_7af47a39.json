@@ -1,0 +1,15 @@
+{
+  "action_id": "act_7af47a39",
+  "tool": "pidstat",
+  "command": [
+    "pidstat",
+    "-dur",
+    "-h",
+    "1",
+    "1"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 1.0011,
+  "error_message": null
+}

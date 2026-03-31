@@ -1,0 +1,19 @@
+{
+  "action_id": "act_19313e2a",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "cycles,instructions,task-clock,cpu-clock",
+    "--",
+    "/home/tchen/agent/perf_agent/examples/bin/multiprocess_fanout_demo",
+    "3",
+    "250",
+    "24000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0849,
+  "error_message": null
+}

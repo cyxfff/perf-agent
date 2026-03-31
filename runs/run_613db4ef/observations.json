@@ -1,0 +1,620 @@
+[
+  {
+    "id": "obs_f68cc089",
+    "source": "time",
+    "category": "cpu",
+    "metric": "user_time_sec",
+    "value": 0.14,
+    "unit": "seconds",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.775787Z",
+    "labels": {
+      "action_id": "act_0d95ee69"
+    },
+    "raw_excerpt": "User time (seconds): 0.14",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_68d68dc3",
+    "source": "time",
+    "category": "cpu",
+    "metric": "system_time_sec",
+    "value": 0.0,
+    "unit": "seconds",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.775787Z",
+    "labels": {
+      "action_id": "act_0d95ee69"
+    },
+    "raw_excerpt": "System time (seconds): 0.00",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_eb576d5b",
+    "source": "time",
+    "category": "cpu",
+    "metric": "cpu_utilization_pct",
+    "value": 100,
+    "unit": "percent",
+    "normalized_value": 1.0,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.775787Z",
+    "labels": {
+      "action_id": "act_0d95ee69"
+    },
+    "raw_excerpt": "Percent of CPU this job got: 100%",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_11123123",
+    "source": "time",
+    "category": "memory",
+    "metric": "max_rss_kb",
+    "value": 4320,
+    "unit": "kb",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.775787Z",
+    "labels": {
+      "action_id": "act_0d95ee69"
+    },
+    "raw_excerpt": "Maximum resident set size (kbytes): 4320",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_690242c9",
+    "source": "time",
+    "category": "memory",
+    "metric": "major_faults",
+    "value": 0,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.775787Z",
+    "labels": {
+      "action_id": "act_0d95ee69"
+    },
+    "raw_excerpt": "Major (requiring I/O) page faults: 0",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_84ead917",
+    "source": "time",
+    "category": "scheduler",
+    "metric": "voluntary_context_switches",
+    "value": 1,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.775787Z",
+    "labels": {
+      "action_id": "act_0d95ee69"
+    },
+    "raw_excerpt": "Voluntary context switches: 1",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_6e8ee80d",
+    "source": "time",
+    "category": "scheduler",
+    "metric": "involuntary_context_switches",
+    "value": 2,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.775787Z",
+    "labels": {
+      "action_id": "act_0d95ee69"
+    },
+    "raw_excerpt": "Involuntary context switches: 2",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_a6313c5a",
+    "source": "perf_stat",
+    "category": "cpu",
+    "metric": "cycles",
+    "value": 763054676,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.776485Z",
+    "labels": {
+      "action_id": "act_670b1b8a",
+      "event_name": "cycles",
+      "raw_event_name": "cpu_core/cycles"
+    },
+    "raw_excerpt": "763054676      cpu_core/cycles/                 #    5.016 G/sec",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_a6f08cbf",
+    "source": "perf_stat",
+    "category": "cpu",
+    "metric": "instructions",
+    "value": 2941673320,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.776485Z",
+    "labels": {
+      "action_id": "act_670b1b8a",
+      "event_name": "instructions",
+      "raw_event_name": "cpu_core/instructions"
+    },
+    "raw_excerpt": "2941673320      cpu_core/instructions/           #   19.335 G/sec",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_ee2772d2",
+    "source": "perf_stat",
+    "category": "cache",
+    "metric": "cache_references",
+    "value": 51369,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.777439Z",
+    "labels": {
+      "action_id": "act_6b87501c",
+      "event_name": "cache-references",
+      "raw_event_name": "cpu_core/cache-references"
+    },
+    "raw_excerpt": "51369      cpu_core/cache-references/",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_6681d225",
+    "source": "perf_stat",
+    "category": "cache",
+    "metric": "cache_misses",
+    "value": 18004,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.777439Z",
+    "labels": {
+      "action_id": "act_6b87501c",
+      "event_name": "cache-misses",
+      "raw_event_name": "cpu_core/cache-misses"
+    },
+    "raw_excerpt": "18004      cpu_core/cache-misses/",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_9c1acc05",
+    "source": "perf_stat",
+    "category": "scheduler",
+    "metric": "context_switches",
+    "value": 1,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.778138Z",
+    "labels": {
+      "action_id": "act_3158dd3f",
+      "event_name": "context-switches",
+      "raw_event_name": "context-switches"
+    },
+    "raw_excerpt": "1      context-switches",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_04793295",
+    "source": "perf_stat",
+    "category": "scheduler",
+    "metric": "cpu_migrations",
+    "value": 0,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.778138Z",
+    "labels": {
+      "action_id": "act_3158dd3f",
+      "event_name": "cpu-migrations",
+      "raw_event_name": "cpu-migrations"
+    },
+    "raw_excerpt": "0      cpu-migrations",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_34c4534e",
+    "source": "perf_stat",
+    "category": "memory",
+    "metric": "page_faults",
+    "value": 170,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:43.778138Z",
+    "labels": {
+      "action_id": "act_3158dd3f",
+      "event_name": "page-faults",
+      "raw_event_name": "page-faults"
+    },
+    "raw_excerpt": "170      page-faults",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_b0ba073c",
+    "source": "mpstat",
+    "category": "system",
+    "metric": "01",
+    "value": "15:42     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle",
+    "unit": null,
+    "normalized_value": null,
+    "scope": "system",
+    "timestamp": "2026-03-31T17:15:43.778801Z",
+    "labels": {
+      "action_id": "act_5f30890e",
+      "source": "mpstat"
+    },
+    "raw_excerpt": "01:15:42     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_0a0dba1b",
+    "source": "mpstat",
+    "category": "system",
+    "metric": "01",
+    "value": "15:43     all    0.65    0.00    0.35    1.70    0.00    0.00    0.00    0.00    0.00   97.30",
+    "unit": null,
+    "normalized_value": null,
+    "scope": "system",
+    "timestamp": "2026-03-31T17:15:43.778801Z",
+    "labels": {
+      "action_id": "act_5f30890e",
+      "source": "mpstat"
+    },
+    "raw_excerpt": "01:15:43     all    0.65    0.00    0.35    1.70    0.00    0.00    0.00    0.00    0.00   97.30",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_097cc33a",
+    "source": "mpstat",
+    "category": "system",
+    "metric": "average",
+    "value": "all    0.65    0.00    0.35    1.70    0.00    0.00    0.00    0.00    0.00   97.30",
+    "unit": null,
+    "normalized_value": null,
+    "scope": "system",
+    "timestamp": "2026-03-31T17:15:43.778801Z",
+    "labels": {
+      "action_id": "act_5f30890e",
+      "source": "mpstat"
+    },
+    "raw_excerpt": "Average:     all    0.65    0.00    0.35    1.70    0.00    0.00    0.00    0.00    0.00   97.30",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_a0d8be95",
+    "source": "perf_record",
+    "category": "callgraph",
+    "metric": "callgraph_samples",
+    "value": 119,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "callchain",
+    "timestamp": "2026-03-31T17:15:45.283839Z",
+    "labels": {
+      "action_id": "act_ed1060c7"
+    },
+    "raw_excerpt": "# To display the perf.data header info, please use --header/--header-only options.",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_05b5ec90",
+    "source": "perf_record",
+    "category": "callgraph",
+    "metric": "hot_symbol_pct",
+    "value": 94.09,
+    "unit": "percent",
+    "normalized_value": 0.9409,
+    "scope": "function",
+    "timestamp": "2026-03-31T17:15:45.283861Z",
+    "labels": {
+      "action_id": "act_ed1060c7",
+      "symbol": "main                                      -      -",
+      "rank": "1"
+    },
+    "raw_excerpt": "94.09%    13.08%  [.] main                                      -      -",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_fb4a657a",
+    "source": "perf_record",
+    "category": "callgraph",
+    "metric": "hot_symbol_pct",
+    "value": 45.59,
+    "unit": "percent",
+    "normalized_value": 0.4559,
+    "scope": "function",
+    "timestamp": "2026-03-31T17:15:45.283872Z",
+    "labels": {
+      "action_id": "act_ed1060c7",
+      "symbol": "__cos_fma                                 -      -",
+      "rank": "2"
+    },
+    "raw_excerpt": "45.59%    44.57%  [.] __cos_fma                                 -      -",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_b0d4e35a",
+    "source": "perf_record",
+    "category": "callgraph",
+    "metric": "hot_symbol_pct",
+    "value": 40.33,
+    "unit": "percent",
+    "normalized_value": 0.4033,
+    "scope": "function",
+    "timestamp": "2026-03-31T17:15:45.283878Z",
+    "labels": {
+      "action_id": "act_ed1060c7",
+      "symbol": "__sin_fma                                 -      -",
+      "rank": "3"
+    },
+    "raw_excerpt": "40.33%    38.43%  [.] __sin_fma                                 -      -",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_a60076ad",
+    "source": "perf_record",
+    "category": "callgraph",
+    "metric": "hot_symbol_pct",
+    "value": 1.99,
+    "unit": "percent",
+    "normalized_value": 0.0199,
+    "scope": "function",
+    "timestamp": "2026-03-31T17:15:45.283884Z",
+    "labels": {
+      "action_id": "act_ed1060c7",
+      "symbol": "0x0000555c3d43b350                        -      -",
+      "rank": "4"
+    },
+    "raw_excerpt": "1.99%     0.00%  [.] 0x0000555c3d43b350                        -      -",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_0cdf33d8",
+    "source": "perf_record",
+    "category": "callgraph",
+    "metric": "hot_symbol_pct",
+    "value": 1.89,
+    "unit": "percent",
+    "normalized_value": 0.0189,
+    "scope": "function",
+    "timestamp": "2026-03-31T17:15:45.283888Z",
+    "labels": {
+      "action_id": "act_ed1060c7",
+      "symbol": "0x00000000000011f4                        -      -",
+      "rank": "5"
+    },
+    "raw_excerpt": "1.89%     1.89%  [.] 0x00000000000011f4                        -      -",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_133b2ab9",
+    "source": "perf_stat",
+    "category": "cpu",
+    "metric": "cycles",
+    "value": 499115196,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:45.283922Z",
+    "labels": {
+      "action_id": "act_03a9e13f",
+      "event_name": "cycles",
+      "series_type": "timeline",
+      "time_bucket_sec": "0.100"
+    },
+    "raw_excerpt": "0.100155500,499115196,,cpu_core/cycles/,100040265,100.00,,",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_efe1520d",
+    "source": "perf_stat",
+    "category": "cpu",
+    "metric": "instructions",
+    "value": 1921333985,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:45.283922Z",
+    "labels": {
+      "action_id": "act_03a9e13f",
+      "event_name": "instructions",
+      "series_type": "timeline",
+      "time_bucket_sec": "0.100"
+    },
+    "raw_excerpt": "0.100155500,1921333985,,cpu_core/instructions/,100042003,100.00,,",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_d4f41e67",
+    "source": "perf_stat",
+    "category": "cache",
+    "metric": "cache_misses",
+    "value": 23973,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:45.283922Z",
+    "labels": {
+      "action_id": "act_03a9e13f",
+      "event_name": "cache-misses",
+      "series_type": "timeline",
+      "time_bucket_sec": "0.100"
+    },
+    "raw_excerpt": "0.100155500,23973,,cpu_core/cache-misses/,100043170,100.00,,",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_c1fabe6d",
+    "source": "perf_stat",
+    "category": "scheduler",
+    "metric": "context_switches",
+    "value": 5,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:45.283922Z",
+    "labels": {
+      "action_id": "act_03a9e13f",
+      "event_name": "context-switches",
+      "series_type": "timeline",
+      "time_bucket_sec": "0.100"
+    },
+    "raw_excerpt": "0.100155500,5,,context-switches,100044338,100.00,,",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_43a56242",
+    "source": "perf_stat",
+    "category": "cpu",
+    "metric": "cycles",
+    "value": 264497631,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:45.283922Z",
+    "labels": {
+      "action_id": "act_03a9e13f",
+      "event_name": "cycles",
+      "series_type": "timeline",
+      "time_bucket_sec": "0.152"
+    },
+    "raw_excerpt": "0.152064709,264497631,,cpu_core/cycles/,51847249,100.00,,",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_955f2da2",
+    "source": "perf_stat",
+    "category": "cpu",
+    "metric": "instructions",
+    "value": 1020410904,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:45.283922Z",
+    "labels": {
+      "action_id": "act_03a9e13f",
+      "event_name": "instructions",
+      "series_type": "timeline",
+      "time_bucket_sec": "0.152"
+    },
+    "raw_excerpt": "0.152064709,1020410904,,cpu_core/instructions/,51845511,100.00,,",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_31bc586e",
+    "source": "perf_stat",
+    "category": "cache",
+    "metric": "cache_misses",
+    "value": 4074,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:45.283922Z",
+    "labels": {
+      "action_id": "act_03a9e13f",
+      "event_name": "cache-misses",
+      "series_type": "timeline",
+      "time_bucket_sec": "0.152"
+    },
+    "raw_excerpt": "0.152064709,4074,,cpu_core/cache-misses/,51844344,100.00,,",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_71b3533e",
+    "source": "perf_stat",
+    "category": "scheduler",
+    "metric": "context_switches",
+    "value": 0,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:45.283922Z",
+    "labels": {
+      "action_id": "act_03a9e13f",
+      "event_name": "context-switches",
+      "series_type": "timeline",
+      "time_bucket_sec": "0.152"
+    },
+    "raw_excerpt": "0.152064709,0,,context-switches,51843176,100.00,,",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_727801e3",
+    "source": "perf_stat",
+    "category": "cpu",
+    "metric": "ipc",
+    "value": 3.8495,
+    "unit": null,
+    "normalized_value": 3.8495,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:45.283922Z",
+    "labels": {
+      "action_id": "act_03a9e13f",
+      "series_type": "timeline",
+      "time_bucket_sec": "0.100",
+      "derived_from": "instructions,cycles"
+    },
+    "raw_excerpt": "time=0.100s ipc=3.8495",
+    "evidence_level": "derived",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_5a1a9084",
+    "source": "perf_stat",
+    "category": "cpu",
+    "metric": "ipc",
+    "value": 3.8579,
+    "unit": null,
+    "normalized_value": 3.8579,
+    "scope": "process",
+    "timestamp": "2026-03-31T17:15:45.283922Z",
+    "labels": {
+      "action_id": "act_03a9e13f",
+      "series_type": "timeline",
+      "time_bucket_sec": "0.152",
+      "derived_from": "instructions,cycles"
+    },
+    "raw_excerpt": "time=0.152s ipc=3.8579",
+    "evidence_level": "derived",
+    "parser_version": "v1"
+  }
+]

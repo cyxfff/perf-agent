@@ -1,0 +1,102 @@
+[
+  {
+    "id": "act_d31ac54e",
+    "tool": "time",
+    "command": [
+      "/usr/bin/time",
+      "-v",
+      "/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo",
+      "700",
+      "18000"
+    ],
+    "reason": "collect baseline process resource usage",
+    "expected_output": "verbose time summary",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_a11ce8dd",
+    "tool": "perf_stat",
+    "command": [
+      "perf",
+      "stat",
+      "-d",
+      "--",
+      "/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo",
+      "700",
+      "18000"
+    ],
+    "reason": "collect baseline hardware counters",
+    "expected_output": "perf stat summary",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_0284b5ac",
+    "tool": "pidstat",
+    "command": [
+      "pidstat",
+      "-dur",
+      "-h",
+      "1",
+      "1"
+    ],
+    "reason": "collect process CPU and wait breakdown",
+    "expected_output": "pidstat process summary",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_cd08eec1",
+    "tool": "mpstat",
+    "command": [
+      "mpstat",
+      "1",
+      "1"
+    ],
+    "reason": "add system CPU context for CPU-heavy workload",
+    "expected_output": "mpstat CPU summary",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_95ce0738",
+    "tool": "perf_record",
+    "command": [
+      "perf",
+      "record",
+      "-g",
+      "--",
+      "/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo",
+      "700",
+      "18000"
+    ],
+    "reason": "collect call stacks for hotspot and callgraph verification",
+    "expected_output": "perf record callgraph samples",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_4b1abaf1",
+    "tool": "perf_record",
+    "command": [
+      "perf",
+      "record",
+      "-g",
+      "--",
+      "/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo",
+      "700",
+      "18000"
+    ],
+    "reason": "collect call stacks for hotspot and callgraph verification",
+    "expected_output": "perf record callgraph samples",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  }
+]

@@ -1,0 +1,246 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 1K of event 'cpu_core/cycles/'
+# Event count (approx.): 1762145334
+#
+# Children      Self  Symbol                                                                                         IPC   [IPC Coverage]
+# ........  ........  .............................................................................................  ....................
+#
+    99.44%     0.01%  [.] clone3                                                                                     -      -            
+            |          
+             --99.43%--clone3
+                       |          
+                        --99.39%--start_thread
+                                  0x7f2ebf4ecdb4
+                                  |          
+                                  |--91.44%--std::thread::_State_impl<std::thread::_Invoker<std::tuple<main::{lambda()#1}> > >::_M_run
+                                  |          |          
+                                  |          |--43.65%--__cos_fma
+                                  |          |          |          
+                                  |          |           --0.51%--asm_sysvec_apic_timer_interrupt
+                                  |          |                     sysvec_apic_timer_interrupt
+                                  |          |                     __sysvec_apic_timer_interrupt
+                                  |          |                     hrtimer_interrupt
+                                  |          |          
+                                  |           --35.89%--__sin_fma
+                                  |          
+                                  |--3.14%--__sin_fma
+                                  |          
+                                  |--2.11%--__cos_fma
+                                  |          
+                                  |--1.42%--0x557bba6be260
+                                  |          
+                                   --1.08%--0x557bba6be430
+
+    99.39%     0.00%  [.] start_thread                                                                               -      -            
+            |
+            ---0x7f2ebf4ecdb4
+               |          
+               |--91.44%--std::thread::_State_impl<std::thread::_Invoker<std::tuple<main::{lambda()#1}> > >::_M_run
+               |          |          
+               |          |--43.65%--__cos_fma
+               |          |          |          
+               |          |           --0.51%--asm_sysvec_apic_timer_interrupt
+               |          |                     sysvec_apic_timer_interrupt
+               |          |                     __sysvec_apic_timer_interrupt
+               |          |                     hrtimer_interrupt
+               |          |          
+               |           --35.89%--__sin_fma
+               |          
+               |--3.14%--__sin_fma
+               |          
+               |--2.11%--__cos_fma
+               |          
+               |--1.42%--0x557bba6be260
+               |          
+                --1.08%--0x557bba6be430
+
+    94.02%    11.99%  [.] std::thread::_State_impl<std::thread::_Invoker<std::tuple<main::{lambda()#1}> > >::_M_run  -      -            
+            |          
+            |--82.03%--std::thread::_State_impl<std::thread::_Invoker<std::tuple<main::{lambda()#1}> > >::_M_run
+            |          |          
+            |          |--43.65%--__cos_fma
+            |          |          |          
+            |          |           --0.51%--asm_sysvec_apic_timer_interrupt
+            |          |                     sysvec_apic_timer_interrupt
+            |          |                     __sysvec_apic_timer_interrupt
+            |          |                     hrtimer_interrupt
+            |          |          
+            |           --35.82%--__sin_fma
+            |          
+             --11.99%--clone3
+                       start_thread
+                       0x7f2ebf4ecdb4
+                       |          
+                       |--9.41%--std::thread::_State_impl<std::thread::_Invoker<std::tuple<main::{lambda()#1}> > >::_M_run
+                       |          
+                       |--1.42%--0x557bba6be260
+                       |          
+                        --1.08%--0x557bba6be430
+
+    82.23%     0.00%  [.] 0x00007f2ebf4ecdb4                                                                         -      -            
+            |          
+            |--75.47%--std::thread::_State_impl<std::thread::_Invoker<std::tuple<main::{lambda()#1}> > >::_M_run
+            |          |          
+            |          |--35.76%--__cos_fma
+            |          |          |          
+            |          |           --0.51%--asm_sysvec_apic_timer_interrupt
+            |          |                     sysvec_apic_timer_interrupt
+            |          |                     __sysvec_apic_timer_interrupt
+            |          |                     hrtimer_interrupt
+            |          |          
+            |           --30.07%--__sin_fma
+            |          
+            |--2.95%--__sin_fma
+            |          
+            |--1.80%--__cos_fma
+            |          
+            |--1.01%--0x557bba6be430
+            |          
+             --1.01%--0x557bba6be260
+
+    46.72%    44.03%  [.] __cos_fma                                                                                  -      -            
+            |          
+            |--44.03%--clone3
+            |          start_thread
+            |          0x7f2ebf4ecdb4
+            |          std::thread::_State_impl<std::thread::_Invoker<std::tuple<main::{lambda()#1}> > >::_M_run
+            |          |          
+            |           --43.07%--__cos_fma
+            |          
+             --2.69%--__cos_fma
+                       |          
+                        --0.51%--asm_sysvec_apic_timer_interrupt
+                                  sysvec_apic_timer_interrupt
+                                  __sysvec_apic_timer_interrupt
+                                  hrtimer_interrupt
+
+    40.24%    38.30%  [.] __sin_fma                                                                                  -      -            
+            |          
+            |--38.30%--clone3
+            |          start_thread
+            |          0x7f2ebf4ecdb4
+            |          |          
+            |          |--36.80%--std::thread::_State_impl<std::thread::_Invoker<std::tuple<main::{lambda()#1}> > >::_M_run
+            |          |          |          
+            |          |           --35.61%--__sin_fma
+            |          |          
+            |           --1.50%--__sin_fma
+            |          
+             --1.94%--__sin_fma
+
+    17.16%     0.00%  [.] 0x00007f2ebf4ecdb4                                                                         -      -            
+            |          
+             --15.97%--std::thread::_State_impl<std::thread::_Invoker<std::tuple<main::{lambda()#1}> > >::_M_run
+                       |          
+                       |--7.89%--__cos_fma
+                       |          
+                        --5.83%--__sin_fma
+
+     2.11%     2.11%  [.] 0x0000000000002434                                                                         -      -            
+            |
+            ---start_thread
+               0x7f2ebf4ecdb4
+               __cos_fma
+
+     1.50%     1.50%  [.] 0x0000000000002264                                                                         -      -            
+            |
+            ---start_thread
+               0x7f2ebf4ecdb4
+               __sin_fma
+
+     1.42%     0.00%  [.] 0x0000557bba6be260                                                                         -      -            
+     1.08%     0.00%  [.] 0x0000557bba6be430                                                                         -      -            
+     1.01%     0.00%  [k] asm_sysvec_apic_timer_interrupt                                                            -      -            
+            |          
+             --0.87%--sysvec_apic_timer_interrupt
+                       __sysvec_apic_timer_interrupt
+                       hrtimer_interrupt
+                       |          
+                        --0.79%--__hrtimer_run_queues
+                                  |          
+                                   --0.65%--tick_sched_timer
+                                             |          
+                                              --0.51%--tick_sched_do_timer
+                                                        tick_do_update_jiffies64
+                                                        update_wall_time
+                                                        timekeeping_advance
+
+     0.87%     0.00%  [k] sysvec_apic_timer_interrupt                                                                -      -            
+            |
+            ---__sysvec_apic_timer_interrupt
+               hrtimer_interrupt
+               |          
+                --0.79%--__hrtimer_run_queues
+                          |          
+                           --0.65%--tick_sched_timer
+                                     |          
+                                      --0.51%--tick_sched_do_timer
+                                                tick_do_update_jiffies64
+                                                update_wall_time
+                                                timekeeping_advance
+
+     0.87%     0.00%  [k] __sysvec_apic_timer_interrupt                                                              -      -            
+            |
+            ---hrtimer_interrupt
+               |          
+                --0.79%--__hrtimer_run_queues
+                          |          
+                           --0.65%--tick_sched_timer
+                                     |          
+                                      --0.51%--tick_sched_do_timer
+                                                tick_do_update_jiffies64
+                                                update_wall_time
+                                                timekeeping_advance
+
+     0.87%     0.00%  [k] hrtimer_interrupt                                                                          -      -            
+            |          
+             --0.79%--__hrtimer_run_queues
+                       |          
+                        --0.65%--tick_sched_timer
+                                  |          
+                                   --0.51%--tick_sched_do_timer
+                                             tick_do_update_jiffies64
+                                             update_wall_time
+                                             timekeeping_advance
+
+     0.79%     0.00%  [k] __hrtimer_run_queues                                                                       -      -            
+            |          
+             --0.65%--tick_sched_timer
+                       |          
+                        --0.51%--tick_sched_do_timer
+                                  tick_do_update_jiffies64
+                                  update_wall_time
+                                  timekeeping_advance
+
+     0.65%     0.00%  [k] tick_sched_timer                                                                           -      -            
+            |          
+             --0.51%--tick_sched_do_timer
+                       tick_do_update_jiffies64
+                       update_wall_time
+                       timekeeping_advance
+
+     0.51%     0.22%  [k] timekeeping_advance                                                                        -      -            
+     0.51%     0.00%  [k] tick_sched_do_timer                                                                        -      -            
+            |
+            ---tick_do_update_jiffies64
+               update_wall_time
+               timekeeping_advance
+
+     0.51%     0.00%  [k] tick_do_update_jiffies64                                                                   -      -            
+            |
+            ---update_wall_time
+               timekeeping_advance
+
+     0.51%     0.00%  [k] update_wall_time                                                                           -      -            
+            |
+            ---timekeeping_advance
+
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

@@ -1,0 +1,633 @@
+{
+  "run_id": "run_83679316",
+  "status": "done",
+  "target_cmd": [
+    "python",
+    "demo_lock.py"
+  ],
+  "target_pid": null,
+  "workload_label": "lock_contention_demo",
+  "observations": [
+    {
+      "id": "obs_c59517cb",
+      "source": "time",
+      "category": "cpu",
+      "metric": "user_time_sec",
+      "value": 1.8,
+      "unit": "seconds",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426313Z",
+      "labels": {
+        "action_id": "act_5e19ab54"
+      },
+      "raw_excerpt": "User time (seconds): 1.80\\nSystem time (seconds): 0.70\\nPercent of CPU this job got: 58%\\nMaximum resident set size (kbytes): 25000\\nMajor (requiring I/O) page faults: 0\\nVoluntary context switches: 900\\nInvoluntary context switches: 410\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_1d6ddbcf",
+      "source": "time",
+      "category": "cpu",
+      "metric": "system_time_sec",
+      "value": 0.7,
+      "unit": "seconds",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426313Z",
+      "labels": {
+        "action_id": "act_5e19ab54"
+      },
+      "raw_excerpt": "User time (seconds): 1.80\\nSystem time (seconds): 0.70\\nPercent of CPU this job got: 58%\\nMaximum resident set size (kbytes): 25000\\nMajor (requiring I/O) page faults: 0\\nVoluntary context switches: 900\\nInvoluntary context switches: 410\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_af3ff948",
+      "source": "time",
+      "category": "cpu",
+      "metric": "cpu_utilization_pct",
+      "value": 58,
+      "unit": "percent",
+      "normalized_value": 0.58,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426313Z",
+      "labels": {
+        "action_id": "act_5e19ab54"
+      },
+      "raw_excerpt": "User time (seconds): 1.80\\nSystem time (seconds): 0.70\\nPercent of CPU this job got: 58%\\nMaximum resident set size (kbytes): 25000\\nMajor (requiring I/O) page faults: 0\\nVoluntary context switches: 900\\nInvoluntary context switches: 410\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_5741dbda",
+      "source": "time",
+      "category": "memory",
+      "metric": "max_rss_kb",
+      "value": 25000,
+      "unit": "kb",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426313Z",
+      "labels": {
+        "action_id": "act_5e19ab54"
+      },
+      "raw_excerpt": "User time (seconds): 1.80\\nSystem time (seconds): 0.70\\nPercent of CPU this job got: 58%\\nMaximum resident set size (kbytes): 25000\\nMajor (requiring I/O) page faults: 0\\nVoluntary context switches: 900\\nInvoluntary context switches: 410\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_724e0e05",
+      "source": "time",
+      "category": "memory",
+      "metric": "major_faults",
+      "value": 0,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426313Z",
+      "labels": {
+        "action_id": "act_5e19ab54"
+      },
+      "raw_excerpt": "User time (seconds): 1.80\\nSystem time (seconds): 0.70\\nPercent of CPU this job got: 58%\\nMaximum resident set size (kbytes): 25000\\nMajor (requiring I/O) page faults: 0\\nVoluntary context switches: 900\\nInvoluntary context switches: 410\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_bd7d1c86",
+      "source": "time",
+      "category": "scheduler",
+      "metric": "voluntary_context_switches",
+      "value": 900,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426313Z",
+      "labels": {
+        "action_id": "act_5e19ab54"
+      },
+      "raw_excerpt": "User time (seconds): 1.80\\nSystem time (seconds): 0.70\\nPercent of CPU this job got: 58%\\nMaximum resident set size (kbytes): 25000\\nMajor (requiring I/O) page faults: 0\\nVoluntary context switches: 900\\nInvoluntary context switches: 410\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_3d5439e7",
+      "source": "time",
+      "category": "scheduler",
+      "metric": "involuntary_context_switches",
+      "value": 410,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426313Z",
+      "labels": {
+        "action_id": "act_5e19ab54"
+      },
+      "raw_excerpt": "User time (seconds): 1.80\\nSystem time (seconds): 0.70\\nPercent of CPU this job got: 58%\\nMaximum resident set size (kbytes): 25000\\nMajor (requiring I/O) page faults: 0\\nVoluntary context switches: 900\\nInvoluntary context switches: 410\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_a3f372b8",
+      "source": "perf_stat",
+      "category": "system",
+      "metric": "task_clock_ms",
+      "value": 900.0,
+      "unit": "ms",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426752Z",
+      "labels": {
+        "action_id": "act_5ac306d9"
+      },
+      "raw_excerpt": "900.00 task-clock\\n65.0% CPUs utilized\\n900,000,000 cycles\\n500,000,000 instructions\\n0.56 insn per cycle\\nlock_wait_pct=18.0\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_86827983",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cpu_utilization_pct",
+      "value": 65.0,
+      "unit": "percent",
+      "normalized_value": 0.65,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426752Z",
+      "labels": {
+        "action_id": "act_5ac306d9"
+      },
+      "raw_excerpt": "900.00 task-clock\\n65.0% CPUs utilized\\n900,000,000 cycles\\n500,000,000 instructions\\n0.56 insn per cycle\\nlock_wait_pct=18.0\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_0fc17334",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 900000000,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426752Z",
+      "labels": {
+        "action_id": "act_5ac306d9"
+      },
+      "raw_excerpt": "900.00 task-clock\\n65.0% CPUs utilized\\n900,000,000 cycles\\n500,000,000 instructions\\n0.56 insn per cycle\\nlock_wait_pct=18.0\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_34b058f8",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 500000000,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426752Z",
+      "labels": {
+        "action_id": "act_5ac306d9"
+      },
+      "raw_excerpt": "900.00 task-clock\\n65.0% CPUs utilized\\n900,000,000 cycles\\n500,000,000 instructions\\n0.56 insn per cycle\\nlock_wait_pct=18.0\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_99afbea1",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "ipc",
+      "value": 0.56,
+      "unit": null,
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426752Z",
+      "labels": {
+        "action_id": "act_5ac306d9"
+      },
+      "raw_excerpt": "900.00 task-clock\\n65.0% CPUs utilized\\n900,000,000 cycles\\n500,000,000 instructions\\n0.56 insn per cycle\\nlock_wait_pct=18.0\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_db079c4e",
+      "source": "perf_stat",
+      "category": "lock",
+      "metric": "lock_wait_pct",
+      "value": 18.0,
+      "unit": "percent",
+      "normalized_value": 0.18,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.426752Z",
+      "labels": {
+        "action_id": "act_5ac306d9"
+      },
+      "raw_excerpt": "900.00 task-clock\\n65.0% CPUs utilized\\n900,000,000 cycles\\n500,000,000 instructions\\n0.56 insn per cycle\\nlock_wait_pct=18.0\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_9ef2ebbc",
+      "source": "pidstat",
+      "category": "cpu",
+      "metric": "usr_pct",
+      "value": 40.0,
+      "unit": "percent",
+      "normalized_value": 0.4,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.427182Z",
+      "labels": {
+        "action_id": "act_56019589",
+        "command": "demo_lock\\n"
+      },
+      "raw_excerpt": "demo_lock\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_80f60e96",
+      "source": "pidstat",
+      "category": "cpu",
+      "metric": "system_pct",
+      "value": 15.0,
+      "unit": "percent",
+      "normalized_value": 0.15,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.427182Z",
+      "labels": {
+        "action_id": "act_56019589",
+        "command": "demo_lock\\n"
+      },
+      "raw_excerpt": "demo_lock\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_4b166003",
+      "source": "pidstat",
+      "category": "io",
+      "metric": "wait_pct",
+      "value": 20.0,
+      "unit": "percent",
+      "normalized_value": 0.2,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.427182Z",
+      "labels": {
+        "action_id": "act_56019589",
+        "command": "demo_lock\\n"
+      },
+      "raw_excerpt": "demo_lock\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_5264077d",
+      "source": "pidstat",
+      "category": "cpu",
+      "metric": "cpu_utilization_pct",
+      "value": 55.0,
+      "unit": "percent",
+      "normalized_value": 0.55,
+      "scope": "process",
+      "timestamp": "2026-03-31T13:51:51.427182Z",
+      "labels": {
+        "action_id": "act_56019589",
+        "command": "demo_lock\\n"
+      },
+      "raw_excerpt": "demo_lock\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_63cb41bc",
+      "source": "mpstat",
+      "category": "cpu",
+      "metric": "cpu_utilization_pct",
+      "value": "55.0\\niowait=5.0\\ncswch_per_sec=22000\\nrun_queue=9\\n",
+      "unit": "percent",
+      "normalized_value": null,
+      "scope": "system",
+      "timestamp": "2026-03-31T13:51:51.427340Z",
+      "labels": {
+        "action_id": "act_6824df4b",
+        "source": "mpstat"
+      },
+      "raw_excerpt": "avg_cpu=55.0\\niowait=5.0\\ncswch_per_sec=22000\\nrun_queue=9\\n",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "hyp_0c1c0eb2",
+      "kind": "unknown",
+      "summary": "The current evidence is insufficient to identify a bottleneck direction.",
+      "reasoning_basis": [
+        "Derived from observations: user_time_sec"
+      ],
+      "supporting_observation_ids": [
+        "obs_c59517cb"
+      ],
+      "contradicting_observation_ids": [],
+      "confidence": 0.32,
+      "needs_verification": true,
+      "suggested_actions": [
+        "Collect another baseline sample before drawing a stronger conclusion."
+      ]
+    }
+  ],
+  "actions_taken": [
+    {
+      "id": "act_5e19ab54",
+      "tool": "time",
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "python",
+        "demo_lock.py"
+      ],
+      "reason": "collect baseline process resource usage",
+      "expected_output": "verbose time summary",
+      "timeout_sec": 60,
+      "retryable": true,
+      "status": "done"
+    },
+    {
+      "id": "act_5ac306d9",
+      "tool": "perf_stat",
+      "command": [
+        "perf",
+        "stat",
+        "-d",
+        "--",
+        "python",
+        "demo_lock.py"
+      ],
+      "reason": "collect baseline hardware counters",
+      "expected_output": "perf stat summary",
+      "timeout_sec": 60,
+      "retryable": true,
+      "status": "done"
+    },
+    {
+      "id": "act_56019589",
+      "tool": "pidstat",
+      "command": [
+        "pidstat",
+        "-dur",
+        "-h",
+        "1",
+        "1"
+      ],
+      "reason": "collect process CPU and wait breakdown",
+      "expected_output": "pidstat process summary",
+      "timeout_sec": 60,
+      "retryable": true,
+      "status": "done"
+    },
+    {
+      "id": "act_6824df4b",
+      "tool": "mpstat",
+      "command": [
+        "mpstat",
+        "1",
+        "1"
+      ],
+      "reason": "add system CPU context for CPU-heavy workload",
+      "expected_output": "mpstat CPU summary",
+      "timeout_sec": 60,
+      "retryable": true,
+      "status": "done"
+    },
+    {
+      "id": "act_0d3d18a8",
+      "tool": "iostat",
+      "command": [
+        "iostat",
+        "-dx",
+        "1",
+        "1"
+      ],
+      "reason": "add disk-level context for possible I/O-heavy workload",
+      "expected_output": "iostat device summary",
+      "timeout_sec": 60,
+      "retryable": true,
+      "status": "done"
+    }
+  ],
+  "pending_actions": [],
+  "artifacts": {
+    "act_5e19ab54.meta": "runs/run_83679316/artifacts/act_5e19ab54.json",
+    "act_5e19ab54.stdout": "runs/run_83679316/artifacts/act_5e19ab54.stdout.txt",
+    "act_5ac306d9.meta": "runs/run_83679316/artifacts/act_5ac306d9.json",
+    "act_5ac306d9.stdout": "runs/run_83679316/artifacts/act_5ac306d9.stdout.txt",
+    "act_56019589.meta": "runs/run_83679316/artifacts/act_56019589.json",
+    "act_56019589.stdout": "runs/run_83679316/artifacts/act_56019589.stdout.txt",
+    "act_6824df4b.meta": "runs/run_83679316/artifacts/act_6824df4b.json",
+    "act_6824df4b.stdout": "runs/run_83679316/artifacts/act_6824df4b.stdout.txt",
+    "act_0d3d18a8.meta": "runs/run_83679316/artifacts/act_0d3d18a8.json",
+    "act_0d3d18a8.stdout": "runs/run_83679316/artifacts/act_0d3d18a8.stdout.txt",
+    "report.json": "runs/run_83679316/report.json",
+    "report.md": "runs/run_83679316/report.md"
+  },
+  "final_report": {
+    "executive_summary": "Primary suspected bottleneck: unknown (confidence=0.32).",
+    "detected_bottlenecks": [
+      "unknown"
+    ],
+    "supporting_evidence": [
+      "unknown: time.user_time_sec=1.8"
+    ],
+    "rejected_alternatives": [],
+    "confidence_overall": 0.32,
+    "recommended_next_steps": [
+      "Collect another baseline sample before drawing a stronger conclusion."
+    ],
+    "artifacts": [
+      "runs/run_83679316/artifacts/act_0d3d18a8.json",
+      "runs/run_83679316/artifacts/act_0d3d18a8.stdout.txt",
+      "runs/run_83679316/artifacts/act_56019589.json",
+      "runs/run_83679316/artifacts/act_56019589.stdout.txt",
+      "runs/run_83679316/artifacts/act_5ac306d9.json",
+      "runs/run_83679316/artifacts/act_5ac306d9.stdout.txt",
+      "runs/run_83679316/artifacts/act_5e19ab54.json",
+      "runs/run_83679316/artifacts/act_5e19ab54.stdout.txt",
+      "runs/run_83679316/artifacts/act_6824df4b.json",
+      "runs/run_83679316/artifacts/act_6824df4b.stdout.txt"
+    ]
+  },
+  "max_verification_rounds": 2,
+  "verification_rounds_done": 0,
+  "error_message": null,
+  "audit_log": [
+    {
+      "timestamp": "2026-03-31T13:51:51.293058Z",
+      "node": "orchestrator",
+      "message": "transitioned to planning",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.293230Z",
+      "node": "planner",
+      "message": "planned initial actions",
+      "details": {
+        "tools": [
+          "time",
+          "perf_stat",
+          "pidstat",
+          "mpstat",
+          "iostat"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.293483Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_5e19ab54",
+        "tool": "time",
+        "success": true,
+        "exit_code": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.293630Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_5ac306d9",
+        "tool": "perf_stat",
+        "success": true,
+        "exit_code": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.293690Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_56019589",
+        "tool": "pidstat",
+        "success": true,
+        "exit_code": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.293745Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_6824df4b",
+        "tool": "mpstat",
+        "success": true,
+        "exit_code": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.295489Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_0d3d18a8",
+        "tool": "iostat",
+        "success": true,
+        "exit_code": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.426650Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_5e19ab54",
+        "tool": "time",
+        "observation_count": 7
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.427094Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_5ac306d9",
+        "tool": "perf_stat",
+        "observation_count": 6
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.427272Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_56019589",
+        "tool": "pidstat",
+        "observation_count": 4
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.427412Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_6824df4b",
+        "tool": "mpstat",
+        "observation_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.427525Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_0d3d18a8",
+        "tool": "iostat",
+        "observation_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.442924Z",
+      "node": "analyzer",
+      "message": "generated hypotheses from rules and structured observations",
+      "details": {
+        "hypothesis_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.444429Z",
+      "node": "verifier",
+      "message": "current evidence is sufficient",
+      "details": {
+        "top_kind": "unknown"
+      }
+    },
+    {
+      "timestamp": "2026-03-31T13:51:51.445816Z",
+      "node": "reporter",
+      "message": "generated final report",
+      "details": {
+        "hypothesis_count": 1
+      }
+    }
+  ],
+  "parsed_action_ids": [
+    "act_5e19ab54",
+    "act_5ac306d9",
+    "act_56019589",
+    "act_6824df4b",
+    "act_0d3d18a8"
+  ],
+  "goal": "Diagnose a workload with lock contention and scheduling stalls.",
+  "mock_outputs": {
+    "time": "User time (seconds): 1.80\\nSystem time (seconds): 0.70\\nPercent of CPU this job got: 58%\\nMaximum resident set size (kbytes): 25000\\nMajor (requiring I/O) page faults: 0\\nVoluntary context switches: 900\\nInvoluntary context switches: 410\\n",
+    "perf_stat": "900.00 task-clock\\n65.0% CPUs utilized\\n900,000,000 cycles\\n500,000,000 instructions\\n0.56 insn per cycle\\nlock_wait_pct=18.0\\n",
+    "pidstat": "Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command\\nAverage:        0      1002   40.00   15.00    0.00   20.00   55.00     3  demo_lock\\n",
+    "mpstat": "avg_cpu=55.0\\niowait=5.0\\ncswch_per_sec=22000\\nrun_queue=9\\n",
+    "perf_record": "demo_lock;pthread_mutex_lock\\ndemo_lock;worker_spin\\n"
+  },
+  "cwd": null,
+  "env": {}
+}

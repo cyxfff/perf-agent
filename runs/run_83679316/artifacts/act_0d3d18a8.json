@@ -1,0 +1,13 @@
+{
+  "tool": "iostat",
+  "command": [
+    "iostat",
+    "-dx",
+    "1",
+    "1"
+  ],
+  "success": true,
+  "exit_code": 0,
+  "started_at": "2026-03-31T13:51:51.293747+00:00",
+  "finished_at": "2026-03-31T13:51:51.295364+00:00"
+}

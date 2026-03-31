@@ -1,0 +1,17 @@
+{
+  "action_id": "act_a11ce8dd",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-d",
+    "--",
+    "/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo",
+    "700",
+    "18000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.1917,
+  "error_message": null
+}

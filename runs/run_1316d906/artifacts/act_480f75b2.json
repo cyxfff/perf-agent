@@ -1,0 +1,16 @@
+{
+  "action_id": "act_480f75b2",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-d",
+    "--",
+    "python",
+    "demo_lock.py"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0,
+  "error_message": null
+}

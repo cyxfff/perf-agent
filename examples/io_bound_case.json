@@ -1,0 +1,12 @@
+{
+  "goal": "Diagnose a workload spending most time waiting for disk I/O.",
+  "target_cmd": ["python", "demo_io.py"],
+  "workload_label": "io_bound_demo",
+  "max_verification_rounds": 2,
+  "mock_outputs": {
+    "time": "User time (seconds): 0.90\\nSystem time (seconds): 0.25\\nPercent of CPU this job got: 32%\\nMaximum resident set size (kbytes): 30720\\nMajor (requiring I/O) page faults: 4\\nVoluntary context switches: 122\\nInvoluntary context switches: 18\\n",
+    "perf_stat": "800.00 task-clock\\n40.0% CPUs utilized\\n300,000,000 cycles\\n150,000,000 instructions\\n0.50 insn per cycle\\n",
+    "pidstat": "Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command\\nAverage:        0      1001   18.00    7.00    0.00   42.00   25.00     1  demo_io\\n",
+    "iostat": "disk_util=89.0\\nawait_ms=23.5\\nread_mb_s=120.0\\nwrite_mb_s=15.0\\n"
+  }
+}

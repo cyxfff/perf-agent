@@ -1,0 +1,40 @@
+/usr/bin/python: can't open file 'app.py': [Errno 2] No such file or directory
+
+ Performance counter stats for 'python app.py --input data.txt':
+
+             28.36 msec task-clock                       #    0.957 CPUs utilized             
+                72      context-switches                 #    2.538 K/sec                     
+                 9      cpu-migrations                   #  317.302 /sec                      
+              7317      page-faults                      #  257.966 K/sec                     
+         122454974      cpu_core/cycles/                 #    4.317 G/sec                     
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+         196173887      cpu_core/instructions/           #    6.916 G/sec                     
+     <not counted>      cpu_atom/instructions/                                                  (0.00%)
+          38780972      cpu_core/branches/               #    1.367 G/sec                     
+     <not counted>      cpu_atom/branches/                                                      (0.00%)
+            770603      cpu_core/branch-misses/          #   27.168 M/sec                     
+     <not counted>      cpu_atom/branch-misses/                                                 (0.00%)
+         730633740      cpu_core/slots/                  #   25.759 G/sec                     
+         208425228      cpu_core/topdown-retiring/       #     28.5% Retiring                 
+          88057166      cpu_core/topdown-bad-spec/       #     12.0% Bad Speculation          
+         248108473      cpu_core/topdown-fe-bound/       #     33.9% Frontend Bound           
+         186938359      cpu_core/topdown-be-bound/       #     25.6% Backend Bound            
+          30342333      cpu_core/topdown-heavy-ops/      #      4.1% Heavy Operations          #     24.3% Light Operations         
+          82366637      cpu_core/topdown-br-mispredict/  #     11.3% Branch Mispredict         #      0.8% Machine Clears           
+         153941079      cpu_core/topdown-fetch-lat/      #     21.0% Fetch Latency             #     12.9% Fetch Bandwidth          
+          79483604      cpu_core/topdown-mem-bound/      #     10.9% Memory Bound              #     14.7% Core Bound               
+          46986641      cpu_core/L1-dcache-loads/        #    1.657 G/sec                     
+     <not counted>      cpu_atom/L1-dcache-loads/                                               (0.00%)
+           1141734      cpu_core/L1-dcache-load-misses/  #   40.253 M/sec                     
+   <not supported>      cpu_atom/L1-dcache-load-misses/                                       
+            276528      cpu_core/LLC-loads/              #    9.749 M/sec                     
+     <not counted>      cpu_atom/LLC-loads/                                                     (0.00%)
+              5452      cpu_core/LLC-load-misses/        #  192.214 K/sec                     
+     <not counted>      cpu_atom/LLC-load-misses/                                               (0.00%)
+
+       0.029630598 seconds time elapsed
+
+       0.022538000 seconds user
+       0.007859000 seconds sys
+
+

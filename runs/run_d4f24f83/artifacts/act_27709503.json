@@ -1,0 +1,19 @@
+{
+  "action_id": "act_27709503",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "context-switches,cpu-migrations,page-faults,mem_inst_retired.lock_loads",
+    "--",
+    "examples/bin/multiprocess_fanout_demo",
+    "3",
+    "250",
+    "24000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0827,
+  "error_message": null
+}

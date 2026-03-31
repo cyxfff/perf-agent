@@ -1,0 +1,18 @@
+
+ Performance counter stats for 'examples/bin/multithread_cpu_demo 4 400 18000':
+
+       10504369062      cpu_core/SLOTS/                                                       
+   <not supported>      cpu_core/topdown-retiring/                                              (0.00%)
+   <not supported>      cpu_core/topdown-bad-spec/                                              (0.00%)
+   <not supported>      cpu_core/topdown-fe-bound/                                              (0.00%)
+   <not supported>      cpu_core/topdown-be-bound/                                              (0.00%)
+        1751854488      cpu_core/cycles/                                                      
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+        6719473577      cpu_core/Instructions/                                                  (99.83%)
+
+       0.086564924 seconds time elapsed
+
+       0.343620000 seconds user
+       0.000000000 seconds sys
+
+

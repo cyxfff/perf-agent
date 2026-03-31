@@ -1,0 +1,28 @@
+{
+  "executive_summary": "Primary suspected bottleneck: io_bound (confidence=0.85).",
+  "detected_bottlenecks": [
+    "io_bound"
+  ],
+  "supporting_evidence": [
+    "io_bound: time.cpu_utilization_pct=32",
+    "io_bound: perf_stat.cpu_utilization_pct=40.0",
+    "io_bound: pidstat.wait_pct=42.0",
+    "io_bound: pidstat.cpu_utilization_pct=25.0",
+    "io_bound: iostat.disk_util_pct=89.0\\nawait_ms=23.5\\nread_mb_s=120.0\\nwrite_mb_s=15.0\\n"
+  ],
+  "rejected_alternatives": [],
+  "confidence_overall": 0.85,
+  "recommended_next_steps": [
+    "Add iostat to validate disk latency and utilization."
+  ],
+  "artifacts": [
+    "runs/run_b8aaaf8d/artifacts/act_169fbb3d.json",
+    "runs/run_b8aaaf8d/artifacts/act_169fbb3d.stdout.txt",
+    "runs/run_b8aaaf8d/artifacts/act_bd81eeed.json",
+    "runs/run_b8aaaf8d/artifacts/act_bd81eeed.stdout.txt",
+    "runs/run_b8aaaf8d/artifacts/act_ca0725c5.json",
+    "runs/run_b8aaaf8d/artifacts/act_ca0725c5.stdout.txt",
+    "runs/run_b8aaaf8d/artifacts/act_f6922829.json",
+    "runs/run_b8aaaf8d/artifacts/act_f6922829.stdout.txt"
+  ]
+}

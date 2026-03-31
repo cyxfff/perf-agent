@@ -1,0 +1,40 @@
+{
+  "action_id": "act_750eba4c",
+  "tool": "perf_record",
+  "command": [
+    "perf",
+    "record",
+    "-o",
+    "/tmp/act_750eba4c_x52x8k71.perf.data",
+    "--call-graph",
+    "fp",
+    "--",
+    "examples/bin/multithread_cpu_demo",
+    "4",
+    "400",
+    "18000"
+  ],
+  "report_command": [
+    "perf",
+    "report",
+    "--stdio",
+    "--sort",
+    "symbol",
+    "--percent-limit",
+    "0.5",
+    "-i",
+    "/tmp/act_750eba4c_x52x8k71.perf.data"
+  ],
+  "script_command": [
+    "perf",
+    "script",
+    "-F",
+    "comm,pid,tid,time,ip,sym,dso",
+    "-i",
+    "/tmp/act_750eba4c_x52x8k71.perf.data"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 1.4823,
+  "error_message": null
+}

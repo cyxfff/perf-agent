@@ -1,0 +1,177 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 587  of event 'cpu_core/cycles/'
+# Event count (approx.): 765272972
+#
+# Children      Self  Symbol                              IPC   [IPC Coverage]
+# ........  ........  ..................................  ....................
+#
+    95.40%    11.12%  [.] main                            -      -            
+            |          
+            |--91.65%--main
+            |          |          
+            |          |--45.39%--__cos_fma
+            |          |          
+            |           --35.24%--__sin_fma
+            |          
+            |--2.16%--0x5575d6e7c1f0
+            |          
+             --1.59%--0x5575d6e7c350
+
+    48.05%    47.22%  [.] __cos_fma                       -      -            
+            |          
+            |--47.22%--main
+            |          |          
+            |           --45.39%--__cos_fma
+            |          
+             --0.83%--__cos_fma
+
+    39.87%    37.96%  [.] __sin_fma                       -      -            
+            |          
+            |--37.06%--main
+            |          |          
+            |           --35.24%--__sin_fma
+            |          
+             --2.80%--__sin_fma
+
+     2.16%     0.00%  [.] 0x00005575d6e7c1f0              -      -            
+     1.91%     1.91%  [.] 0x00000000000011f4              -      -            
+     1.59%     0.00%  [.] 0x00005575d6e7c350              -      -            
+     0.83%     0.83%  [.] 0x0000000000001354              -      -            
+     0.63%     0.63%  [.] check_match                     -      -            
+            |
+            ---_dl_init
+               call_init.part.0
+               0x7fc4a26b750c
+               std::ios_base_library_init
+               std::locale::locale
+               0x7fc4a26e9884
+               std::locale::_Impl::_Impl
+               _dl_runtime_resolve_xsavec
+               _dl_fixup
+               _dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] _dl_start_user                  -      -            
+            |
+            ---_dl_init
+               call_init.part.0
+               0x7fc4a26b750c
+               std::ios_base_library_init
+               std::locale::locale
+               0x7fc4a26e9884
+               std::locale::_Impl::_Impl
+               _dl_runtime_resolve_xsavec
+               _dl_fixup
+               _dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] _dl_init                        -      -            
+            |
+            ---call_init.part.0
+               0x7fc4a26b750c
+               std::ios_base_library_init
+               std::locale::locale
+               0x7fc4a26e9884
+               std::locale::_Impl::_Impl
+               _dl_runtime_resolve_xsavec
+               _dl_fixup
+               _dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] call_init.part.0                -      -            
+            |
+            ---0x7fc4a26b750c
+               std::ios_base_library_init
+               std::locale::locale
+               0x7fc4a26e9884
+               std::locale::_Impl::_Impl
+               _dl_runtime_resolve_xsavec
+               _dl_fixup
+               _dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] 0x00007fc4a26b750c              -      -            
+            |
+            ---std::ios_base_library_init
+               std::locale::locale
+               0x7fc4a26e9884
+               std::locale::_Impl::_Impl
+               _dl_runtime_resolve_xsavec
+               _dl_fixup
+               _dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] std::ios_base_library_init      -      -            
+            |
+            ---std::locale::locale
+               0x7fc4a26e9884
+               std::locale::_Impl::_Impl
+               _dl_runtime_resolve_xsavec
+               _dl_fixup
+               _dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] std::locale::locale             -      -            
+            |
+            ---0x7fc4a26e9884
+               std::locale::_Impl::_Impl
+               _dl_runtime_resolve_xsavec
+               _dl_fixup
+               _dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] 0x00007fc4a26e9884              -      -            
+            |
+            ---std::locale::_Impl::_Impl
+               _dl_runtime_resolve_xsavec
+               _dl_fixup
+               _dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] std::locale::_Impl::_Impl       -      -            
+            |
+            ---_dl_runtime_resolve_xsavec
+               _dl_fixup
+               _dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] _dl_runtime_resolve_xsavec      -      -            
+            |
+            ---_dl_fixup
+               _dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] _dl_fixup                       -      -            
+            |
+            ---_dl_lookup_symbol_x
+               do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] _dl_lookup_symbol_x             -      -            
+            |
+            ---do_lookup_x
+               check_match
+
+     0.63%     0.00%  [.] do_lookup_x                     -      -            
+            |
+            ---check_match
+
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

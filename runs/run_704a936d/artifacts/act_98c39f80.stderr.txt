@@ -1,0 +1,2 @@
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.070 MB /tmp/act_98c39f80_4qm9u2za.perf.data (587 samples) ]

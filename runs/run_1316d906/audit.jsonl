@@ -1,0 +1,22 @@
+{"timestamp": "2026-03-31T14:05:58.162064Z", "node": "orchestrator", "message": "transitioned to planning", "details": {}}
+{"timestamp": "2026-03-31T14:05:58.162357Z", "node": "planner", "message": "planned initial actions", "details": {"tools": ["time", "perf_stat", "pidstat", "mpstat", "iostat"]}}
+{"timestamp": "2026-03-31T14:05:58.162748Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_eca04929", "tool": "time", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T14:05:58.162814Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_480f75b2", "tool": "perf_stat", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T14:05:58.162870Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_826e4a17", "tool": "pidstat", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T14:05:58.162930Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_a0f3b7ba", "tool": "mpstat", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T14:05:58.164602Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_490bc051", "tool": "iostat", "success": true, "exit_code": 0, "duration_sec": 0.0016}}
+{"timestamp": "2026-03-31T14:05:58.165449Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_eca04929", "tool": "time", "observation_count": 7}}
+{"timestamp": "2026-03-31T14:05:58.165538Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_480f75b2", "tool": "perf_stat", "observation_count": 6}}
+{"timestamp": "2026-03-31T14:05:58.165578Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_826e4a17", "tool": "pidstat", "observation_count": 4}}
+{"timestamp": "2026-03-31T14:05:58.165621Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_a0f3b7ba", "tool": "mpstat", "observation_count": 4}}
+{"timestamp": "2026-03-31T14:05:58.165648Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_490bc051", "tool": "iostat", "observation_count": 0}}
+{"timestamp": "2026-03-31T14:05:58.167481Z", "node": "analyzer", "message": "generated hypotheses from rules and structured observations", "details": {"hypothesis_count": 2}}
+{"timestamp": "2026-03-31T14:05:58.168268Z", "node": "verifier", "message": "scheduled follow-up verification action", "details": {"tool": "perf_record", "evidence_gaps": ["Evidence is incomplete for hypothesis lock_contention."]}}
+{"timestamp": "2026-03-31T14:05:58.168989Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_e32b8d81", "tool": "perf_record", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T14:05:58.169639Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_e32b8d81", "tool": "perf_record", "observation_count": 1}}
+{"timestamp": "2026-03-31T14:05:58.171256Z", "node": "analyzer", "message": "generated hypotheses from rules and structured observations", "details": {"hypothesis_count": 2}}
+{"timestamp": "2026-03-31T14:05:58.172077Z", "node": "verifier", "message": "scheduled follow-up verification action", "details": {"tool": "perf_record", "evidence_gaps": ["Evidence is incomplete for hypothesis lock_contention."]}}
+{"timestamp": "2026-03-31T14:05:58.172797Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_83da41e7", "tool": "perf_record", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T14:05:58.173539Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_83da41e7", "tool": "perf_record", "observation_count": 1}}
+{"timestamp": "2026-03-31T14:05:58.175157Z", "node": "analyzer", "message": "generated hypotheses from rules and structured observations", "details": {"hypothesis_count": 2}}
+{"timestamp": "2026-03-31T14:05:58.176008Z", "node": "reporter", "message": "generated final report", "details": {"hypothesis_count": 2}}

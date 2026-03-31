@@ -1,0 +1,64 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 827  of event 'cpu_core/cycles/'
+# Event count (approx.): 1105695209
+#
+# Children      Self  Symbol                               IPC   [IPC Coverage]
+# ........  ........  ...................................  ....................
+#
+    92.40%    12.04%  [.] main                             -      -            
+            |          
+            |--87.50%--main
+            |          |          
+            |          |--41.63%--__cos_fma
+            |          |          
+            |           --34.76%--__sin_fma
+            |          
+            |--2.31%--0x55ecc8ef6480
+            |          
+            |--1.79%--0x55ecc8ef6290
+            |          
+             --0.81%--0x55ecc8ef6320
+
+    43.94%    42.89%  [.] __cos_fma                        -      -            
+            |          
+            |--42.89%--main
+            |          |          
+            |           --41.63%--__cos_fma
+            |          
+             --1.05%--__cos_fma
+
+    38.51%    37.94%  [.] __sin_fma                        -      -            
+            |          
+            |--36.50%--main
+            |          |          
+            |           --34.76%--__sin_fma
+            |          
+             --2.02%--__sin_fma
+
+     3.63%     2.48%  [.] __sqrt                           -      -            
+            |          
+            |--2.53%--__sqrt
+            |          
+             --1.10%--__sqrt_finite@GLIBC_2.15
+
+     2.31%     0.00%  [.] 0x000055ecc8ef6480               -      -            
+     1.95%     0.85%  [.] __sqrt_finite@GLIBC_2.15         -      -            
+            |          
+            |--1.10%--__sqrt_finite@GLIBC_2.15
+            |          
+             --0.85%--main
+
+     1.79%     0.00%  [.] 0x000055ecc8ef6290               -      -            
+     1.15%     1.15%  [.] 0x0000000000002324               -      -            
+     1.05%     1.05%  [.] 0x0000000000002484               -      -            
+     0.81%     0.00%  [.] 0x000055ecc8ef6320               -      -            
+     0.57%     0.57%  [.] 0x0000000000002294               -      -            
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

@@ -1,0 +1,1 @@
+Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command\nAverage:        0      1002   40.00   15.00    0.00   20.00   55.00     3  demo_lock\n

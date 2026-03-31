@@ -1,0 +1,25 @@
+[
+  {
+    "id": "hyp_3402cec6",
+    "kind": "cpu_bound",
+    "summary": "High active CPU utilization suggests a CPU-bound workload.",
+    "reasoning_basis": [
+      "Derived from observations: cpu_utilization_pct, cpu_utilization_pct, ipc, usr_pct, system_pct, cpu_utilization_pct, cpu_utilization_pct"
+    ],
+    "supporting_observation_ids": [
+      "obs_91eaa292",
+      "obs_4283c4d4",
+      "obs_6cc835c6",
+      "obs_eefb216a",
+      "obs_85af96cf",
+      "obs_513f341e",
+      "obs_3ecd00ec"
+    ],
+    "contradicting_observation_ids": [],
+    "confidence": 0.95,
+    "needs_verification": false,
+    "suggested_actions": [
+      "Run perf record -g to locate the hottest functions."
+    ]
+  }
+]

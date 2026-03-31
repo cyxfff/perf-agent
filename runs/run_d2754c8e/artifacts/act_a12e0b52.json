@@ -1,0 +1,13 @@
+{
+  "action_id": "act_a12e0b52",
+  "tool": "mpstat",
+  "command": [
+    "mpstat",
+    "1",
+    "1"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 1.0043,
+  "error_message": null
+}

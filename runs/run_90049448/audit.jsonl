@@ -1,0 +1,19 @@
+{"timestamp": "2026-03-31T13:52:28.158194Z", "node": "orchestrator", "message": "transitioned to planning", "details": {}}
+{"timestamp": "2026-03-31T13:52:28.158360Z", "node": "planner", "message": "planned initial actions", "details": {"tools": ["time", "perf_stat", "pidstat", "mpstat", "iostat"]}}
+{"timestamp": "2026-03-31T13:52:28.158609Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_8d82835b", "tool": "time", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:52:28.158771Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_a19506d0", "tool": "perf_stat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:52:28.158838Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_efa84ef1", "tool": "pidstat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:52:28.158896Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_cd9ee73b", "tool": "mpstat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:52:28.160532Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_08ed642e", "tool": "iostat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:52:28.170269Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_8d82835b", "tool": "time", "observation_count": 7}}
+{"timestamp": "2026-03-31T13:52:28.170359Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_a19506d0", "tool": "perf_stat", "observation_count": 6}}
+{"timestamp": "2026-03-31T13:52:28.170402Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_efa84ef1", "tool": "pidstat", "observation_count": 4}}
+{"timestamp": "2026-03-31T13:52:28.170446Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_cd9ee73b", "tool": "mpstat", "observation_count": 4}}
+{"timestamp": "2026-03-31T13:52:28.170476Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_08ed642e", "tool": "iostat", "observation_count": 0}}
+{"timestamp": "2026-03-31T13:52:28.170893Z", "node": "analyzer", "message": "generated hypotheses from rules and structured observations", "details": {"hypothesis_count": 2}}
+{"timestamp": "2026-03-31T13:52:28.171227Z", "node": "verifier", "message": "scheduled follow-up verification action", "details": {"tool": "perf_record", "kind": "scheduler_issue"}}
+{"timestamp": "2026-03-31T13:52:28.171663Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_3e7bb3af", "tool": "perf_record", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:52:28.172012Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_3e7bb3af", "tool": "perf_record", "observation_count": 1}}
+{"timestamp": "2026-03-31T13:52:28.172373Z", "node": "analyzer", "message": "generated hypotheses from rules and structured observations", "details": {"hypothesis_count": 2}}
+{"timestamp": "2026-03-31T13:52:28.172711Z", "node": "verifier", "message": "follow-up action already executed or pending", "details": {"tool": "perf_record"}}
+{"timestamp": "2026-03-31T13:52:28.173067Z", "node": "reporter", "message": "generated final report", "details": {"hypothesis_count": 2}}

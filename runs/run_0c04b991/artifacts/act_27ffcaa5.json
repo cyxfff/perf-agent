@@ -1,0 +1,18 @@
+{
+  "action_id": "act_27ffcaa5",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "cycles,Instructions,task-clock,cpu-clock,SLOTS",
+    "--",
+    "examples/bin/cpu_bound_demo",
+    "700",
+    "18000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.1615,
+  "error_message": null
+}

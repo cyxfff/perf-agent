@@ -1,0 +1,18 @@
+{
+  "action_id": "act_00d8e808",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-d",
+    "--",
+    "python",
+    "app.py",
+    "--input",
+    "data.txt"
+  ],
+  "exit_code": 2,
+  "success": false,
+  "duration_sec": 0.0713,
+  "error_message": null
+}

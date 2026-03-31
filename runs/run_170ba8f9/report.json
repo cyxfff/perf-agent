@@ -1,0 +1,24 @@
+{
+  "summary": "The strongest current signal points to a cpu bottleneck with confidence 0.84.",
+  "findings": [
+    {
+      "phenomenon": "The workload is likely CPU bound with high active CPU utilization.",
+      "evidence": [
+        "perf_stat: CPU utilization 98.7%, IPC 0.5, cache misses 12500",
+        "pidstat: demo_cpu\\n used 94.0% user CPU, 4.0% system CPU, and waited 1.0%.",
+        "mpstat: mpstat reported avg_cpu=98.0\\niowait=1.0\\ncswch_per_sec=1500\\n"
+      ],
+      "inference": "The strongest current signal points to a cpu bottleneck with confidence 0.84.",
+      "recommendation": "Collect call stacks with perf record to find the hottest functions.",
+      "supporting_observation_ids": [
+        "obs_b4e9d7f1",
+        "obs_1fb24a59",
+        "obs_48258164"
+      ]
+    }
+  ],
+  "next_actions": [
+    "Collect call stacks with perf record to find the hottest functions."
+  ],
+  "markdown": "# Performance Analysis Report\n\nSummary: The strongest current signal points to a cpu bottleneck with confidence 0.84.\n\n## Finding 1\n- Phenomenon: The workload is likely CPU bound with high active CPU utilization.\n- Evidence: perf_stat: CPU utilization 98.7%, IPC 0.5, cache misses 12500; pidstat: demo_cpu\\n used 94.0% user CPU, 4.0% system CPU, and waited 1.0%.; mpstat: mpstat reported avg_cpu=98.0\\niowait=1.0\\ncswch_per_sec=1500\\n\n- Inference: The strongest current signal points to a cpu bottleneck with confidence 0.84.\n- Recommendation: Collect call stacks with perf record to find the hottest functions.\n"
+}

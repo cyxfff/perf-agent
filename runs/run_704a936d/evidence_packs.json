@@ -1,0 +1,75 @@
+[
+  {
+    "round_index": 1,
+    "summary": "\u7b2c 1 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a cpu_bound\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 0 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 0 \u4e2a\u3002",
+    "top_observation_ids": [
+      "obs_244fa175",
+      "obs_325ecd7c",
+      "obs_58cb2042",
+      "obs_b1155976",
+      "obs_9a881548",
+      "obs_67bbf2e7",
+      "obs_4135abfb",
+      "obs_10e34b8d",
+      "obs_55573bdf",
+      "obs_81c6f69e"
+    ],
+    "highlighted_metrics": [
+      "voluntary_context_switches",
+      "cache_misses",
+      "context_switches",
+      "cpu_utilization_pct",
+      "involuntary_context_switches",
+      "cache_references",
+      "cpu_migrations",
+      "user_time_sec",
+      "system_time_sec",
+      "max_rss_kb"
+    ],
+    "hotspot_symbols": [],
+    "timeline_metrics": [],
+    "unresolved_questions": [
+      "\u662f\u5426\u9700\u8981\u8fdb\u4e00\u6b65\u533a\u5206 cpu_bound \u4e0e\u5176\u4ed6\u5019\u9009\u74f6\u9888\u3002",
+      "\u5f53\u524d\u8fd8\u7f3a\u5c11\u65f6\u95f4\u5e8f\u5217\u8bc1\u636e\uff0c\u5c1a\u4e0d\u80fd\u5224\u65ad\u74f6\u9888\u662f\u5426\u9636\u6bb5\u6027\u51fa\u73b0\u3002",
+      "\u5f53\u524d\u8fd8\u7f3a\u5c11\u70ed\u70b9\u51fd\u6570\u7ea7\u8bc1\u636e\uff0c\u5c1a\u4e0d\u80fd\u7a33\u5b9a\u6620\u5c04\u5230\u8c03\u7528\u8def\u5f84\u3002"
+    ]
+  },
+  {
+    "round_index": 2,
+    "summary": "\u7b2c 2 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a cpu_bound\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 3 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 5 \u4e2a\u3002",
+    "top_observation_ids": [
+      "obs_a05bb412",
+      "obs_b5d1cd98",
+      "obs_ae17d3a3",
+      "obs_b7020da5",
+      "obs_244fa175",
+      "obs_325ecd7c",
+      "obs_58cb2042",
+      "obs_ed20757c",
+      "obs_edbe75d1",
+      "obs_de8dba90"
+    ],
+    "highlighted_metrics": [
+      "cache_misses",
+      "context_switches",
+      "voluntary_context_switches",
+      "callgraph_samples",
+      "hot_symbol_pct"
+    ],
+    "hotspot_symbols": [
+      "main",
+      "__cos_fma",
+      "__sin_fma"
+    ],
+    "timeline_metrics": [
+      "cache_misses",
+      "context_switches",
+      "cycles",
+      "instructions",
+      "ipc"
+    ],
+    "unresolved_questions": [
+      "\u662f\u5426\u9700\u8981\u8fdb\u4e00\u6b65\u533a\u5206 cpu_bound \u4e0e\u5176\u4ed6\u5019\u9009\u74f6\u9888\u3002"
+    ]
+  }
+]

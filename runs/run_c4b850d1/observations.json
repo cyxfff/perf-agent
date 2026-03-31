@@ -1,0 +1,121 @@
+[
+  {
+    "id": "obs_44945a1a",
+    "source": "time",
+    "category": "cpu",
+    "metric": "user_time_sec",
+    "value": 0.01,
+    "unit": "seconds",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T14:04:08.604558Z",
+    "labels": {
+      "action_id": "act_0920b44f"
+    },
+    "raw_excerpt": "User time (seconds): 0.01",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_4f6a2fa4",
+    "source": "time",
+    "category": "cpu",
+    "metric": "system_time_sec",
+    "value": 0.0,
+    "unit": "seconds",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T14:04:08.604558Z",
+    "labels": {
+      "action_id": "act_0920b44f"
+    },
+    "raw_excerpt": "System time (seconds): 0.00",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_23883734",
+    "source": "time",
+    "category": "cpu",
+    "metric": "cpu_utilization_pct",
+    "value": 95,
+    "unit": "percent",
+    "normalized_value": 0.95,
+    "scope": "process",
+    "timestamp": "2026-03-31T14:04:08.604558Z",
+    "labels": {
+      "action_id": "act_0920b44f"
+    },
+    "raw_excerpt": "Percent of CPU this job got: 95%",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_57b58323",
+    "source": "time",
+    "category": "memory",
+    "metric": "max_rss_kb",
+    "value": 6400,
+    "unit": "kb",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T14:04:08.604558Z",
+    "labels": {
+      "action_id": "act_0920b44f"
+    },
+    "raw_excerpt": "Maximum resident set size (kbytes): 6400",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_b23ec7d3",
+    "source": "time",
+    "category": "memory",
+    "metric": "major_faults",
+    "value": 1,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T14:04:08.604558Z",
+    "labels": {
+      "action_id": "act_0920b44f"
+    },
+    "raw_excerpt": "Major (requiring I/O) page faults: 1",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_7b8f426d",
+    "source": "time",
+    "category": "scheduler",
+    "metric": "voluntary_context_switches",
+    "value": 103,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T14:04:08.604558Z",
+    "labels": {
+      "action_id": "act_0920b44f"
+    },
+    "raw_excerpt": "Voluntary context switches: 103",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_85f3dff7",
+    "source": "time",
+    "category": "scheduler",
+    "metric": "involuntary_context_switches",
+    "value": 2,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T14:04:08.604558Z",
+    "labels": {
+      "action_id": "act_0920b44f"
+    },
+    "raw_excerpt": "Involuntary context switches: 2",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  }
+]

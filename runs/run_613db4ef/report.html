@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>性能分析报告</title>
+  <style>
+    :root {
+      --panel: #fffdf8;
+      --ink: #1f2937;
+      --muted: #5b6470;
+      --accent: #c55b3c;
+      --line: #e8ddce;
+    }
+    body {
+      margin: 0;
+      font-family: Georgia, "Iowan Old Style", serif;
+      color: var(--ink);
+      background: radial-gradient(circle at top right, #f9e7db, transparent 28%), linear-gradient(180deg, #f7f1e7 0%, #efe7db 100%);
+    }
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+    .hero {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(71, 48, 29, 0.08);
+    }
+    h1, h2, h3 { margin: 0 0 12px; }
+    p, li, td, th { line-height: 1.55; }
+    ul { margin: 0; padding-left: 20px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(71, 48, 29, 0.06);
+    }
+    .bar {
+      height: 10px;
+      background: #efe5d9;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0 14px;
+    }
+    .bar span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #e38e62);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: var(--panel);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+    th {
+      background: #fbf5ed;
+      color: var(--muted);
+    }
+    .section { margin-top: 24px; }
+    .muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <p class="muted">自动化实验设计型性能分析</p>
+      <h1>当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.76。</h1>
+      <div class="grid">
+        <div class="card">
+          <h3>分析目标</h3>
+          <p>/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo 700 18000</p>
+          <p class="muted">可执行文件: /home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo</p>
+        </div>
+        <div class="card">
+          <h3>最高置信度</h3>
+          <div class="bar"><span style="width:76%"></span></div>
+          <p>0.76</p>
+        </div>
+        <div class="card">
+          <h3>源码上下文</h3>
+          <p><strong>源码目录:</strong> /home/tchen/agent/perf_agent/examples/cpp</p><p><strong>已索引源码文件:</strong> 2</p><p><strong>语言:</strong> cpp</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>运行环境</h2>
+      <div class="card">
+        <ul>
+          <li>架构: x86_64</li>
+<li>内核: 6.2.0-37-generic</li>
+<li>CPU: 13th Gen Intel(R) Core(TM) i5-13600K</li>
+<li>逻辑核数: 20</li>
+<li>perf: 可用 perf version 6.2.16</li>
+<li>可用事件数: 15</li>
+<li>调用栈模式: fp, dwarf, lbr</li>
+<li>perf_event_paranoid: -1</li>
+<li>检测到 topdown 相关事件，可在后续实验中优先尝试。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>实验设计与执行</h2>
+      <div class="card">
+        <ul>
+          <li>第 1 轮 [baseline] /usr/bin/time / 运行时基线: 用 /usr/bin/time -v 建立程序运行基线。</li>
+<li>第 1 轮 [baseline] perf stat / 指令效率: 判断 cycles、instructions 和 IPC 的健康度。当前使用首选事件组合。 事件为 cycles, instructions, task-clock, cpu-clock。</li>
+<li>第 1 轮 [baseline] perf stat / 缓存与内存压力: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 cache-references, cache-misses。，已退化到当前机器可用方案</li>
+<li>第 1 轮 [baseline] perf stat / 调度上下文: 判断调度切换、迁移与系统级 CPU 上下文。当前使用首选事件组合。 事件为 context-switches, cpu-migrations, page-faults。</li>
+<li>第 1 轮 [baseline] pidstat / 调度上下文: 补充进程级 CPU 与等待拆分。</li>
+<li>第 1 轮 [baseline] mpstat / 调度上下文: 补充系统级 CPU 与调度上下文。</li>
+<li>第 2 轮 [verification] perf record / 热点函数调用链: 使用 perf record 采样热点函数和调用链，调用栈模式为 fp。</li>
+<li>第 2 轮 [verification] perf stat / 时间序列行为: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>证据摘要</h2>
+      <div class="card">
+        <ul>
+          <li>第 2 轮后，当前最强规则候选为 cpu_bound。 重点 observation 数量 10，热点符号 5 个，时间序列指标 5 个。</li>
+<li>重点指标: cache_misses, context_switches, cache_misses, context_switches, voluntary_context_switches, cache_misses, context_switches, callgraph_samples</li>
+<li>热点符号: main                                      -      -, __cos_fma                                 -      -, __sin_fma                                 -      -, 0x0000555c3d43b350                        -      -, 0x00000000000011f4                        -      -</li>
+<li>时间序列指标: cache_misses, context_switches, cycles, instructions, ipc</li>
+<li>是否需要进一步区分 cpu_bound 与其他候选瓶颈。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>证据图表</h2>
+      <div class="grid">
+        <div class='card'><h3>候选瓶颈置信度对比</h3><p class='muted'>所有报告都应先展示当前最主要的瓶颈候选及其相对置信度。</p><div style='margin:10px 0'><div style='font-size:13px'>CPU 瓶颈 0.76</div><div class='bar'><span style='width:76%'></span></div></div></div>
+<div class='card'><h3>ipc 时间序列</h3><p class='muted'>存在时间序列观测时，应直接展示关键指标随时间的变化趋势。</p><svg viewBox='0 0 320 160' width='100%' height='160' role='img' aria-label='ipc'><line x1='20' y1='140' x2='300' y2='140' stroke='#cab9a2' stroke-width='1' /><line x1='20' y1='20' x2='20' y2='140' stroke='#cab9a2' stroke-width='1' /><path d='M 20.0,140.0 L 300.0,40.0' fill='none' stroke='#c55b3c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' /><text x='20' y='155' font-size='11' fill='#5b6470'>0.10s</text><text x='250' y='155' font-size='11' fill='#5b6470'>0.15s</text><text x='24' y='18' font-size='11' fill='#5b6470'>3.86</text><text x='24' y='138' font-size='11' fill='#5b6470'>3.85</text></svg></div>
+<div class='card'><h3>cache_misses 时间序列</h3><p class='muted'>存在时间序列观测时，应直接展示关键指标随时间的变化趋势。</p><svg viewBox='0 0 320 160' width='100%' height='160' role='img' aria-label='cache_misses'><line x1='20' y1='140' x2='300' y2='140' stroke='#cab9a2' stroke-width='1' /><line x1='20' y1='20' x2='20' y2='140' stroke='#cab9a2' stroke-width='1' /><path d='M 20.0,40.0 L 300.0,140.0' fill='none' stroke='#c55b3c' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' /><text x='20' y='155' font-size='11' fill='#5b6470'>0.10s</text><text x='250' y='155' font-size='11' fill='#5b6470'>0.15s</text><text x='24' y='18' font-size='11' fill='#5b6470'>23973.00</text><text x='24' y='138' font-size='11' fill='#5b6470'>4074.00</text></svg></div>
+<div class='card'><h3>热点函数占比</h3><p class='muted'>已经拿到热点函数样本后，应展示最热函数分布，帮助验证热点是否集中。</p><div style='margin:10px 0'><div style='font-size:13px'>main                                      -      94.09%</div><div class='bar'><span style='width:94%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px'>__cos_fma                                 -      45.59%</div><div class='bar'><span style='width:45%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px'>__sin_fma                                 -      40.33%</div><div class='bar'><span style='width:40%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px'>0x0000555c3d43b350                        -      1.99%</div><div class='bar'><span style='width:8%'></span></div></div><div style='margin:10px 0'><div style='font-size:13px'>0x00000000000011f4                        -      1.89%</div><div class='bar'><span style='width:8%'></span></div></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>候选瓶颈</h2>
+      <div class="grid">
+        <div class='card hypothesis'><h3>CPU 瓶颈</h3><div class='bar'><span style='width:76%'></span></div><p>活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。</p><p><strong>置信度:</strong> 0.76</p><p><strong>支持证据:</strong> obs_eb576d5b, obs_727801e3, obs_5a1a9084</p><p><strong>验证状态:</strong> 需要继续验证</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>关键观测</h2>
+      <table>
+        <thead>
+          <tr><th>ID</th><th>来源</th><th>指标</th><th>值</th><th>类别</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>obs_b0ba073c</td><td>mpstat</td><td>01</td><td>15:42     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle</td><td>system</td></tr>
+<tr><td>obs_0a0dba1b</td><td>mpstat</td><td>01</td><td>15:43     all    0.65    0.00    0.35    1.70    0.00    0.00    0.00    0.00    0.00   97.30</td><td>system</td></tr>
+<tr><td>obs_097cc33a</td><td>mpstat</td><td>average</td><td>all    0.65    0.00    0.35    1.70    0.00    0.00    0.00    0.00    0.00   97.30</td><td>system</td></tr>
+<tr><td>obs_a0d8be95</td><td>perf_record</td><td>callgraph_samples</td><td>119</td><td>callgraph</td></tr>
+<tr><td>obs_05b5ec90</td><td>perf_record</td><td>hot_symbol_pct</td><td>94.09</td><td>callgraph</td></tr>
+<tr><td>obs_fb4a657a</td><td>perf_record</td><td>hot_symbol_pct</td><td>45.59</td><td>callgraph</td></tr>
+<tr><td>obs_b0d4e35a</td><td>perf_record</td><td>hot_symbol_pct</td><td>40.33</td><td>callgraph</td></tr>
+<tr><td>obs_a60076ad</td><td>perf_record</td><td>hot_symbol_pct</td><td>1.99</td><td>callgraph</td></tr>
+<tr><td>obs_0cdf33d8</td><td>perf_record</td><td>hot_symbol_pct</td><td>1.89</td><td>callgraph</td></tr>
+<tr><td>obs_6681d225</td><td>perf_stat</td><td>cache_misses</td><td>18004</td><td>cache</td></tr>
+<tr><td>obs_d4f41e67</td><td>perf_stat</td><td>cache_misses</td><td>23973</td><td>cache</td></tr>
+<tr><td>obs_31bc586e</td><td>perf_stat</td><td>cache_misses</td><td>4074</td><td>cache</td></tr>
+<tr><td>obs_ee2772d2</td><td>perf_stat</td><td>cache_references</td><td>51369</td><td>cache</td></tr>
+<tr><td>obs_9c1acc05</td><td>perf_stat</td><td>context_switches</td><td>1</td><td>scheduler</td></tr>
+<tr><td>obs_c1fabe6d</td><td>perf_stat</td><td>context_switches</td><td>5</td><td>scheduler</td></tr>
+<tr><td>obs_71b3533e</td><td>perf_stat</td><td>context_switches</td><td>0</td><td>scheduler</td></tr>
+<tr><td>obs_04793295</td><td>perf_stat</td><td>cpu_migrations</td><td>0</td><td>scheduler</td></tr>
+<tr><td>obs_a6313c5a</td><td>perf_stat</td><td>cycles</td><td>763054676</td><td>cpu</td></tr>
+<tr><td>obs_133b2ab9</td><td>perf_stat</td><td>cycles</td><td>499115196</td><td>cpu</td></tr>
+<tr><td>obs_43a56242</td><td>perf_stat</td><td>cycles</td><td>264497631</td><td>cpu</td></tr>
+<tr><td>obs_a6f08cbf</td><td>perf_stat</td><td>instructions</td><td>2941673320</td><td>cpu</td></tr>
+<tr><td>obs_efe1520d</td><td>perf_stat</td><td>instructions</td><td>1921333985</td><td>cpu</td></tr>
+<tr><td>obs_955f2da2</td><td>perf_stat</td><td>instructions</td><td>1020410904</td><td>cpu</td></tr>
+<tr><td>obs_727801e3</td><td>perf_stat</td><td>ipc</td><td>3.8495</td><td>cpu</td></tr>
+<tr><td>obs_5a1a9084</td><td>perf_stat</td><td>ipc</td><td>3.8579</td><td>cpu</td></tr>
+<tr><td>obs_34c4534e</td><td>perf_stat</td><td>page_faults</td><td>170</td><td>memory</td></tr>
+<tr><td>obs_eb576d5b</td><td>time</td><td>cpu_utilization_pct</td><td>100</td><td>cpu</td></tr>
+<tr><td>obs_6e8ee80d</td><td>time</td><td>involuntary_context_switches</td><td>2</td><td>scheduler</td></tr>
+<tr><td>obs_690242c9</td><td>time</td><td>major_faults</td><td>0</td><td>memory</td></tr>
+<tr><td>obs_11123123</td><td>time</td><td>max_rss_kb</td><td>4320</td><td>memory</td></tr>
+<tr><td>obs_68d68dc3</td><td>time</td><td>system_time_sec</td><td>0.0</td><td>cpu</td></tr>
+<tr><td>obs_f68cc089</td><td>time</td><td>user_time_sec</td><td>0.14</td><td>cpu</td></tr>
+<tr><td>obs_84ead917</td><td>time</td><td>voluntary_context_switches</td><td>1</td><td>scheduler</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{"timestamp": "2026-03-31T13:51:51.293058Z", "node": "orchestrator", "message": "transitioned to planning", "details": {}}
+{"timestamp": "2026-03-31T13:51:51.293230Z", "node": "planner", "message": "planned initial actions", "details": {"tools": ["time", "perf_stat", "pidstat", "mpstat", "iostat"]}}
+{"timestamp": "2026-03-31T13:51:51.293483Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_5e19ab54", "tool": "time", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:51:51.293630Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_5ac306d9", "tool": "perf_stat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:51:51.293690Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_56019589", "tool": "pidstat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:51:51.293745Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_6824df4b", "tool": "mpstat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:51:51.295489Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_0d3d18a8", "tool": "iostat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:51:51.426650Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_5e19ab54", "tool": "time", "observation_count": 7}}
+{"timestamp": "2026-03-31T13:51:51.427094Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_5ac306d9", "tool": "perf_stat", "observation_count": 6}}
+{"timestamp": "2026-03-31T13:51:51.427272Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_56019589", "tool": "pidstat", "observation_count": 4}}
+{"timestamp": "2026-03-31T13:51:51.427412Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_6824df4b", "tool": "mpstat", "observation_count": 1}}
+{"timestamp": "2026-03-31T13:51:51.427525Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_0d3d18a8", "tool": "iostat", "observation_count": 0}}
+{"timestamp": "2026-03-31T13:51:51.442924Z", "node": "analyzer", "message": "generated hypotheses from rules and structured observations", "details": {"hypothesis_count": 1}}
+{"timestamp": "2026-03-31T13:51:51.444429Z", "node": "verifier", "message": "current evidence is sufficient", "details": {"top_kind": "unknown"}}
+{"timestamp": "2026-03-31T13:51:51.445816Z", "node": "reporter", "message": "generated final report", "details": {"hypothesis_count": 1}}

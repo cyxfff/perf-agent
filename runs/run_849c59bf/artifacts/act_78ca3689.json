@@ -1,0 +1,16 @@
+{
+  "action_id": "act_78ca3689",
+  "tool": "time",
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "examples/bin/multithread_cpu_demo",
+    "4",
+    "400",
+    "18000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0982,
+  "error_message": null
+}

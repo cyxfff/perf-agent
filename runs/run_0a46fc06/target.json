@@ -1,0 +1,13 @@
+{
+  "executable_path": null,
+  "target_args": [],
+  "target_cmd": [
+    "python",
+    "demo_cpu.py"
+  ],
+  "target_pid": null,
+  "workload_label": "cpu_bound_demo",
+  "source_dir": "src/perf_agent",
+  "build_cmd": [],
+  "cwd": null
+}

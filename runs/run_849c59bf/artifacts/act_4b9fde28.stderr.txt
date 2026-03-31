@@ -1,0 +1,16 @@
+
+ Performance counter stats for 'examples/bin/multithread_cpu_demo 4 400 18000':
+
+        1757925147      cpu_core/cycles/                 #    5.101 G/sec                     
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+        6719473551      cpu_core/Instructions/           #   19.497 G/sec                       (80.01%)
+            344.64 msec task-clock                       #    3.943 CPUs utilized             
+            344.63 msec cpu-clock                        #    3.943 CPUs utilized             
+       10508143524      cpu_core/SLOTS/                  #   30.491 G/sec                     
+
+       0.087411717 seconds time elapsed
+
+       0.344818000 seconds user
+       0.000000000 seconds sys
+
+

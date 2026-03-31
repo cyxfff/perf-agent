@@ -1,0 +1,32 @@
+memory_bound:
+  conditions:
+    - low_ipc
+    - high_cache_miss
+    - high_backend_stall
+  min_confidence: 0.65
+io_bound:
+  conditions:
+    - high_iowait
+    - low_cpu_util
+  min_confidence: 0.60
+cpu_bound:
+  conditions:
+    - high_cpu_util
+  min_confidence: 0.70
+lock_contention:
+  conditions:
+    - high_lock_wait
+    - high_context_switch
+  min_confidence: 0.70
+scheduler_issue:
+  conditions:
+    - high_context_switch
+    - high_run_queue
+  min_confidence: 0.65
+branch_mispredict:
+  conditions:
+    - high_branch_miss
+  min_confidence: 0.65
+unknown:
+  conditions: []
+  min_confidence: 0.20

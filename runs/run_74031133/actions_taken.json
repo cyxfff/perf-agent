@@ -1,0 +1,50 @@
+[
+  {
+    "id": "act_cc74a5cb",
+    "tool": "time",
+    "command": [
+      "/usr/bin/time",
+      "-v",
+      "python",
+      "bench.py"
+    ],
+    "reason": "collect baseline process resource usage",
+    "expected_output": "verbose time summary",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "failed"
+  },
+  {
+    "id": "act_e3023bdd",
+    "tool": "perf_stat",
+    "command": [
+      "perf",
+      "stat",
+      "-d",
+      "--",
+      "python",
+      "bench.py"
+    ],
+    "reason": "collect baseline hardware counters",
+    "expected_output": "perf stat summary",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "failed"
+  },
+  {
+    "id": "act_450f4b8b",
+    "tool": "pidstat",
+    "command": [
+      "pidstat",
+      "-dur",
+      "-h",
+      "1",
+      "1"
+    ],
+    "reason": "collect process CPU and wait breakdown",
+    "expected_output": "pidstat process summary",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "executive_summary": "Primary suspected bottleneck: unknown (confidence=0.32).",
+  "detected_bottlenecks": [
+    "unknown"
+  ],
+  "supporting_evidence": [
+    "unknown: time.user_time_sec=1.8"
+  ],
+  "rejected_alternatives": [],
+  "confidence_overall": 0.32,
+  "recommended_next_steps": [
+    "Collect another baseline sample before drawing a stronger conclusion."
+  ],
+  "artifacts": [
+    "runs/run_2ae0ab1e/artifacts/act_0ae1a781.json",
+    "runs/run_2ae0ab1e/artifacts/act_0ae1a781.stdout.txt",
+    "runs/run_2ae0ab1e/artifacts/act_13dce563.json",
+    "runs/run_2ae0ab1e/artifacts/act_13dce563.stdout.txt",
+    "runs/run_2ae0ab1e/artifacts/act_a2ade8ba.json",
+    "runs/run_2ae0ab1e/artifacts/act_a2ade8ba.stdout.txt",
+    "runs/run_2ae0ab1e/artifacts/act_c8326104.json",
+    "runs/run_2ae0ab1e/artifacts/act_c8326104.stdout.txt",
+    "runs/run_2ae0ab1e/artifacts/act_dbd88e89.json",
+    "runs/run_2ae0ab1e/artifacts/act_dbd88e89.stdout.txt"
+  ]
+}

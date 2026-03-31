@@ -1,0 +1,175 @@
+[
+  {
+    "id": "obs_8f3a0286",
+    "source": "time",
+    "category": "cpu",
+    "metric": "user_time_sec",
+    "value": 0.02,
+    "unit": "seconds",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T15:56:25.835976Z",
+    "labels": {
+      "action_id": "act_c301857d"
+    },
+    "raw_excerpt": "User time (seconds): 0.02",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_add90d61",
+    "source": "time",
+    "category": "cpu",
+    "metric": "system_time_sec",
+    "value": 0.01,
+    "unit": "seconds",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T15:56:25.835976Z",
+    "labels": {
+      "action_id": "act_c301857d"
+    },
+    "raw_excerpt": "System time (seconds): 0.01",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_ab2ded3d",
+    "source": "time",
+    "category": "cpu",
+    "metric": "cpu_utilization_pct",
+    "value": 7,
+    "unit": "percent",
+    "normalized_value": 0.07,
+    "scope": "process",
+    "timestamp": "2026-03-31T15:56:25.835976Z",
+    "labels": {
+      "action_id": "act_c301857d"
+    },
+    "raw_excerpt": "Percent of CPU this job got: 7%",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_b7105c30",
+    "source": "time",
+    "category": "memory",
+    "metric": "max_rss_kb",
+    "value": 3840,
+    "unit": "kb",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T15:56:25.835976Z",
+    "labels": {
+      "action_id": "act_c301857d"
+    },
+    "raw_excerpt": "Maximum resident set size (kbytes): 3840",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_f8d16b53",
+    "source": "time",
+    "category": "memory",
+    "metric": "major_faults",
+    "value": 0,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T15:56:25.835976Z",
+    "labels": {
+      "action_id": "act_c301857d"
+    },
+    "raw_excerpt": "Major (requiring I/O) page faults: 0",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_b004985b",
+    "source": "time",
+    "category": "scheduler",
+    "metric": "voluntary_context_switches",
+    "value": 15340,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T15:56:25.835976Z",
+    "labels": {
+      "action_id": "act_c301857d"
+    },
+    "raw_excerpt": "Voluntary context switches: 15340",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_05687523",
+    "source": "time",
+    "category": "scheduler",
+    "metric": "involuntary_context_switches",
+    "value": 7,
+    "unit": "count",
+    "normalized_value": null,
+    "scope": "process",
+    "timestamp": "2026-03-31T15:56:25.835976Z",
+    "labels": {
+      "action_id": "act_c301857d"
+    },
+    "raw_excerpt": "Involuntary context switches: 7",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_1dd334cb",
+    "source": "mpstat",
+    "category": "system",
+    "metric": "23",
+    "value": "56:24     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle",
+    "unit": null,
+    "normalized_value": null,
+    "scope": "system",
+    "timestamp": "2026-03-31T15:56:25.839246Z",
+    "labels": {
+      "action_id": "act_65e935ee",
+      "source": "mpstat"
+    },
+    "raw_excerpt": "23:56:24     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_aa0edb51",
+    "source": "mpstat",
+    "category": "system",
+    "metric": "23",
+    "value": "56:25     all    1.60    0.00    1.10    1.70    0.00    0.05    0.00    0.00    0.00   95.55",
+    "unit": null,
+    "normalized_value": null,
+    "scope": "system",
+    "timestamp": "2026-03-31T15:56:25.839246Z",
+    "labels": {
+      "action_id": "act_65e935ee",
+      "source": "mpstat"
+    },
+    "raw_excerpt": "23:56:25     all    1.60    0.00    1.10    1.70    0.00    0.05    0.00    0.00    0.00   95.55",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  },
+  {
+    "id": "obs_0cebf1d6",
+    "source": "mpstat",
+    "category": "system",
+    "metric": "average",
+    "value": "all    1.60    0.00    1.10    1.70    0.00    0.05    0.00    0.00    0.00   95.55",
+    "unit": null,
+    "normalized_value": null,
+    "scope": "system",
+    "timestamp": "2026-03-31T15:56:25.839246Z",
+    "labels": {
+      "action_id": "act_65e935ee",
+      "source": "mpstat"
+    },
+    "raw_excerpt": "Average:     all    1.60    0.00    1.10    1.70    0.00    0.05    0.00    0.00    0.00   95.55",
+    "evidence_level": "direct",
+    "parser_version": "v1"
+  }
+]

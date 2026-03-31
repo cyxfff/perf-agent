@@ -1,0 +1,13 @@
+{"timestamp": "2026-03-31T15:48:18.445197Z", "node": "orchestrator", "message": "transitioned to running", "details": {}}
+{"timestamp": "2026-03-31T15:48:18.446607Z", "node": "runner", "message": "prepared runtime target", "details": {"target_cmd": ["python", "demo_cpu.py"], "source_file_count": 56}}
+{"timestamp": "2026-03-31T15:48:18.446927Z", "node": "planner", "message": "planned initial actions", "details": {"tools": ["time", "perf_stat", "pidstat", "mpstat"]}}
+{"timestamp": "2026-03-31T15:48:18.447611Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_d3ffe3cf", "tool": "time", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T15:48:18.447672Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_f13c38b5", "tool": "perf_stat", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T15:48:18.447730Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_f9a45963", "tool": "pidstat", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T15:48:18.447782Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_d51333a9", "tool": "mpstat", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T15:48:18.448352Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_d3ffe3cf", "tool": "time", "observation_count": 7}}
+{"timestamp": "2026-03-31T15:48:18.448462Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_f13c38b5", "tool": "perf_stat", "observation_count": 6}}
+{"timestamp": "2026-03-31T15:48:18.448501Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_f9a45963", "tool": "pidstat", "observation_count": 4}}
+{"timestamp": "2026-03-31T15:48:18.448541Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_d51333a9", "tool": "mpstat", "observation_count": 3}}
+{"timestamp": "2026-03-31T15:48:19.456905Z", "node": "analyzer", "message": "generated hypotheses from rules and structured observations", "details": {"hypothesis_count": 1}}
+{"timestamp": "2026-03-31T15:48:20.354079Z", "node": "reporter", "message": "generated final report", "details": {"hypothesis_count": 1}}

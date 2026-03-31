@@ -1,0 +1,30 @@
+{
+  "executive_summary": "Primary suspected bottleneck: cpu_bound (confidence=0.95).",
+  "detected_bottlenecks": [
+    "cpu_bound"
+  ],
+  "supporting_evidence": [
+    "cpu_bound: time.cpu_utilization_pct=99",
+    "cpu_bound: perf_stat.cpu_utilization_pct=98.7",
+    "cpu_bound: perf_stat.ipc=0.5",
+    "cpu_bound: pidstat.usr_pct=94.0",
+    "cpu_bound: pidstat.system_pct=4.0",
+    "cpu_bound: pidstat.cpu_utilization_pct=98.0",
+    "cpu_bound: mpstat.cpu_utilization_pct=98.0\\niowait=1.0\\ncswch_per_sec=1500\\n"
+  ],
+  "rejected_alternatives": [],
+  "confidence_overall": 0.95,
+  "recommended_next_steps": [
+    "Run perf record -g to locate the hottest functions."
+  ],
+  "artifacts": [
+    "runs/run_dc78efa8/artifacts/act_645e4671.json",
+    "runs/run_dc78efa8/artifacts/act_645e4671.stdout.txt",
+    "runs/run_dc78efa8/artifacts/act_90bd5f27.json",
+    "runs/run_dc78efa8/artifacts/act_90bd5f27.stdout.txt",
+    "runs/run_dc78efa8/artifacts/act_b89d01cf.json",
+    "runs/run_dc78efa8/artifacts/act_b89d01cf.stdout.txt",
+    "runs/run_dc78efa8/artifacts/act_e5851ac3.json",
+    "runs/run_dc78efa8/artifacts/act_e5851ac3.stdout.txt"
+  ]
+}

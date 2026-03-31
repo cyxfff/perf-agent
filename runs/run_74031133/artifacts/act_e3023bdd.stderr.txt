@@ -1,0 +1,40 @@
+/usr/bin/python: can't open file 'bench.py': [Errno 2] No such file or directory
+
+ Performance counter stats for 'python bench.py':
+
+             28.03 msec task-clock                       #    0.953 CPUs utilized             
+                73      context-switches                 #    2.604 K/sec                     
+                14      cpu-migrations                   #  499.390 /sec                      
+              7299      page-faults                      #  260.360 K/sec                     
+         122722944      cpu_core/cycles/                 #    4.378 G/sec                       (98.83%)
+          41468267      cpu_atom/cycles/                 #    1.479 G/sec                       (2.98%)
+         197000646      cpu_core/instructions/           #    7.027 G/sec                       (98.83%)
+          51283944      cpu_atom/instructions/           #    1.829 G/sec                       (2.98%)
+          38898259      cpu_core/branches/               #    1.388 G/sec                       (98.83%)
+          11200942      cpu_atom/branches/               #  399.545 M/sec                       (2.98%)
+            751937      cpu_core/branch-misses/          #   26.822 M/sec                       (98.83%)
+            414523      cpu_atom/branch-misses/          #   14.786 M/sec                       (2.98%)
+         729430431      cpu_core/slots/                  #   26.019 G/sec                       (98.83%)
+         209137427      cpu_core/topdown-retiring/       #     28.6% Retiring                   (98.83%)
+          86996575      cpu_core/topdown-bad-spec/       #     11.9% Bad Speculation            (98.83%)
+         243972969      cpu_core/topdown-fe-bound/       #     33.4% Frontend Bound             (98.83%)
+         190163788      cpu_core/topdown-be-bound/       #     26.0% Backend Bound              (98.83%)
+          30290420      cpu_core/topdown-heavy-ops/      #      4.1% Heavy Operations          #     24.5% Light Operations           (98.83%)
+          81325428      cpu_core/topdown-br-mispredict/  #     11.1% Branch Mispredict         #      0.8% Machine Clears             (98.83%)
+         150320901      cpu_core/topdown-fetch-lat/      #     20.6% Fetch Latency             #     12.8% Fetch Bandwidth            (98.83%)
+          81948970      cpu_core/topdown-mem-bound/      #     11.2% Memory Bound              #     14.8% Core Bound                 (98.83%)
+          47195151      cpu_core/L1-dcache-loads/        #    1.683 G/sec                       (98.83%)
+          12121042      cpu_atom/L1-dcache-loads/        #  432.366 M/sec                       (2.98%)
+           1143170      cpu_core/L1-dcache-load-misses/  #   40.778 M/sec                       (98.83%)
+   <not supported>      cpu_atom/L1-dcache-load-misses/                                       
+            271533      cpu_core/LLC-loads/              #    9.686 M/sec                       (98.83%)
+             53223      cpu_atom/LLC-loads/              #    1.899 M/sec                       (2.98%)
+              5763      cpu_core/LLC-load-misses/        #  205.570 K/sec                       (98.83%)
+                 0      cpu_atom/LLC-load-misses/        #    0.000 /sec                        (2.98%)
+
+       0.029419980 seconds time elapsed
+
+       0.020331000 seconds user
+       0.009674000 seconds sys
+
+

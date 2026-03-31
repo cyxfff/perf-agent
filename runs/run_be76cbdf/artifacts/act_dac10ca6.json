@@ -1,0 +1,15 @@
+{
+  "action_id": "act_dac10ca6",
+  "tool": "pidstat",
+  "command": [
+    "pidstat",
+    "-dur",
+    "-h",
+    "1",
+    "1"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 1.0014,
+  "error_message": null
+}

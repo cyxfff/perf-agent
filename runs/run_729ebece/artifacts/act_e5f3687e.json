@@ -1,0 +1,19 @@
+{
+  "action_id": "act_e5f3687e",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "context-switches,cpu-migrations,page-faults",
+    "--",
+    "/home/tchen/agent/perf_agent/examples/bin/multithread_cpu_demo",
+    "4",
+    "400",
+    "18000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.103,
+  "error_message": null
+}

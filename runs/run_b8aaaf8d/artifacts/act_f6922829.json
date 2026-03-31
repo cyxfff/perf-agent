@@ -1,0 +1,15 @@
+{
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-d",
+    "--",
+    "python",
+    "demo_io.py"
+  ],
+  "success": true,
+  "exit_code": 0,
+  "started_at": "2026-03-31T13:51:40.761884+00:00",
+  "finished_at": "2026-03-31T13:51:40.761885+00:00"
+}

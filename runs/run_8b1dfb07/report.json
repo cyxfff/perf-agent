@@ -1,0 +1,86 @@
+{
+  "executive_summary": "\u5f53\u524d\u6700\u53ef\u80fd\u7684\u74f6\u9888\u65b9\u5411\u662f CPU \u74f6\u9888\uff0c\u7f6e\u4fe1\u5ea6\u4e3a 0.70\u3002",
+  "target": {
+    "command": [
+      "/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo",
+      "700",
+      "18000"
+    ],
+    "executable_path": "/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo",
+    "source_dir": "/home/tchen/agent/perf_agent/examples/cpp",
+    "source_file_count": 2,
+    "runtime_notes": [
+      "verification_rounds=2",
+      "actions_executed=6"
+    ]
+  },
+  "detected_bottlenecks": [
+    "cpu_bound"
+  ],
+  "supporting_evidence": [
+    "CPU \u74f6\u9888: time.cpu_utilization_pct=100"
+  ],
+  "rejected_alternatives": [],
+  "source_findings": [
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo.cpp",
+      "line_no": 9,
+      "symbol_hint": "double hot_loop(std::size_t outer_loops, std::size_t inner_loops) {",
+      "issue_type": "\u5927\u89c4\u6a21\u5411\u91cf\u5904\u7406",
+      "rationale": "\u68c0\u6d4b\u5230\u53ef\u80fd\u53c2\u4e0e\u9ad8\u9891\u6570\u636e\u5904\u7406\u7684\u5bb9\u5668\u4ee3\u7801\u3002",
+      "snippet": "std::vector<double> values(inner_loops, 0.0);",
+      "related_hypothesis": "cpu_bound"
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo.cpp",
+      "line_no": 11,
+      "symbol_hint": "for (std::size_t round = 0; round < outer_loops; ++round) {",
+      "issue_type": "\u70ed\u70b9\u5faa\u73af",
+      "rationale": "\u68c0\u6d4b\u5230\u7591\u4f3c\u9ad8\u9891\u8ba1\u7b97\u5faa\u73af\u6216\u6570\u5b66\u51fd\u6570\u8c03\u7528\u3002",
+      "snippet": "for (std::size_t round = 0; round < outer_loops; ++round) {",
+      "related_hypothesis": "cpu_bound"
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+      "line_no": 14,
+      "symbol_hint": "for (std::size_t i = 0; i < iterations; ++i) {",
+      "issue_type": "\u70ed\u70b9\u5faa\u73af",
+      "rationale": "\u68c0\u6d4b\u5230\u7591\u4f3c\u9ad8\u9891\u8ba1\u7b97\u5faa\u73af\u6216\u6570\u5b66\u51fd\u6570\u8c03\u7528\u3002",
+      "snippet": "for (std::size_t i = 0; i < iterations; ++i) {",
+      "related_hypothesis": "cpu_bound"
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+      "line_no": 35,
+      "symbol_hint": "if (argc > 2) {",
+      "issue_type": "\u5927\u89c4\u6a21\u5411\u91cf\u5904\u7406",
+      "rationale": "\u68c0\u6d4b\u5230\u53ef\u80fd\u53c2\u4e0e\u9ad8\u9891\u6570\u636e\u5904\u7406\u7684\u5bb9\u5668\u4ee3\u7801\u3002",
+      "snippet": "std::vector<std::thread> threads;",
+      "related_hypothesis": "cpu_bound"
+    }
+  ],
+  "confidence_overall": 0.7,
+  "recommended_next_steps": [
+    "\u5efa\u8bae\u8ffd\u52a0 perf record -g\uff0c\u5b9a\u4f4d\u6700\u70ed\u51fd\u6570\u548c\u8c03\u7528\u6808\u3002"
+  ],
+  "artifacts": [
+    "runs/run_8b1dfb07/artifacts/act_317dc5f8.json",
+    "runs/run_8b1dfb07/artifacts/act_317dc5f8.stdout.txt",
+    "runs/run_8b1dfb07/artifacts/act_40748d8a.json",
+    "runs/run_8b1dfb07/artifacts/act_40748d8a.stderr.txt",
+    "runs/run_8b1dfb07/artifacts/act_40748d8a.stdout.txt",
+    "runs/run_8b1dfb07/artifacts/act_5590f2e4.json",
+    "runs/run_8b1dfb07/artifacts/act_5590f2e4.stdout.txt",
+    "runs/run_8b1dfb07/artifacts/act_687ff7bb.json",
+    "runs/run_8b1dfb07/artifacts/act_687ff7bb.stderr.txt",
+    "runs/run_8b1dfb07/artifacts/act_687ff7bb.stdout.txt",
+    "runs/run_8b1dfb07/artifacts/act_99e920bc.json",
+    "runs/run_8b1dfb07/artifacts/act_99e920bc.stderr.txt",
+    "runs/run_8b1dfb07/artifacts/act_99e920bc.stdout.txt",
+    "runs/run_8b1dfb07/artifacts/act_cd6a1190.json",
+    "runs/run_8b1dfb07/artifacts/act_cd6a1190.stderr.txt",
+    "runs/run_8b1dfb07/artifacts/act_cd6a1190.stdout.txt",
+    "runs/run_8b1dfb07/source_manifest.json",
+    "runs/run_8b1dfb07/target.json"
+  ]
+}

@@ -1,0 +1,3252 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 603  of event 'cpu_core/cycles/'
+# Event count (approx.): 95350308
+#
+# Children      Self  Symbol                                         IPC   [IPC Coverage]
+# ........  ........  .............................................  ....................
+#
+    79.64%     6.25%  [.] (anonymous namespace)::worker              -      -            
+            |          
+            |--73.39%--(anonymous namespace)::worker
+            |          |          
+            |          |--25.88%--pthread_mutex_lock@@GLIBC_2.2.5
+            |          |          
+            |          |--15.39%--__GI___lll_lock_wait
+            |          |          |          
+            |          |           --12.84%--entry_SYSCALL_64_after_hwframe
+            |          |                     |          
+            |          |                      --12.83%--do_syscall_64
+            |          |                                |          
+            |          |                                |--11.02%--__x64_sys_futex
+            |          |                                |          |          
+            |          |                                |           --10.82%--do_futex
+            |          |                                |                     |          
+            |          |                                |                      --10.56%--futex_wait
+            |          |                                |                                |          
+            |          |                                |                                |--8.51%--futex_wait_queue
+            |          |                                |                                |          |          
+            |          |                                |                                |           --8.03%--schedule
+            |          |                                |                                |                     |          
+            |          |                                |                                |                      --8.01%--__schedule
+            |          |                                |                                |                                |          
+            |          |                                |                                |                                |--3.57%--dequeue_task
+            |          |                                |                                |                                |          dequeue_task_fair
+            |          |                                |                                |                                |          |          
+            |          |                                |                                |                                |           --3.29%--dequeue_entity
+            |          |                                |                                |                                |                     |          
+            |          |                                |                                |                                |                     |--1.33%--update_load_avg
+            |          |                                |                                |                                |                     |          |          
+            |          |                                |                                |                                |                     |           --0.97%--__update_load_avg_se
+            |          |                                |                                |                                |                     |          
+            |          |                                |                                |                                |                      --1.31%--update_curr
+            |          |                                |                                |                                |                                |          
+            |          |                                |                                |                                |                                 --1.02%--cpuacct_charge
+            |          |                                |                                |                                |          
+            |          |                                |                                |                                |--2.18%--psi_task_switch
+            |          |                                |                                |                                |          |          
+            |          |                                |                                |                                |          |--1.67%--psi_group_change
+            |          |                                |                                |                                |          |          
+            |          |                                |                                |                                |           --0.51%--psi_flags_change
+            |          |                                |                                |                                |          
+            |          |                                |                                |                                |--1.32%--prepare_task_switch
+            |          |                                |                                |                                |          __perf_event_task_sched_out
+            |          |                                |                                |                                |          |          
+            |          |                                |                                |                                |           --1.18%--__rcu_read_lock
+            |          |                                |                                |                                |          
+            |          |                                |                                |                                 --0.63%--finish_task_switch.isra.0
+            |          |                                |                                |          
+            |          |                                |                                |--1.40%--futex_wait_setup
+            |          |                                |                                |          |          
+            |          |                                |                                |           --0.94%--_raw_spin_lock
+            |          |                                |                                |          
+            |          |                                |                                 --0.55%--futex_unqueue
+            |          |                                |          
+            |          |                                 --1.49%--syscall_exit_to_user_mode
+            |          |                                           |          
+            |          |                                            --1.44%--exit_to_user_mode_prepare
+            |          |                                                      |          
+            |          |                                                       --1.10%--switch_fpu_return
+            |          |          
+            |          |--13.21%--pthread_mutex_unlock@@GLIBC_2.2.5
+            |          |          
+            |          |--9.89%--__nanosleep
+            |          |          |          
+            |          |           --9.74%--clock_nanosleep@GLIBC_2.2.5
+            |          |                     |          
+            |          |                      --8.58%--entry_SYSCALL_64_after_hwframe
+            |          |                                do_syscall_64
+            |          |                                |          
+            |          |                                |--5.50%--__x64_sys_clock_nanosleep
+            |          |                                |          |          
+            |          |                                |           --5.40%--common_nsleep
+            |          |                                |                     |          
+            |          |                                |                     |--4.67%--hrtimer_nanosleep
+            |          |                                |                     |          |          
+            |          |                                |                     |           --4.43%--do_nanosleep
+            |          |                                |                     |                     |          
+            |          |                                |                     |                     |--2.75%--schedule
+            |          |                                |                     |                     |          __schedule
+            |          |                                |                     |                     |          |          
+            |          |                                |                     |                     |           --1.74%--dequeue_task
+            |          |                                |                     |                     |                     dequeue_task_fair
+            |          |                                |                     |                     |                     dequeue_entity
+            |          |                                |                     |                     |                     |          
+            |          |                                |                     |                     |                      --1.29%--update_cfs_group
+            |          |                                |                     |                     |                                |          
+            |          |                                |                     |                     |                                 --1.21%--reweight_entity
+            |          |                                |                     |                     |          
+            |          |                                |                     |                      --1.68%--hrtimer_start_range_ns
+            |          |                                |                     |                                |          
+            |          |                                |                     |                                |--1.12%--hrtimer_reprogram
+            |          |                                |                     |                                |          tick_program_event
+            |          |                                |                     |                                |          clockevents_program_event
+            |          |                                |                     |                                |          |          
+            |          |                                |                     |                                |           --0.88%--native_write_msr
+            |          |                                |                     |                                |          
+            |          |                                |                     |                                 --0.51%--__hrtimer_start_range_ns
+            |          |                                |                     |          
+            |          |                                |                      --0.73%--do_nanosleep
+            |          |                                |          
+            |          |                                |--1.91%--common_nsleep
+            |          |                                |          
+            |          |                                |--0.54%--syscall_exit_to_user_mode
+            |          |                                |          
+            |          |                                 --0.52%--syscall_enter_from_user_mode
+            |          |                                           syscall_trace_enter.constprop.0
+            |          |          
+            |          |--6.77%--__GI___lll_lock_wake
+            |          |          |          
+            |          |           --6.28%--entry_SYSCALL_64_after_hwframe
+            |          |                     |          
+            |          |                      --6.25%--do_syscall_64
+            |          |                                |          
+            |          |                                 --5.30%--__x64_sys_futex
+            |          |                                           |          
+            |          |                                            --5.21%--do_futex
+            |          |                                                      |          
+            |          |                                                       --5.04%--futex_wake
+            |          |                                                                 |          
+            |          |                                                                 |--2.83%--wake_up_q
+            |          |                                                                 |          |          
+            |          |                                                                 |           --2.72%--try_to_wake_up
+            |          |                                                                 |                     |          
+            |          |                                                                 |                      --0.56%--ttwu_queue_wakelist
+            |          |                                                                 |          
+            |          |                                                                  --1.21%--futex_wake_mark
+            |          |                                                                            |          
+            |          |                                                                             --1.07%--__futex_unqueue
+            |          |          
+            |           --1.55%--0x56135e291180
+            |                     clock_nanosleep@GLIBC_2.2.5
+            |                     |          
+            |                      --1.53%--entry_SYSCALL_64
+            |          
+            |--2.15%--0
+            |          |          
+            |           --1.74%--(anonymous namespace)::worker
+            |          
+            |--1.33%--0x10000006f
+            |          0x56135e28e310
+            |          
+            |--1.29%--0x100000070
+            |          (anonymous namespace)::worker
+            |          
+             --1.06%--0x100000072
+                       0x56135e28e310
+
+    54.54%     0.00%  [k] 0000000000000000                           -      -            
+            |          
+            |--48.43%--(anonymous namespace)::worker
+            |          |          
+            |          |--25.64%--pthread_mutex_lock@@GLIBC_2.2.5
+            |          |          
+            |          |--13.18%--pthread_mutex_unlock@@GLIBC_2.2.5
+            |          |          
+            |          |--5.57%--__GI___lll_lock_wake
+            |          |          entry_SYSCALL_64_after_hwframe
+            |          |          do_syscall_64
+            |          |          |          
+            |          |           --4.62%--__x64_sys_futex
+            |          |                     |          
+            |          |                      --4.53%--do_futex
+            |          |                                |          
+            |          |                                 --4.40%--futex_wake
+            |          |                                           |          
+            |          |                                           |--2.55%--wake_up_q
+            |          |                                           |          |          
+            |          |                                           |           --2.44%--try_to_wake_up
+            |          |                                           |          
+            |          |                                            --1.19%--futex_wake_mark
+            |          |                                                      |          
+            |          |                                                       --1.05%--__futex_unqueue
+            |          |          
+            |           --1.55%--0x56135e291180
+            |                     clock_nanosleep@GLIBC_2.2.5
+            |                     |          
+            |                      --1.53%--entry_SYSCALL_64
+            |          
+            |--3.99%--pthread_mutex_lock@@GLIBC_2.2.5
+            |          
+             --1.52%--pthread_mutex_unlock@@GLIBC_2.2.5
+
+    30.48%     0.00%  [k] entry_SYSCALL_64_after_hwframe             -      -            
+            |          
+             --30.43%--do_syscall_64
+                       |          
+                       |--16.32%--__x64_sys_futex
+                       |          |          
+                       |           --16.03%--do_futex
+                       |                     |          
+                       |                     |--10.56%--futex_wait
+                       |                     |          |          
+                       |                     |          |--8.51%--futex_wait_queue
+                       |                     |          |          |          
+                       |                     |          |           --8.03%--schedule
+                       |                     |          |                     |          
+                       |                     |          |                      --8.01%--__schedule
+                       |                     |          |                                |          
+                       |                     |          |                                |--3.57%--dequeue_task
+                       |                     |          |                                |          dequeue_task_fair
+                       |                     |          |                                |          |          
+                       |                     |          |                                |           --3.29%--dequeue_entity
+                       |                     |          |                                |                     |          
+                       |                     |          |                                |                     |--1.33%--update_load_avg
+                       |                     |          |                                |                     |          |          
+                       |                     |          |                                |                     |           --0.97%--__update_load_avg_se
+                       |                     |          |                                |                     |          
+                       |                     |          |                                |                      --1.31%--update_curr
+                       |                     |          |                                |                                |          
+                       |                     |          |                                |                                 --1.02%--cpuacct_charge
+                       |                     |          |                                |          
+                       |                     |          |                                |--2.18%--psi_task_switch
+                       |                     |          |                                |          |          
+                       |                     |          |                                |          |--1.67%--psi_group_change
+                       |                     |          |                                |          |          
+                       |                     |          |                                |           --0.51%--psi_flags_change
+                       |                     |          |                                |          
+                       |                     |          |                                |--1.32%--prepare_task_switch
+                       |                     |          |                                |          __perf_event_task_sched_out
+                       |                     |          |                                |          |          
+                       |                     |          |                                |           --1.18%--__rcu_read_lock
+                       |                     |          |                                |          
+                       |                     |          |                                 --0.63%--finish_task_switch.isra.0
+                       |                     |          |          
+                       |                     |          |--1.40%--futex_wait_setup
+                       |                     |          |          |          
+                       |                     |          |           --0.94%--_raw_spin_lock
+                       |                     |          |          
+                       |                     |           --0.55%--futex_unqueue
+                       |                     |          
+                       |                      --5.04%--futex_wake
+                       |                                |          
+                       |                                |--2.83%--wake_up_q
+                       |                                |          |          
+                       |                                |           --2.72%--try_to_wake_up
+                       |                                |                     |          
+                       |                                |                      --0.56%--ttwu_queue_wakelist
+                       |                                |          
+                       |                                 --1.21%--futex_wake_mark
+                       |                                           |          
+                       |                                            --1.07%--__futex_unqueue
+                       |          
+                       |--5.50%--__x64_sys_clock_nanosleep
+                       |          |          
+                       |           --5.40%--common_nsleep
+                       |                     |          
+                       |                     |--4.67%--hrtimer_nanosleep
+                       |                     |          |          
+                       |                     |           --4.43%--do_nanosleep
+                       |                     |                     |          
+                       |                     |                     |--2.75%--schedule
+                       |                     |                     |          __schedule
+                       |                     |                     |          |          
+                       |                     |                     |           --1.74%--dequeue_task
+                       |                     |                     |                     dequeue_task_fair
+                       |                     |                     |                     dequeue_entity
+                       |                     |                     |                     |          
+                       |                     |                     |                      --1.29%--update_cfs_group
+                       |                     |                     |                                |          
+                       |                     |                     |                                 --1.21%--reweight_entity
+                       |                     |                     |          
+                       |                     |                      --1.68%--hrtimer_start_range_ns
+                       |                     |                                |          
+                       |                     |                                |--1.12%--hrtimer_reprogram
+                       |                     |                                |          tick_program_event
+                       |                     |                                |          clockevents_program_event
+                       |                     |                                |          |          
+                       |                     |                                |           --0.88%--native_write_msr
+                       |                     |                                |          
+                       |                     |                                 --0.51%--__hrtimer_start_range_ns
+                       |                     |          
+                       |                      --0.73%--do_nanosleep
+                       |          
+                       |--2.78%--__x64_sys_execve
+                       |          do_execveat_common.isra.0
+                       |          bprm_execve
+                       |          bprm_execve.part.0
+                       |          exec_binprm
+                       |          search_binary_handler
+                       |          load_elf_binary
+                       |          |          
+                       |           --2.64%--load_elf_interp.constprop.0
+                       |                     elf_map
+                       |                     vm_mmap
+                       |                     vm_mmap_pgoff
+                       |                     do_mmap
+                       |                     mmap_region
+                       |                     perf_event_mmap
+                       |                     perf_iterate_ctx
+                       |                     __perf_addr_filters_adjust
+                       |          
+                       |--2.04%--syscall_exit_to_user_mode
+                       |          |          
+                       |           --1.93%--exit_to_user_mode_prepare
+                       |                     |          
+                       |                     |--1.10%--switch_fpu_return
+                       |                     |          
+                       |                      --0.77%--exit_to_user_mode_loop
+                       |                                |          
+                       |                                 --0.53%--__rseq_handle_notify_resume
+                       |          
+                       |--1.91%--common_nsleep
+                       |          
+                        --0.66%--syscall_enter_from_user_mode
+                                  syscall_trace_enter.constprop.0
+
+    30.45%     0.17%  [k] do_syscall_64                              -      -            
+            |          
+             --30.28%--do_syscall_64
+                       |          
+                       |--16.32%--__x64_sys_futex
+                       |          |          
+                       |           --16.03%--do_futex
+                       |                     |          
+                       |                     |--10.56%--futex_wait
+                       |                     |          |          
+                       |                     |          |--8.51%--futex_wait_queue
+                       |                     |          |          |          
+                       |                     |          |           --8.03%--schedule
+                       |                     |          |                     |          
+                       |                     |          |                      --8.01%--__schedule
+                       |                     |          |                                |          
+                       |                     |          |                                |--3.57%--dequeue_task
+                       |                     |          |                                |          dequeue_task_fair
+                       |                     |          |                                |          |          
+                       |                     |          |                                |           --3.29%--dequeue_entity
+                       |                     |          |                                |                     |          
+                       |                     |          |                                |                     |--1.33%--update_load_avg
+                       |                     |          |                                |                     |          |          
+                       |                     |          |                                |                     |           --0.97%--__update_load_avg_se
+                       |                     |          |                                |                     |          
+                       |                     |          |                                |                      --1.31%--update_curr
+                       |                     |          |                                |                                |          
+                       |                     |          |                                |                                 --1.02%--cpuacct_charge
+                       |                     |          |                                |          
+                       |                     |          |                                |--2.18%--psi_task_switch
+                       |                     |          |                                |          |          
+                       |                     |          |                                |          |--1.67%--psi_group_change
+                       |                     |          |                                |          |          
+                       |                     |          |                                |           --0.51%--psi_flags_change
+                       |                     |          |                                |          
+                       |                     |          |                                |--1.32%--prepare_task_switch
+                       |                     |          |                                |          __perf_event_task_sched_out
+                       |                     |          |                                |          |          
+                       |                     |          |                                |           --1.18%--__rcu_read_lock
+                       |                     |          |                                |          
+                       |                     |          |                                 --0.63%--finish_task_switch.isra.0
+                       |                     |          |          
+                       |                     |          |--1.40%--futex_wait_setup
+                       |                     |          |          |          
+                       |                     |          |           --0.94%--_raw_spin_lock
+                       |                     |          |          
+                       |                     |           --0.55%--futex_unqueue
+                       |                     |          
+                       |                      --5.04%--futex_wake
+                       |                                |          
+                       |                                |--2.83%--wake_up_q
+                       |                                |          |          
+                       |                                |           --2.72%--try_to_wake_up
+                       |                                |                     |          
+                       |                                |                      --0.56%--ttwu_queue_wakelist
+                       |                                |          
+                       |                                 --1.21%--futex_wake_mark
+                       |                                           |          
+                       |                                            --1.07%--__futex_unqueue
+                       |          
+                       |--5.50%--__x64_sys_clock_nanosleep
+                       |          |          
+                       |           --5.40%--common_nsleep
+                       |                     |          
+                       |                     |--4.67%--hrtimer_nanosleep
+                       |                     |          |          
+                       |                     |           --4.43%--do_nanosleep
+                       |                     |                     |          
+                       |                     |                     |--2.75%--schedule
+                       |                     |                     |          __schedule
+                       |                     |                     |          |          
+                       |                     |                     |           --1.74%--dequeue_task
+                       |                     |                     |                     dequeue_task_fair
+                       |                     |                     |                     dequeue_entity
+                       |                     |                     |                     |          
+                       |                     |                     |                      --1.29%--update_cfs_group
+                       |                     |                     |                                |          
+                       |                     |                     |                                 --1.21%--reweight_entity
+                       |                     |                     |          
+                       |                     |                      --1.68%--hrtimer_start_range_ns
+                       |                     |                                |          
+                       |                     |                                |--1.12%--hrtimer_reprogram
+                       |                     |                                |          tick_program_event
+                       |                     |                                |          clockevents_program_event
+                       |                     |                                |          |          
+                       |                     |                                |           --0.88%--native_write_msr
+                       |                     |                                |          
+                       |                     |                                 --0.51%--__hrtimer_start_range_ns
+                       |                     |          
+                       |                      --0.73%--do_nanosleep
+                       |          
+                       |--2.78%--__x64_sys_execve
+                       |          do_execveat_common.isra.0
+                       |          bprm_execve
+                       |          bprm_execve.part.0
+                       |          exec_binprm
+                       |          search_binary_handler
+                       |          load_elf_binary
+                       |          |          
+                       |           --2.64%--load_elf_interp.constprop.0
+                       |                     elf_map
+                       |                     vm_mmap
+                       |                     vm_mmap_pgoff
+                       |                     do_mmap
+                       |                     mmap_region
+                       |                     perf_event_mmap
+                       |                     perf_iterate_ctx
+                       |                     __perf_addr_filters_adjust
+                       |          
+                       |--2.04%--syscall_exit_to_user_mode
+                       |          |          
+                       |           --1.93%--exit_to_user_mode_prepare
+                       |                     |          
+                       |                     |--1.10%--switch_fpu_return
+                       |                     |          
+                       |                      --0.77%--exit_to_user_mode_loop
+                       |                                |          
+                       |                                 --0.53%--__rseq_handle_notify_resume
+                       |          
+                       |--1.91%--common_nsleep
+                       |          
+                        --0.66%--syscall_enter_from_user_mode
+                                  syscall_trace_enter.constprop.0
+
+    30.21%    26.78%  [.] pthread_mutex_lock@@GLIBC_2.2.5            -      -            
+            |          
+            |--26.21%--0
+            |          |          
+            |          |--25.64%--(anonymous namespace)::worker
+            |          |          pthread_mutex_lock@@GLIBC_2.2.5
+            |          |          
+            |           --0.56%--pthread_mutex_lock@@GLIBC_2.2.5
+            |          
+            |--3.42%--pthread_mutex_lock@@GLIBC_2.2.5
+            |          
+             --0.54%--0x10000006d
+
+    20.88%    20.58%  [.] pthread_mutex_unlock@@GLIBC_2.2.5          -      -            
+            |          
+            |--15.15%--0
+            |          |          
+            |          |--13.63%--(anonymous namespace)::worker
+            |          |          |          
+            |          |           --13.18%--pthread_mutex_unlock@@GLIBC_2.2.5
+            |          |          
+            |           --1.52%--pthread_mutex_unlock@@GLIBC_2.2.5
+            |          
+            |--3.11%--0x10000006e
+            |          pthread_mutex_unlock@@GLIBC_2.2.5
+            |          
+             --1.65%--0x100000072
+                       pthread_mutex_unlock@@GLIBC_2.2.5
+
+    17.05%     0.91%  [k] __x64_sys_futex                            -      -            
+            |          
+            |--16.14%--__x64_sys_futex
+            |          |          
+            |           --16.03%--do_futex
+            |                     |          
+            |                     |--10.56%--futex_wait
+            |                     |          |          
+            |                     |          |--8.51%--futex_wait_queue
+            |                     |          |          |          
+            |                     |          |           --8.03%--schedule
+            |                     |          |                     |          
+            |                     |          |                      --8.01%--__schedule
+            |                     |          |                                |          
+            |                     |          |                                |--3.57%--dequeue_task
+            |                     |          |                                |          dequeue_task_fair
+            |                     |          |                                |          |          
+            |                     |          |                                |           --3.29%--dequeue_entity
+            |                     |          |                                |                     |          
+            |                     |          |                                |                     |--1.33%--update_load_avg
+            |                     |          |                                |                     |          |          
+            |                     |          |                                |                     |           --0.97%--__update_load_avg_se
+            |                     |          |                                |                     |          
+            |                     |          |                                |                      --1.31%--update_curr
+            |                     |          |                                |                                |          
+            |                     |          |                                |                                 --1.02%--cpuacct_charge
+            |                     |          |                                |          
+            |                     |          |                                |--2.18%--psi_task_switch
+            |                     |          |                                |          |          
+            |                     |          |                                |          |--1.67%--psi_group_change
+            |                     |          |                                |          |          
+            |                     |          |                                |           --0.51%--psi_flags_change
+            |                     |          |                                |          
+            |                     |          |                                |--1.32%--prepare_task_switch
+            |                     |          |                                |          __perf_event_task_sched_out
+            |                     |          |                                |          |          
+            |                     |          |                                |           --1.18%--__rcu_read_lock
+            |                     |          |                                |          
+            |                     |          |                                 --0.63%--finish_task_switch.isra.0
+            |                     |          |          
+            |                     |          |--1.40%--futex_wait_setup
+            |                     |          |          |          
+            |                     |          |           --0.94%--_raw_spin_lock
+            |                     |          |          
+            |                     |           --0.55%--futex_unqueue
+            |                     |          
+            |                      --5.04%--futex_wake
+            |                                |          
+            |                                |--2.83%--wake_up_q
+            |                                |          |          
+            |                                |           --2.72%--try_to_wake_up
+            |                                |                     |          
+            |                                |                      --0.56%--ttwu_queue_wakelist
+            |                                |          
+            |                                 --1.21%--futex_wake_mark
+            |                                           |          
+            |                                            --1.07%--__futex_unqueue
+            |          
+             --0.72%--0
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wake
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+
+    16.05%     0.28%  [k] do_futex                                   -      -            
+            |          
+             --15.77%--do_futex
+                       |          
+                       |--10.56%--futex_wait
+                       |          |          
+                       |          |--8.51%--futex_wait_queue
+                       |          |          |          
+                       |          |           --8.03%--schedule
+                       |          |                     |          
+                       |          |                      --8.01%--__schedule
+                       |          |                                |          
+                       |          |                                |--3.57%--dequeue_task
+                       |          |                                |          dequeue_task_fair
+                       |          |                                |          |          
+                       |          |                                |           --3.29%--dequeue_entity
+                       |          |                                |                     |          
+                       |          |                                |                     |--1.33%--update_load_avg
+                       |          |                                |                     |          |          
+                       |          |                                |                     |           --0.97%--__update_load_avg_se
+                       |          |                                |                     |          
+                       |          |                                |                      --1.31%--update_curr
+                       |          |                                |                                |          
+                       |          |                                |                                 --1.02%--cpuacct_charge
+                       |          |                                |          
+                       |          |                                |--2.18%--psi_task_switch
+                       |          |                                |          |          
+                       |          |                                |          |--1.67%--psi_group_change
+                       |          |                                |          |          
+                       |          |                                |           --0.51%--psi_flags_change
+                       |          |                                |          
+                       |          |                                |--1.32%--prepare_task_switch
+                       |          |                                |          __perf_event_task_sched_out
+                       |          |                                |          |          
+                       |          |                                |           --1.18%--__rcu_read_lock
+                       |          |                                |          
+                       |          |                                 --0.63%--finish_task_switch.isra.0
+                       |          |          
+                       |          |--1.40%--futex_wait_setup
+                       |          |          |          
+                       |          |           --0.94%--_raw_spin_lock
+                       |          |          
+                       |           --0.55%--futex_unqueue
+                       |          
+                        --5.04%--futex_wake
+                                  |          
+                                  |--2.83%--wake_up_q
+                                  |          |          
+                                  |           --2.72%--try_to_wake_up
+                                  |                     |          
+                                  |                      --0.56%--ttwu_queue_wakelist
+                                  |          
+                                   --1.21%--futex_wake_mark
+                                             |          
+                                              --1.07%--__futex_unqueue
+
+    15.39%     0.50%  [.] __GI___lll_lock_wait                       -      -            
+            |          
+             --14.89%--__GI___lll_lock_wait
+                       |          
+                        --12.84%--entry_SYSCALL_64_after_hwframe
+                                  |          
+                                   --12.83%--do_syscall_64
+                                             |          
+                                             |--11.02%--__x64_sys_futex
+                                             |          |          
+                                             |           --10.82%--do_futex
+                                             |                     |          
+                                             |                      --10.56%--futex_wait
+                                             |                                |          
+                                             |                                |--8.51%--futex_wait_queue
+                                             |                                |          |          
+                                             |                                |           --8.03%--schedule
+                                             |                                |                     |          
+                                             |                                |                      --8.01%--__schedule
+                                             |                                |                                |          
+                                             |                                |                                |--3.57%--dequeue_task
+                                             |                                |                                |          dequeue_task_fair
+                                             |                                |                                |          |          
+                                             |                                |                                |           --3.29%--dequeue_entity
+                                             |                                |                                |                     |          
+                                             |                                |                                |                     |--1.33%--update_load_avg
+                                             |                                |                                |                     |          |          
+                                             |                                |                                |                     |           --0.97%--__update_load_avg_se
+                                             |                                |                                |                     |          
+                                             |                                |                                |                      --1.31%--update_curr
+                                             |                                |                                |                                |          
+                                             |                                |                                |                                 --1.02%--cpuacct_charge
+                                             |                                |                                |          
+                                             |                                |                                |--2.18%--psi_task_switch
+                                             |                                |                                |          |          
+                                             |                                |                                |          |--1.67%--psi_group_change
+                                             |                                |                                |          |          
+                                             |                                |                                |           --0.51%--psi_flags_change
+                                             |                                |                                |          
+                                             |                                |                                |--1.32%--prepare_task_switch
+                                             |                                |                                |          __perf_event_task_sched_out
+                                             |                                |                                |          |          
+                                             |                                |                                |           --1.18%--__rcu_read_lock
+                                             |                                |                                |          
+                                             |                                |                                 --0.63%--finish_task_switch.isra.0
+                                             |                                |          
+                                             |                                |--1.40%--futex_wait_setup
+                                             |                                |          |          
+                                             |                                |           --0.94%--_raw_spin_lock
+                                             |                                |          
+                                             |                                 --0.55%--futex_unqueue
+                                             |          
+                                              --1.49%--syscall_exit_to_user_mode
+                                                        |          
+                                                         --1.44%--exit_to_user_mode_prepare
+                                                                   |          
+                                                                    --1.10%--switch_fpu_return
+
+    11.48%     1.27%  [.] clock_nanosleep@GLIBC_2.2.5                -      -            
+            |          
+            |--10.21%--clock_nanosleep@GLIBC_2.2.5
+            |          |          
+            |          |--8.58%--entry_SYSCALL_64_after_hwframe
+            |          |          do_syscall_64
+            |          |          |          
+            |          |          |--5.50%--__x64_sys_clock_nanosleep
+            |          |          |          |          
+            |          |          |           --5.40%--common_nsleep
+            |          |          |                     |          
+            |          |          |                     |--4.67%--hrtimer_nanosleep
+            |          |          |                     |          |          
+            |          |          |                     |           --4.43%--do_nanosleep
+            |          |          |                     |                     |          
+            |          |          |                     |                     |--2.75%--schedule
+            |          |          |                     |                     |          __schedule
+            |          |          |                     |                     |          |          
+            |          |          |                     |                     |           --1.74%--dequeue_task
+            |          |          |                     |                     |                     dequeue_task_fair
+            |          |          |                     |                     |                     dequeue_entity
+            |          |          |                     |                     |                     |          
+            |          |          |                     |                     |                      --1.29%--update_cfs_group
+            |          |          |                     |                     |                                |          
+            |          |          |                     |                     |                                 --1.21%--reweight_entity
+            |          |          |                     |                     |          
+            |          |          |                     |                      --1.68%--hrtimer_start_range_ns
+            |          |          |                     |                                |          
+            |          |          |                     |                                |--1.12%--hrtimer_reprogram
+            |          |          |                     |                                |          tick_program_event
+            |          |          |                     |                                |          clockevents_program_event
+            |          |          |                     |                                |          |          
+            |          |          |                     |                                |           --0.88%--native_write_msr
+            |          |          |                     |                                |          
+            |          |          |                     |                                 --0.51%--__hrtimer_start_range_ns
+            |          |          |                     |          
+            |          |          |                      --0.73%--do_nanosleep
+            |          |          |          
+            |          |          |--1.91%--common_nsleep
+            |          |          |          
+            |          |          |--0.54%--syscall_exit_to_user_mode
+            |          |          |          
+            |          |           --0.52%--syscall_enter_from_user_mode
+            |          |                     syscall_trace_enter.constprop.0
+            |          |          
+            |           --1.53%--entry_SYSCALL_64
+            |          
+             --1.06%--0x100000072
+                       (anonymous namespace)::worker
+                       __nanosleep
+                       clock_nanosleep@GLIBC_2.2.5
+
+    10.86%     0.04%  [k] schedule                                   -      -            
+            |          
+             --10.82%--schedule
+                       |          
+                        --10.77%--__schedule
+                                  |          
+                                  |--5.31%--dequeue_task
+                                  |          dequeue_task_fair
+                                  |          |          
+                                  |           --5.03%--dequeue_entity
+                                  |                     |          
+                                  |                     |--1.76%--update_cfs_group
+                                  |                     |          |          
+                                  |                     |           --1.28%--reweight_entity
+                                  |                     |          
+                                  |                     |--1.56%--update_load_avg
+                                  |                     |          |          
+                                  |                     |           --1.00%--__update_load_avg_se
+                                  |                     |          
+                                  |                      --1.53%--update_curr
+                                  |                                |          
+                                  |                                 --1.02%--cpuacct_charge
+                                  |          
+                                  |--2.42%--psi_task_switch
+                                  |          |          
+                                  |          |--1.86%--psi_group_change
+                                  |          |          
+                                  |           --0.51%--psi_flags_change
+                                  |          
+                                  |--1.40%--prepare_task_switch
+                                  |          __perf_event_task_sched_out
+                                  |          |          
+                                  |           --1.18%--__rcu_read_lock
+                                  |          
+                                   --1.07%--finish_task_switch.isra.0
+
+    10.77%     0.27%  [k] __schedule                                 -      -            
+            |          
+             --10.50%--__schedule
+                       |          
+                       |--5.31%--dequeue_task
+                       |          dequeue_task_fair
+                       |          |          
+                       |           --5.03%--dequeue_entity
+                       |                     |          
+                       |                     |--1.76%--update_cfs_group
+                       |                     |          |          
+                       |                     |           --1.28%--reweight_entity
+                       |                     |          
+                       |                     |--1.56%--update_load_avg
+                       |                     |          |          
+                       |                     |           --1.00%--__update_load_avg_se
+                       |                     |          
+                       |                      --1.53%--update_curr
+                       |                                |          
+                       |                                 --1.02%--cpuacct_charge
+                       |          
+                       |--2.42%--psi_task_switch
+                       |          |          
+                       |          |--1.86%--psi_group_change
+                       |          |          
+                       |           --0.51%--psi_flags_change
+                       |          
+                       |--1.40%--prepare_task_switch
+                       |          __perf_event_task_sched_out
+                       |          |          
+                       |           --1.18%--__rcu_read_lock
+                       |          
+                        --1.07%--finish_task_switch.isra.0
+
+    10.56%     0.09%  [k] futex_wait                                 -      -            
+            |          
+             --10.47%--futex_wait
+                       |          
+                       |--8.51%--futex_wait_queue
+                       |          |          
+                       |           --8.03%--schedule
+                       |                     |          
+                       |                      --8.01%--__schedule
+                       |                                |          
+                       |                                |--3.57%--dequeue_task
+                       |                                |          dequeue_task_fair
+                       |                                |          |          
+                       |                                |           --3.29%--dequeue_entity
+                       |                                |                     |          
+                       |                                |                     |--1.33%--update_load_avg
+                       |                                |                     |          |          
+                       |                                |                     |           --0.97%--__update_load_avg_se
+                       |                                |                     |          
+                       |                                |                      --1.31%--update_curr
+                       |                                |                                |          
+                       |                                |                                 --1.02%--cpuacct_charge
+                       |                                |          
+                       |                                |--2.18%--psi_task_switch
+                       |                                |          |          
+                       |                                |          |--1.67%--psi_group_change
+                       |                                |          |          
+                       |                                |           --0.51%--psi_flags_change
+                       |                                |          
+                       |                                |--1.32%--prepare_task_switch
+                       |                                |          __perf_event_task_sched_out
+                       |                                |          |          
+                       |                                |           --1.18%--__rcu_read_lock
+                       |                                |          
+                       |                                 --0.63%--finish_task_switch.isra.0
+                       |          
+                       |--1.40%--futex_wait_setup
+                       |          |          
+                       |           --0.94%--_raw_spin_lock
+                       |          
+                        --0.55%--futex_unqueue
+
+     9.95%     0.06%  [.] __nanosleep                                -      -            
+            |          
+             --9.89%--__nanosleep
+                       |          
+                        --9.74%--clock_nanosleep@GLIBC_2.2.5
+                                  |          
+                                   --8.58%--entry_SYSCALL_64_after_hwframe
+                                             do_syscall_64
+                                             |          
+                                             |--5.50%--__x64_sys_clock_nanosleep
+                                             |          |          
+                                             |           --5.40%--common_nsleep
+                                             |                     |          
+                                             |                     |--4.67%--hrtimer_nanosleep
+                                             |                     |          |          
+                                             |                     |           --4.43%--do_nanosleep
+                                             |                     |                     |          
+                                             |                     |                     |--2.75%--schedule
+                                             |                     |                     |          __schedule
+                                             |                     |                     |          |          
+                                             |                     |                     |           --1.74%--dequeue_task
+                                             |                     |                     |                     dequeue_task_fair
+                                             |                     |                     |                     dequeue_entity
+                                             |                     |                     |                     |          
+                                             |                     |                     |                      --1.29%--update_cfs_group
+                                             |                     |                     |                                |          
+                                             |                     |                     |                                 --1.21%--reweight_entity
+                                             |                     |                     |          
+                                             |                     |                      --1.68%--hrtimer_start_range_ns
+                                             |                     |                                |          
+                                             |                     |                                |--1.12%--hrtimer_reprogram
+                                             |                     |                                |          tick_program_event
+                                             |                     |                                |          clockevents_program_event
+                                             |                     |                                |          |          
+                                             |                     |                                |           --0.88%--native_write_msr
+                                             |                     |                                |          
+                                             |                     |                                 --0.51%--__hrtimer_start_range_ns
+                                             |                     |          
+                                             |                      --0.73%--do_nanosleep
+                                             |          
+                                             |--1.91%--common_nsleep
+                                             |          
+                                             |--0.54%--syscall_exit_to_user_mode
+                                             |          
+                                              --0.52%--syscall_enter_from_user_mode
+                                                        syscall_trace_enter.constprop.0
+
+     9.37%     0.00%  [k] 0x000000010000006e                         -      -            
+            |          
+            |--6.26%--(anonymous namespace)::worker
+            |          |          
+            |           --5.90%--__GI___lll_lock_wait
+            |                     |          
+            |                      --3.89%--entry_SYSCALL_64_after_hwframe
+            |                                do_syscall_64
+            |                                |          
+            |                                 --3.65%--__x64_sys_futex
+            |                                           |          
+            |                                            --3.50%--do_futex
+            |                                                      futex_wait
+            |                                                      |          
+            |                                                      |--2.55%--futex_wait_queue
+            |                                                      |          |          
+            |                                                      |           --2.45%--schedule
+            |                                                      |                     __schedule
+            |                                                      |                     |          
+            |                                                      |                     |--1.17%--prepare_task_switch
+            |                                                      |                     |          __perf_event_task_sched_out
+            |                                                      |                     |          |          
+            |                                                      |                     |           --1.15%--__rcu_read_lock
+            |                                                      |                     |          
+            |                                                      |                      --0.51%--psi_task_switch
+            |                                                      |                                psi_flags_change
+            |                                                      |          
+            |                                                       --0.94%--futex_wait_setup
+            |                                                                 _raw_spin_lock
+            |          
+             --3.11%--pthread_mutex_unlock@@GLIBC_2.2.5
+
+     8.58%     0.00%  [k] 0x0000000100000072                         -      -            
+            |          
+            |--5.87%--(anonymous namespace)::worker
+            |          |          
+            |          |--3.09%--__GI___lll_lock_wait
+            |          |          |          
+            |          |           --3.06%--entry_SYSCALL_64_after_hwframe
+            |          |                     do_syscall_64
+            |          |                     |          
+            |          |                      --2.98%--__x64_sys_futex
+            |          |                                do_futex
+            |          |                                futex_wait
+            |          |                                |          
+            |          |                                 --2.74%--futex_wait_queue
+            |          |                                           schedule
+            |          |                                           __schedule
+            |          |                                           |          
+            |          |                                           |--1.30%--psi_task_switch
+            |          |                                           |          psi_group_change
+            |          |                                           |          
+            |          |                                            --1.28%--dequeue_task
+            |          |                                                      dequeue_task_fair
+            |          |                                                      |          
+            |          |                                                       --1.07%--dequeue_entity
+            |          |                                                                 |          
+            |          |                                                                  --1.02%--update_curr
+            |          |                                                                            |          
+            |          |                                                                             --0.83%--cpuacct_charge
+            |          |          
+            |           --2.61%--__nanosleep
+            |                     clock_nanosleep@GLIBC_2.2.5
+            |                     |          
+            |                      --1.55%--entry_SYSCALL_64_after_hwframe
+            |                                do_syscall_64
+            |                                |          
+            |                                 --1.45%--__x64_sys_clock_nanosleep
+            |                                           common_nsleep
+            |                                           |          
+            |                                           |--0.82%--hrtimer_nanosleep
+            |                                           |          do_nanosleep
+            |                                           |          hrtimer_start_range_ns
+            |                                           |          hrtimer_reprogram
+            |                                           |          tick_program_event
+            |                                           |          clockevents_program_event
+            |                                           |          native_write_msr
+            |                                           |          
+            |                                            --0.63%--do_nanosleep
+            |          
+            |--1.65%--pthread_mutex_unlock@@GLIBC_2.2.5
+            |          
+             --1.06%--0x56135e28e310
+
+     8.51%     0.11%  [k] futex_wait_queue                           -      -            
+            |          
+             --8.39%--futex_wait_queue
+                       |          
+                        --8.03%--schedule
+                                  |          
+                                   --8.01%--__schedule
+                                             |          
+                                             |--3.57%--dequeue_task
+                                             |          dequeue_task_fair
+                                             |          |          
+                                             |           --3.29%--dequeue_entity
+                                             |                     |          
+                                             |                     |--1.33%--update_load_avg
+                                             |                     |          |          
+                                             |                     |           --0.97%--__update_load_avg_se
+                                             |                     |          
+                                             |                      --1.31%--update_curr
+                                             |                                |          
+                                             |                                 --1.02%--cpuacct_charge
+                                             |          
+                                             |--2.18%--psi_task_switch
+                                             |          |          
+                                             |          |--1.67%--psi_group_change
+                                             |          |          
+                                             |           --0.51%--psi_flags_change
+                                             |          
+                                             |--1.32%--prepare_task_switch
+                                             |          __perf_event_task_sched_out
+                                             |          |          
+                                             |           --1.18%--__rcu_read_lock
+                                             |          
+                                              --0.63%--finish_task_switch.isra.0
+
+     8.21%     1.43%  [.] __GI___lll_lock_wake                       -      -            
+            |          
+            |--6.77%--__GI___lll_lock_wake
+            |          |          
+            |           --6.28%--entry_SYSCALL_64_after_hwframe
+            |                     |          
+            |                      --6.25%--do_syscall_64
+            |                                |          
+            |                                 --5.30%--__x64_sys_futex
+            |                                           |          
+            |                                            --5.21%--do_futex
+            |                                                      |          
+            |                                                       --5.04%--futex_wake
+            |                                                                 |          
+            |                                                                 |--2.83%--wake_up_q
+            |                                                                 |          |          
+            |                                                                 |           --2.72%--try_to_wake_up
+            |                                                                 |                     |          
+            |                                                                 |                      --0.56%--ttwu_queue_wakelist
+            |                                                                 |          
+            |                                                                  --1.21%--futex_wake_mark
+            |                                                                            |          
+            |                                                                             --1.07%--__futex_unqueue
+            |          
+             --1.37%--0
+                       (anonymous namespace)::worker
+                       0x56135e291180
+                       clock_nanosleep@GLIBC_2.2.5
+                       entry_SYSCALL_64
+
+     7.31%     1.91%  [k] common_nsleep                              -      -            
+            |          
+            |--5.40%--common_nsleep
+            |          |          
+            |          |--4.67%--hrtimer_nanosleep
+            |          |          |          
+            |          |           --4.43%--do_nanosleep
+            |          |                     |          
+            |          |                     |--2.75%--schedule
+            |          |                     |          __schedule
+            |          |                     |          |          
+            |          |                     |           --1.74%--dequeue_task
+            |          |                     |                     dequeue_task_fair
+            |          |                     |                     dequeue_entity
+            |          |                     |                     |          
+            |          |                     |                      --1.29%--update_cfs_group
+            |          |                     |                                |          
+            |          |                     |                                 --1.21%--reweight_entity
+            |          |                     |          
+            |          |                      --1.68%--hrtimer_start_range_ns
+            |          |                                |          
+            |          |                                |--1.12%--hrtimer_reprogram
+            |          |                                |          tick_program_event
+            |          |                                |          clockevents_program_event
+            |          |                                |          |          
+            |          |                                |           --0.88%--native_write_msr
+            |          |                                |          
+            |          |                                 --0.51%--__hrtimer_start_range_ns
+            |          |          
+            |           --0.73%--do_nanosleep
+            |          
+            |--0.92%--0x10000006f
+            |          (anonymous namespace)::worker
+            |          __nanosleep
+            |          clock_nanosleep@GLIBC_2.2.5
+            |          entry_SYSCALL_64_after_hwframe
+            |          do_syscall_64
+            |          common_nsleep
+            |          
+             --0.83%--0x100000071
+                       (anonymous namespace)::worker
+                       __nanosleep
+                       clock_nanosleep@GLIBC_2.2.5
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       common_nsleep
+
+     6.10%     0.00%  [k] 0x000000010000006f                         -      -            
+            |          
+            |--4.76%--(anonymous namespace)::worker
+            |          |          
+            |          |--2.69%--__GI___lll_lock_wait
+            |          |          |          
+            |          |           --2.58%--entry_SYSCALL_64_after_hwframe
+            |          |                     do_syscall_64
+            |          |                     |          
+            |          |                      --2.54%--__x64_sys_futex
+            |          |                                |          
+            |          |                                 --2.49%--do_futex
+            |          |                                           futex_wait
+            |          |                                           |          
+            |          |                                            --2.22%--futex_wait_queue
+            |          |                                                      |          
+            |          |                                                       --2.12%--schedule
+            |          |                                                                 |          
+            |          |                                                                  --2.10%--__schedule
+            |          |                                                                            |          
+            |          |                                                                             --1.38%--dequeue_task
+            |          |                                                                                       dequeue_task_fair
+            |          |                                                                                       |          
+            |          |                                                                                        --1.32%--dequeue_entity
+            |          |                                                                                                  |          
+            |          |                                                                                                   --0.98%--update_load_avg
+            |          |                                                                                                             |          
+            |          |                                                                                                              --0.94%--__update_load_avg_se
+            |          |          
+            |           --2.07%--__nanosleep
+            |                     clock_nanosleep@GLIBC_2.2.5
+            |                     entry_SYSCALL_64_after_hwframe
+            |                     do_syscall_64
+            |                     |          
+            |                     |--1.15%--__x64_sys_clock_nanosleep
+            |                     |          common_nsleep
+            |                     |          hrtimer_nanosleep
+            |                     |          do_nanosleep
+            |                     |          schedule
+            |                     |          __schedule
+            |                     |          dequeue_task
+            |                     |          dequeue_task_fair
+            |                     |          dequeue_entity
+            |                     |          update_cfs_group
+            |                     |          reweight_entity
+            |                     |          
+            |                      --0.92%--common_nsleep
+            |          
+             --1.33%--0x56135e28e310
+
+     6.01%     0.00%  [k] asm_exc_page_fault                         -      -            
+            |
+            ---exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               |          
+                --5.79%--__handle_mm_fault
+                          handle_pte_fault
+                          |          
+                           --5.48%--do_fault
+                                     do_read_fault
+                                     filemap_map_pages
+                                     do_set_pte
+                                     page_add_file_rmap
+
+     6.01%     0.00%  [k] exc_page_fault                             -      -            
+            |
+            ---do_user_addr_fault
+               handle_mm_fault
+               |          
+                --5.79%--__handle_mm_fault
+                          handle_pte_fault
+                          |          
+                           --5.48%--do_fault
+                                     do_read_fault
+                                     filemap_map_pages
+                                     do_set_pte
+                                     page_add_file_rmap
+
+     6.01%     0.00%  [k] do_user_addr_fault                         -      -            
+            |
+            ---handle_mm_fault
+               |          
+                --5.79%--__handle_mm_fault
+                          handle_pte_fault
+                          |          
+                           --5.48%--do_fault
+                                     do_read_fault
+                                     filemap_map_pages
+                                     do_set_pte
+                                     page_add_file_rmap
+
+     6.01%     0.00%  [k] handle_mm_fault                            -      -            
+            |          
+             --5.79%--__handle_mm_fault
+                       handle_pte_fault
+                       |          
+                        --5.48%--do_fault
+                                  do_read_fault
+                                  filemap_map_pages
+                                  do_set_pte
+                                  page_add_file_rmap
+
+     6.01%     0.23%  [k] __handle_mm_fault                          -      -            
+            |          
+             --5.79%--__handle_mm_fault
+                       handle_pte_fault
+                       |          
+                        --5.48%--do_fault
+                                  do_read_fault
+                                  filemap_map_pages
+                                  do_set_pte
+                                  page_add_file_rmap
+
+     5.82%     0.00%  [k] 0x000000010000006d                         -      -            
+            |          
+            |--5.07%--(anonymous namespace)::worker
+            |          |          
+            |          |--3.18%--__nanosleep
+            |          |          |          
+            |          |           --3.09%--clock_nanosleep@GLIBC_2.2.5
+            |          |                     |          
+            |          |                      --3.02%--entry_SYSCALL_64_after_hwframe
+            |          |                                do_syscall_64
+            |          |                                |          
+            |          |                                |--1.80%--__x64_sys_clock_nanosleep
+            |          |                                |          |          
+            |          |                                |           --1.72%--common_nsleep
+            |          |                                |                     |          
+            |          |                                |                      --1.62%--hrtimer_nanosleep
+            |          |                                |                                |          
+            |          |                                |                                 --1.38%--do_nanosleep
+            |          |                                |                                           |          
+            |          |                                |                                            --1.08%--schedule
+            |          |                                |                                                      __schedule
+            |          |                                |          
+            |          |                                 --0.52%--syscall_enter_from_user_mode
+            |          |                                           syscall_trace_enter.constprop.0
+            |          |          
+            |           --0.63%--__GI___lll_lock_wake
+            |          
+             --0.56%--pthread_mutex_unlock@@GLIBC_2.2.5
+
+     5.79%     0.00%  [k] handle_pte_fault                           -      -            
+            |          
+             --5.48%--do_fault
+                       do_read_fault
+                       filemap_map_pages
+                       do_set_pte
+                       page_add_file_rmap
+
+     5.50%     0.10%  [k] __x64_sys_clock_nanosleep                  -      -            
+            |          
+             --5.40%--__x64_sys_clock_nanosleep
+                       common_nsleep
+                       |          
+                       |--4.67%--hrtimer_nanosleep
+                       |          |          
+                       |           --4.43%--do_nanosleep
+                       |                     |          
+                       |                     |--2.75%--schedule
+                       |                     |          __schedule
+                       |                     |          |          
+                       |                     |           --1.74%--dequeue_task
+                       |                     |                     dequeue_task_fair
+                       |                     |                     dequeue_entity
+                       |                     |                     |          
+                       |                     |                      --1.29%--update_cfs_group
+                       |                     |                                |          
+                       |                     |                                 --1.21%--reweight_entity
+                       |                     |          
+                       |                      --1.68%--hrtimer_start_range_ns
+                       |                                |          
+                       |                                |--1.12%--hrtimer_reprogram
+                       |                                |          tick_program_event
+                       |                                |          clockevents_program_event
+                       |                                |          |          
+                       |                                |           --0.88%--native_write_msr
+                       |                                |          
+                       |                                 --0.51%--__hrtimer_start_range_ns
+                       |          
+                        --0.73%--do_nanosleep
+
+     5.48%     5.48%  [k] page_add_file_rmap                         -      -            
+            |
+            ---_dl_init
+               call_init.part.0
+               0x7f9124ab750c
+               std::ios_base_library_init
+               std::locale::locale
+               0x7f9124ae9884
+               std::__cxx11::messages<wchar_t>::messages
+               asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               do_fault
+               do_read_fault
+               filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [.] _dl_start_user                             -      -            
+            |
+            ---_dl_init
+               call_init.part.0
+               0x7f9124ab750c
+               std::ios_base_library_init
+               std::locale::locale
+               0x7f9124ae9884
+               std::__cxx11::messages<wchar_t>::messages
+               asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               do_fault
+               do_read_fault
+               filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [.] _dl_init                                   -      -            
+            |
+            ---call_init.part.0
+               0x7f9124ab750c
+               std::ios_base_library_init
+               std::locale::locale
+               0x7f9124ae9884
+               std::__cxx11::messages<wchar_t>::messages
+               asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               do_fault
+               do_read_fault
+               filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [.] call_init.part.0                           -      -            
+            |
+            ---0x7f9124ab750c
+               std::ios_base_library_init
+               std::locale::locale
+               0x7f9124ae9884
+               std::__cxx11::messages<wchar_t>::messages
+               asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               do_fault
+               do_read_fault
+               filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [.] 0x00007f9124ab750c                         -      -            
+            |
+            ---std::ios_base_library_init
+               std::locale::locale
+               0x7f9124ae9884
+               std::__cxx11::messages<wchar_t>::messages
+               asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               do_fault
+               do_read_fault
+               filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [.] std::ios_base_library_init                 -      -            
+            |
+            ---std::locale::locale
+               0x7f9124ae9884
+               std::__cxx11::messages<wchar_t>::messages
+               asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               do_fault
+               do_read_fault
+               filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [.] std::locale::locale                        -      -            
+            |
+            ---0x7f9124ae9884
+               std::__cxx11::messages<wchar_t>::messages
+               asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               do_fault
+               do_read_fault
+               filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [.] 0x00007f9124ae9884                         -      -            
+            |
+            ---std::__cxx11::messages<wchar_t>::messages
+               asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               do_fault
+               do_read_fault
+               filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [.] std::__cxx11::messages<wchar_t>::messages  -      -            
+            |
+            ---asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               do_fault
+               do_read_fault
+               filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [k] do_fault                                   -      -            
+            |
+            ---do_read_fault
+               filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [k] do_read_fault                              -      -            
+            |
+            ---filemap_map_pages
+               do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [k] filemap_map_pages                          -      -            
+            |
+            ---do_set_pte
+               page_add_file_rmap
+
+     5.48%     0.00%  [k] do_set_pte                                 -      -            
+            |
+            ---page_add_file_rmap
+
+     5.31%     0.05%  [k] dequeue_task_fair                          -      -            
+            |          
+             --5.26%--dequeue_task_fair
+                       |          
+                        --5.03%--dequeue_entity
+                                  |          
+                                  |--1.76%--update_cfs_group
+                                  |          |          
+                                  |           --1.28%--reweight_entity
+                                  |          
+                                  |--1.56%--update_load_avg
+                                  |          |          
+                                  |           --1.00%--__update_load_avg_se
+                                  |          
+                                   --1.53%--update_curr
+                                             |          
+                                              --1.02%--cpuacct_charge
+
+     5.31%     0.00%  [k] dequeue_task                               -      -            
+            |
+            ---dequeue_task_fair
+               |          
+                --5.03%--dequeue_entity
+                          |          
+                          |--1.76%--update_cfs_group
+                          |          |          
+                          |           --1.28%--reweight_entity
+                          |          
+                          |--1.56%--update_load_avg
+                          |          |          
+                          |           --1.00%--__update_load_avg_se
+                          |          
+                           --1.53%--update_curr
+                                     |          
+                                      --1.02%--cpuacct_charge
+
+     5.26%     0.73%  [k] do_nanosleep                               -      -            
+            |          
+            |--4.53%--do_nanosleep
+            |          |          
+            |          |--2.75%--schedule
+            |          |          __schedule
+            |          |          |          
+            |          |           --1.74%--dequeue_task
+            |          |                     dequeue_task_fair
+            |          |                     dequeue_entity
+            |          |                     |          
+            |          |                      --1.29%--update_cfs_group
+            |          |                                |          
+            |          |                                 --1.21%--reweight_entity
+            |          |          
+            |           --1.68%--hrtimer_start_range_ns
+            |                     |          
+            |                     |--1.12%--hrtimer_reprogram
+            |                     |          tick_program_event
+            |                     |          clockevents_program_event
+            |                     |          |          
+            |                     |           --0.88%--native_write_msr
+            |                     |          
+            |                      --0.51%--__hrtimer_start_range_ns
+            |          
+             --0.63%--0x100000072
+                       (anonymous namespace)::worker
+                       __nanosleep
+                       clock_nanosleep@GLIBC_2.2.5
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_clock_nanosleep
+                       common_nsleep
+                       do_nanosleep
+
+     5.13%     0.68%  [k] futex_wake                                 -      -            
+            |          
+             --4.45%--futex_wake
+                       |          
+                       |--2.83%--wake_up_q
+                       |          |          
+                       |           --2.72%--try_to_wake_up
+                       |                     |          
+                       |                      --0.56%--ttwu_queue_wakelist
+                       |          
+                        --1.21%--futex_wake_mark
+                                  |          
+                                   --1.07%--__futex_unqueue
+
+     5.03%     0.12%  [k] dequeue_entity                             -      -            
+            |          
+             --4.91%--dequeue_entity
+                       |          
+                       |--1.76%--update_cfs_group
+                       |          |          
+                       |           --1.28%--reweight_entity
+                       |          
+                       |--1.56%--update_load_avg
+                       |          |          
+                       |           --1.00%--__update_load_avg_se
+                       |          
+                        --1.53%--update_curr
+                                  |          
+                                   --1.02%--cpuacct_charge
+
+     4.88%     0.00%  [k] 0x0000000100000071                         -      -            
+            |          
+             --4.49%--(anonymous namespace)::worker
+                       |          
+                       |--2.75%--__GI___lll_lock_wait
+                       |          |          
+                       |           --2.60%--entry_SYSCALL_64_after_hwframe
+                       |                     do_syscall_64
+                       |                     |          
+                       |                     |--1.33%--syscall_exit_to_user_mode
+                       |                     |          |          
+                       |                     |           --1.28%--exit_to_user_mode_prepare
+                       |                     |                     |          
+                       |                     |                      --1.07%--switch_fpu_return
+                       |                     |          
+                       |                      --1.27%--__x64_sys_futex
+                       |                                do_futex
+                       |                                |          
+                       |                                 --1.01%--futex_wait
+                       |                                           |          
+                       |                                            --0.65%--futex_wait_queue
+                       |          
+                        --1.62%--__nanosleep
+                                  |          
+                                   --1.57%--clock_nanosleep@GLIBC_2.2.5
+                                             entry_SYSCALL_64_after_hwframe
+                                             do_syscall_64
+                                             |          
+                                             |--0.83%--common_nsleep
+                                             |          
+                                              --0.74%--__x64_sys_clock_nanosleep
+                                                        common_nsleep
+                                                        hrtimer_nanosleep
+                                                        do_nanosleep
+
+     4.77%     0.15%  [k] hrtimer_nanosleep                          -      -            
+            |          
+             --4.62%--hrtimer_nanosleep
+                       |          
+                        --4.43%--do_nanosleep
+                                  |          
+                                  |--2.75%--schedule
+                                  |          __schedule
+                                  |          |          
+                                  |           --1.74%--dequeue_task
+                                  |                     dequeue_task_fair
+                                  |                     dequeue_entity
+                                  |                     |          
+                                  |                      --1.29%--update_cfs_group
+                                  |                                |          
+                                  |                                 --1.21%--reweight_entity
+                                  |          
+                                   --1.68%--hrtimer_start_range_ns
+                                             |          
+                                             |--1.12%--hrtimer_reprogram
+                                             |          tick_program_event
+                                             |          clockevents_program_event
+                                             |          |          
+                                             |           --0.88%--native_write_msr
+                                             |          
+                                              --0.51%--__hrtimer_start_range_ns
+
+     3.42%     3.42%  [.] 0x00000000000023e4                         -      -            
+            |
+            ---pthread_mutex_lock@@GLIBC_2.2.5
+
+     2.83%     0.11%  [k] wake_up_q                                  -      -            
+            |          
+             --2.72%--wake_up_q
+                       try_to_wake_up
+                       |          
+                        --0.56%--ttwu_queue_wakelist
+
+     2.78%     0.00%  [k] 0x00007ffa302eef3b                         -      -            
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               __x64_sys_execve
+               do_execveat_common.isra.0
+               bprm_execve
+               bprm_execve.part.0
+               exec_binprm
+               search_binary_handler
+               load_elf_binary
+               |          
+                --2.64%--load_elf_interp.constprop.0
+                          elf_map
+                          vm_mmap
+                          vm_mmap_pgoff
+                          do_mmap
+                          mmap_region
+                          perf_event_mmap
+                          perf_iterate_ctx
+                          __perf_addr_filters_adjust
+
+     2.78%     0.00%  [k] __x64_sys_execve                           -      -            
+            |
+            ---do_execveat_common.isra.0
+               bprm_execve
+               bprm_execve.part.0
+               exec_binprm
+               search_binary_handler
+               load_elf_binary
+               |          
+                --2.64%--load_elf_interp.constprop.0
+                          elf_map
+                          vm_mmap
+                          vm_mmap_pgoff
+                          do_mmap
+                          mmap_region
+                          perf_event_mmap
+                          perf_iterate_ctx
+                          __perf_addr_filters_adjust
+
+     2.78%     0.00%  [k] do_execveat_common.isra.0                  -      -            
+            |
+            ---bprm_execve
+               bprm_execve.part.0
+               exec_binprm
+               search_binary_handler
+               load_elf_binary
+               |          
+                --2.64%--load_elf_interp.constprop.0
+                          elf_map
+                          vm_mmap
+                          vm_mmap_pgoff
+                          do_mmap
+                          mmap_region
+                          perf_event_mmap
+                          perf_iterate_ctx
+                          __perf_addr_filters_adjust
+
+     2.78%     0.00%  [k] bprm_execve                                -      -            
+            |
+            ---bprm_execve.part.0
+               exec_binprm
+               search_binary_handler
+               load_elf_binary
+               |          
+                --2.64%--load_elf_interp.constprop.0
+                          elf_map
+                          vm_mmap
+                          vm_mmap_pgoff
+                          do_mmap
+                          mmap_region
+                          perf_event_mmap
+                          perf_iterate_ctx
+                          __perf_addr_filters_adjust
+
+     2.78%     0.00%  [k] bprm_execve.part.0                         -      -            
+            |
+            ---exec_binprm
+               search_binary_handler
+               load_elf_binary
+               |          
+                --2.64%--load_elf_interp.constprop.0
+                          elf_map
+                          vm_mmap
+                          vm_mmap_pgoff
+                          do_mmap
+                          mmap_region
+                          perf_event_mmap
+                          perf_iterate_ctx
+                          __perf_addr_filters_adjust
+
+     2.78%     0.00%  [k] exec_binprm                                -      -            
+            |
+            ---search_binary_handler
+               load_elf_binary
+               |          
+                --2.64%--load_elf_interp.constprop.0
+                          elf_map
+                          vm_mmap
+                          vm_mmap_pgoff
+                          do_mmap
+                          mmap_region
+                          perf_event_mmap
+                          perf_iterate_ctx
+                          __perf_addr_filters_adjust
+
+     2.78%     0.00%  [k] search_binary_handler                      -      -            
+            |
+            ---load_elf_binary
+               |          
+                --2.64%--load_elf_interp.constprop.0
+                          elf_map
+                          vm_mmap
+                          vm_mmap_pgoff
+                          do_mmap
+                          mmap_region
+                          perf_event_mmap
+                          perf_iterate_ctx
+                          __perf_addr_filters_adjust
+
+     2.78%     0.00%  [k] load_elf_binary                            -      -            
+            |          
+             --2.64%--load_elf_interp.constprop.0
+                       elf_map
+                       vm_mmap
+                       vm_mmap_pgoff
+                       do_mmap
+                       mmap_region
+                       perf_event_mmap
+                       perf_iterate_ctx
+                       __perf_addr_filters_adjust
+
+     2.77%     0.00%  [k] perf_iterate_ctx                           -      -            
+            |          
+             --2.64%--__perf_addr_filters_adjust
+
+     2.72%     1.81%  [k] try_to_wake_up                             -      -            
+            |          
+            |--1.81%--0
+            |          (anonymous namespace)::worker
+            |          __GI___lll_lock_wake
+            |          entry_SYSCALL_64_after_hwframe
+            |          do_syscall_64
+            |          __x64_sys_futex
+            |          do_futex
+            |          futex_wake
+            |          wake_up_q
+            |          try_to_wake_up
+            |          
+             --0.91%--try_to_wake_up
+                       |          
+                        --0.56%--ttwu_queue_wakelist
+
+     2.64%     2.64%  [k] __perf_addr_filters_adjust                 -      -            
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               __x64_sys_execve
+               do_execveat_common.isra.0
+               bprm_execve
+               bprm_execve.part.0
+               exec_binprm
+               search_binary_handler
+               load_elf_binary
+               load_elf_interp.constprop.0
+               elf_map
+               vm_mmap
+               vm_mmap_pgoff
+               do_mmap
+               mmap_region
+               perf_event_mmap
+               perf_iterate_ctx
+               __perf_addr_filters_adjust
+
+     2.64%     0.00%  [k] load_elf_interp.constprop.0                -      -            
+            |
+            ---elf_map
+               vm_mmap
+               vm_mmap_pgoff
+               do_mmap
+               mmap_region
+               perf_event_mmap
+               perf_iterate_ctx
+               __perf_addr_filters_adjust
+
+     2.64%     0.00%  [k] elf_map                                    -      -            
+            |
+            ---vm_mmap
+               vm_mmap_pgoff
+               do_mmap
+               mmap_region
+               perf_event_mmap
+               perf_iterate_ctx
+               __perf_addr_filters_adjust
+
+     2.64%     0.00%  [k] vm_mmap                                    -      -            
+            |
+            ---vm_mmap_pgoff
+               do_mmap
+               mmap_region
+               perf_event_mmap
+               perf_iterate_ctx
+               __perf_addr_filters_adjust
+
+     2.64%     0.00%  [k] vm_mmap_pgoff                              -      -            
+            |
+            ---do_mmap
+               mmap_region
+               perf_event_mmap
+               perf_iterate_ctx
+               __perf_addr_filters_adjust
+
+     2.64%     0.00%  [k] do_mmap                                    -      -            
+            |
+            ---mmap_region
+               perf_event_mmap
+               perf_iterate_ctx
+               __perf_addr_filters_adjust
+
+     2.64%     0.00%  [k] mmap_region                                -      -            
+            |
+            ---perf_event_mmap
+               perf_iterate_ctx
+               __perf_addr_filters_adjust
+
+     2.64%     0.00%  [k] perf_event_mmap                            -      -            
+            |
+            ---perf_iterate_ctx
+               __perf_addr_filters_adjust
+
+     2.44%     0.00%  [.] 0x000056135e28e310                         -      -            
+     2.42%     0.00%  [k] psi_task_switch                            -      -            
+            |          
+            |--1.86%--psi_group_change
+            |          
+             --0.51%--psi_flags_change
+
+     2.17%     0.30%  [k] exit_to_user_mode_prepare                  -      -            
+            |          
+             --1.87%--exit_to_user_mode_prepare
+                       |          
+                       |--1.10%--switch_fpu_return
+                       |          
+                        --0.78%--exit_to_user_mode_loop
+                                  |          
+                                   --0.53%--__rseq_handle_notify_resume
+
+     2.15%     0.62%  [k] entry_SYSCALL_64                           -      -            
+            |          
+             --1.53%--entry_SYSCALL_64
+
+     2.04%     0.00%  [k] syscall_exit_to_user_mode                  -      -            
+            |          
+             --1.93%--exit_to_user_mode_prepare
+                       |          
+                       |--1.10%--switch_fpu_return
+                       |          
+                        --0.77%--exit_to_user_mode_loop
+                                  |          
+                                   --0.53%--__rseq_handle_notify_resume
+
+     1.97%     0.69%  [k] update_cfs_group                           -      -            
+            |          
+             --1.28%--update_cfs_group
+                       reweight_entity
+
+     1.93%     0.00%  [k] 0x0000000100000070                         -      -            
+            |          
+             --1.92%--(anonymous namespace)::worker
+
+     1.86%     1.86%  [k] psi_group_change                           -      -            
+            |          
+             --1.30%--0x100000072
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wait
+                       futex_wait_queue
+                       schedule
+                       __schedule
+                       psi_task_switch
+                       psi_group_change
+
+     1.82%     1.39%  [k] _raw_spin_lock                             -      -            
+            |          
+             --0.97%--0x10000006e
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wait
+                       |          
+                        --0.94%--futex_wait_setup
+                                  _raw_spin_lock
+
+     1.68%     0.05%  [k] hrtimer_start_range_ns                     -      -            
+            |          
+             --1.63%--hrtimer_start_range_ns
+                       |          
+                       |--1.12%--hrtimer_reprogram
+                       |          tick_program_event
+                       |          clockevents_program_event
+                       |          |          
+                       |           --0.88%--native_write_msr
+                       |          
+                        --0.51%--__hrtimer_start_range_ns
+
+     1.64%     1.64%  [k] entry_SYSRETQ_unsafe_stack                 -      -            
+            |          
+             --1.58%--0x10000006e
+                       (anonymous namespace)::worker
+                       |          
+                        --1.54%--__GI___lll_lock_wait
+
+     1.56%     0.20%  [k] update_load_avg                            -      -            
+            |          
+             --1.37%--update_load_avg
+                       |          
+                        --1.00%--__update_load_avg_se
+
+     1.55%     0.00%  [.] 0x000056135e291180                         -      -            
+            |
+            ---clock_nanosleep@GLIBC_2.2.5
+               |          
+                --1.53%--entry_SYSCALL_64
+
+     1.55%     0.05%  [k] update_curr                                -      -            
+            |          
+             --1.49%--update_curr
+                       |          
+                        --1.02%--cpuacct_charge
+
+     1.40%     0.00%  [k] futex_wait_setup                           -      -            
+            |          
+             --0.94%--_raw_spin_lock
+
+     1.40%     0.00%  [k] prepare_task_switch                        -      -            
+            |
+            ---__perf_event_task_sched_out
+               |          
+                --1.18%--__rcu_read_lock
+
+     1.40%     0.00%  [k] __perf_event_task_sched_out                -      -            
+            |          
+             --1.18%--__rcu_read_lock
+
+     1.28%     1.28%  [k] reweight_entity                            -      -            
+            |          
+             --1.18%--0x10000006f
+                       (anonymous namespace)::worker
+                       |          
+                        --1.15%--__nanosleep
+                                  clock_nanosleep@GLIBC_2.2.5
+                                  entry_SYSCALL_64_after_hwframe
+                                  do_syscall_64
+                                  __x64_sys_clock_nanosleep
+                                  common_nsleep
+                                  hrtimer_nanosleep
+                                  do_nanosleep
+                                  schedule
+                                  __schedule
+                                  dequeue_task
+                                  dequeue_task_fair
+                                  dequeue_entity
+                                  update_cfs_group
+                                  reweight_entity
+
+     1.27%     0.42%  [k] finish_task_switch.isra.0                  -      -            
+            |          
+             --0.85%--finish_task_switch.isra.0
+
+     1.26%     1.26%  [k] native_write_msr                           -      -            
+            |          
+             --0.82%--0x100000072
+                       (anonymous namespace)::worker
+                       __nanosleep
+                       clock_nanosleep@GLIBC_2.2.5
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_clock_nanosleep
+                       common_nsleep
+                       hrtimer_nanosleep
+                       do_nanosleep
+                       hrtimer_start_range_ns
+                       hrtimer_reprogram
+                       tick_program_event
+                       clockevents_program_event
+                       native_write_msr
+
+     1.21%     0.14%  [k] futex_wake_mark                            -      -            
+            |          
+             --1.07%--futex_wake_mark
+                       __futex_unqueue
+
+     1.18%     0.03%  [k] __rcu_read_lock                            -      -            
+            |          
+             --1.15%--__rcu_read_lock
+
+     1.17%     1.15%  [k] perf_event_context_sched_out               -      -            
+            |          
+             --1.15%--0x10000006e
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wait
+                       futex_wait_queue
+                       schedule
+                       __schedule
+                       prepare_task_switch
+                       __perf_event_task_sched_out
+                       __rcu_read_lock
+
+     1.12%     0.00%  [k] hrtimer_reprogram                          -      -            
+            |
+            ---tick_program_event
+               clockevents_program_event
+               |          
+                --0.88%--native_write_msr
+
+     1.12%     0.00%  [k] tick_program_event                         -      -            
+            |
+            ---clockevents_program_event
+               |          
+                --0.88%--native_write_msr
+
+     1.12%     0.00%  [k] clockevents_program_event                  -      -            
+            |          
+             --0.88%--native_write_msr
+
+     1.10%     1.07%  [k] switch_fpu_return                          -      -            
+            |          
+             --1.07%--0x100000071
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       syscall_exit_to_user_mode
+                       exit_to_user_mode_prepare
+                       switch_fpu_return
+
+     1.07%     1.07%  [k] __futex_unqueue                            -      -            
+            |          
+             --1.05%--0
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wake
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wake
+                       futex_wake_mark
+                       __futex_unqueue
+
+     1.02%     1.02%  [k] cpuacct_charge                             -      -            
+            |          
+             --0.83%--0x100000072
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wait
+                       futex_wait_queue
+                       schedule
+                       __schedule
+                       dequeue_task
+                       dequeue_task_fair
+                       dequeue_entity
+                       update_curr
+                       cpuacct_charge
+
+     1.00%     1.00%  [k] __update_load_avg_se                       -      -            
+            |          
+             --0.94%--0x10000006f
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wait
+                       futex_wait_queue
+                       schedule
+                       __schedule
+                       dequeue_task
+                       dequeue_task_fair
+                       dequeue_entity
+                       update_load_avg
+                       __update_load_avg_se
+
+     0.78%     0.24%  [k] exit_to_user_mode_loop                     -      -            
+            |          
+             --0.54%--exit_to_user_mode_loop
+                       |          
+                        --0.53%--__rseq_handle_notify_resume
+
+     0.73%     0.00%  [.] clone3                                     -      -            
+            |          
+             --0.54%--asm_exc_page_fault
+                       exc_page_fault
+                       do_user_addr_fault
+                       handle_mm_fault
+
+     0.69%     0.03%  [k] syscall_enter_from_user_mode               -      -            
+            |          
+             --0.66%--syscall_enter_from_user_mode
+                       syscall_trace_enter.constprop.0
+
+     0.66%     0.19%  [k] __secure_computing                         -      -            
+     0.66%     0.00%  [k] syscall_trace_enter.constprop.0            -      -            
+     0.56%     0.00%  [k] ttwu_queue_wakelist                        -      -            
+     0.56%     0.56%  [k] psi_flags_change                           -      -            
+            |          
+             --0.51%--0x10000006e
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wait
+                       futex_wait_queue
+                       schedule
+                       __schedule
+                       psi_task_switch
+                       psi_flags_change
+
+     0.55%     0.55%  [k] futex_unqueue                              -      -            
+     0.53%     0.21%  [k] __rseq_handle_notify_resume                -      -            
+     0.51%     0.00%  [k] __hrtimer_start_range_ns                   -      -            
+
+
+# Samples: 79  of event 'cpu_atom/cycles/'
+# Event count (approx.): 14049906
+#
+# Children      Self  Symbol                                 IPC   [IPC Coverage]
+# ........  ........  .....................................  ....................
+#
+    90.43%     0.00%  [.] (anonymous namespace)::worker      -      -            
+            |          
+            |--56.81%--__GI___lll_lock_wait
+            |          |          
+            |          |--55.44%--entry_SYSCALL_64_after_hwframe
+            |          |          |          
+            |          |           --50.35%--do_syscall_64
+            |          |                     |          
+            |          |                     |--31.48%--__x64_sys_futex
+            |          |                     |          do_futex
+            |          |                     |          |          
+            |          |                     |           --31.41%--futex_wait
+            |          |                     |                     |          
+            |          |                     |                     |--15.62%--futex_wait_queue
+            |          |                     |                     |          |          
+            |          |                     |                     |           --15.38%--schedule
+            |          |                     |                     |                     __schedule
+            |          |                     |                     |                     |          
+            |          |                     |                     |                     |--9.88%--psi_group_change
+            |          |                     |                     |                     |          
+            |          |                     |                     |                     |--2.52%--dequeue_task
+            |          |                     |                     |                     |          dequeue_task_fair
+            |          |                     |                     |                     |          |          
+            |          |                     |                     |                     |           --2.39%--dequeue_entity
+            |          |                     |                     |                     |                     |          
+            |          |                     |                     |                     |                     |--1.58%--update_load_avg
+            |          |                     |                     |                     |                     |          |          
+            |          |                     |                     |                     |                     |          |--0.67%--__update_load_avg_cfs_rq
+            |          |                     |                     |                     |                     |          |          
+            |          |                     |                     |                     |                     |           --0.56%--__update_load_avg_se
+            |          |                     |                     |                     |                     |          
+            |          |                     |                     |                     |                      --0.63%--update_curr
+            |          |                     |                     |                     |                                |          
+            |          |                     |                     |                     |                                 --0.53%--__calc_delta
+            |          |                     |                     |                     |          
+            |          |                     |                     |                     |--0.73%--psi_task_switch
+            |          |                     |                     |                     |          
+            |          |                     |                     |                      --0.72%--update_rq_clock
+            |          |                     |                     |                                sched_clock_cpu
+            |          |                     |                     |                                sched_clock
+            |          |                     |                     |                                native_sched_clock
+            |          |                     |                     |          
+            |          |                     |                     |--9.05%--futex_unqueue
+            |          |                     |                     |          
+            |          |                     |                      --6.75%--futex_wait_setup
+            |          |                     |                                |          
+            |          |                     |                                 --6.46%--futex_q_lock
+            |          |                     |                                           |          
+            |          |                     |                                            --0.69%--_raw_spin_lock
+            |          |                     |                                                      native_queued_spin_lock_slowpath
+            |          |                     |          
+            |          |                     |--9.97%--syscall_exit_to_user_mode
+            |          |                     |          exit_to_user_mode_prepare
+            |          |                     |          |          
+            |          |                     |           --9.70%--exit_to_user_mode_loop
+            |          |                     |                     __rseq_handle_notify_resume
+            |          |                     |          
+            |          |                      --8.89%--syscall_enter_from_user_mode
+            |          |                                |          
+            |          |                                 --8.78%--syscall_trace_enter.constprop.0
+            |          |                                           __secure_computing
+            |          |                                           __seccomp_filter
+            |          |          
+            |           --0.68%--entry_SYSCALL_64
+            |          
+            |--13.87%--pthread_mutex_lock@@GLIBC_2.2.5
+            |          
+            |--9.73%--__nanosleep
+            |          clock_nanosleep@GLIBC_2.2.5
+            |          entry_SYSCALL_64_after_hwframe
+            |          do_syscall_64
+            |          |          
+            |          |--9.09%--__x64_sys_clock_nanosleep
+            |          |          common_nsleep
+            |          |          hrtimer_nanosleep
+            |          |          do_nanosleep
+            |          |          schedule
+            |          |          __schedule
+            |          |          |          
+            |          |           --8.78%--pick_next_task
+            |          |                     put_prev_task_fair
+            |          |                     check_cfs_rq_runtime
+            |          |          
+            |           --0.64%--syscall_exit_to_user_mode
+            |                     exit_to_user_mode_prepare
+            |          
+            |--9.24%--pthread_mutex_unlock@@GLIBC_2.2.5
+            |          
+             --0.78%--__GI___lll_lock_wake
+
+    65.60%     5.09%  [k] entry_SYSCALL_64_after_hwframe     -      -            
+            |          
+            |--60.50%--entry_SYSCALL_64_after_hwframe
+            |          do_syscall_64
+            |          |          
+            |          |--31.91%--__x64_sys_futex
+            |          |          do_futex
+            |          |          |          
+            |          |           --31.41%--futex_wait
+            |          |                     |          
+            |          |                     |--15.62%--futex_wait_queue
+            |          |                     |          |          
+            |          |                     |           --15.38%--schedule
+            |          |                     |                     __schedule
+            |          |                     |                     |          
+            |          |                     |                     |--9.88%--psi_group_change
+            |          |                     |                     |          
+            |          |                     |                     |--2.52%--dequeue_task
+            |          |                     |                     |          dequeue_task_fair
+            |          |                     |                     |          |          
+            |          |                     |                     |           --2.39%--dequeue_entity
+            |          |                     |                     |                     |          
+            |          |                     |                     |                     |--1.58%--update_load_avg
+            |          |                     |                     |                     |          |          
+            |          |                     |                     |                     |          |--0.67%--__update_load_avg_cfs_rq
+            |          |                     |                     |                     |          |          
+            |          |                     |                     |                     |           --0.56%--__update_load_avg_se
+            |          |                     |                     |                     |          
+            |          |                     |                     |                      --0.63%--update_curr
+            |          |                     |                     |                                |          
+            |          |                     |                     |                                 --0.53%--__calc_delta
+            |          |                     |                     |          
+            |          |                     |                     |--0.73%--psi_task_switch
+            |          |                     |                     |          
+            |          |                     |                      --0.72%--update_rq_clock
+            |          |                     |                                sched_clock_cpu
+            |          |                     |                                sched_clock
+            |          |                     |                                native_sched_clock
+            |          |                     |          
+            |          |                     |--9.05%--futex_unqueue
+            |          |                     |          
+            |          |                      --6.75%--futex_wait_setup
+            |          |                                |          
+            |          |                                 --6.46%--futex_q_lock
+            |          |                                           |          
+            |          |                                            --0.69%--_raw_spin_lock
+            |          |                                                      native_queued_spin_lock_slowpath
+            |          |          
+            |          |--10.61%--syscall_exit_to_user_mode
+            |          |          exit_to_user_mode_prepare
+            |          |          |          
+            |          |           --9.70%--exit_to_user_mode_loop
+            |          |                     __rseq_handle_notify_resume
+            |          |          
+            |          |--9.09%--__x64_sys_clock_nanosleep
+            |          |          common_nsleep
+            |          |          hrtimer_nanosleep
+            |          |          do_nanosleep
+            |          |          schedule
+            |          |          __schedule
+            |          |          |          
+            |          |           --8.78%--pick_next_task
+            |          |                     put_prev_task_fair
+            |          |                     check_cfs_rq_runtime
+            |          |          
+            |           --8.89%--syscall_enter_from_user_mode
+            |                     |          
+            |                      --8.78%--syscall_trace_enter.constprop.0
+            |                                __secure_computing
+            |                                __seccomp_filter
+            |          
+             --5.09%--0x10000006e
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+
+    60.50%     0.00%  [k] do_syscall_64                      -      -            
+            |          
+            |--31.91%--__x64_sys_futex
+            |          do_futex
+            |          |          
+            |           --31.41%--futex_wait
+            |                     |          
+            |                     |--15.62%--futex_wait_queue
+            |                     |          |          
+            |                     |           --15.38%--schedule
+            |                     |                     __schedule
+            |                     |                     |          
+            |                     |                     |--9.88%--psi_group_change
+            |                     |                     |          
+            |                     |                     |--2.52%--dequeue_task
+            |                     |                     |          dequeue_task_fair
+            |                     |                     |          |          
+            |                     |                     |           --2.39%--dequeue_entity
+            |                     |                     |                     |          
+            |                     |                     |                     |--1.58%--update_load_avg
+            |                     |                     |                     |          |          
+            |                     |                     |                     |          |--0.67%--__update_load_avg_cfs_rq
+            |                     |                     |                     |          |          
+            |                     |                     |                     |           --0.56%--__update_load_avg_se
+            |                     |                     |                     |          
+            |                     |                     |                      --0.63%--update_curr
+            |                     |                     |                                |          
+            |                     |                     |                                 --0.53%--__calc_delta
+            |                     |                     |          
+            |                     |                     |--0.73%--psi_task_switch
+            |                     |                     |          
+            |                     |                      --0.72%--update_rq_clock
+            |                     |                                sched_clock_cpu
+            |                     |                                sched_clock
+            |                     |                                native_sched_clock
+            |                     |          
+            |                     |--9.05%--futex_unqueue
+            |                     |          
+            |                      --6.75%--futex_wait_setup
+            |                                |          
+            |                                 --6.46%--futex_q_lock
+            |                                           |          
+            |                                            --0.69%--_raw_spin_lock
+            |                                                      native_queued_spin_lock_slowpath
+            |          
+            |--10.61%--syscall_exit_to_user_mode
+            |          exit_to_user_mode_prepare
+            |          |          
+            |           --9.70%--exit_to_user_mode_loop
+            |                     __rseq_handle_notify_resume
+            |          
+            |--9.09%--__x64_sys_clock_nanosleep
+            |          common_nsleep
+            |          hrtimer_nanosleep
+            |          do_nanosleep
+            |          schedule
+            |          __schedule
+            |          |          
+            |           --8.78%--pick_next_task
+            |                     put_prev_task_fair
+            |                     check_cfs_rq_runtime
+            |          
+             --8.89%--syscall_enter_from_user_mode
+                       |          
+                        --8.78%--syscall_trace_enter.constprop.0
+                                  __secure_computing
+                                  __seccomp_filter
+
+    57.16%     0.78%  [.] __GI___lll_lock_wait               -      -            
+            |          
+            |--56.39%--__GI___lll_lock_wait
+            |          |          
+            |           --55.44%--entry_SYSCALL_64_after_hwframe
+            |                     |          
+            |                      --50.35%--do_syscall_64
+            |                                |          
+            |                                |--31.48%--__x64_sys_futex
+            |                                |          do_futex
+            |                                |          |          
+            |                                |           --31.41%--futex_wait
+            |                                |                     |          
+            |                                |                     |--15.62%--futex_wait_queue
+            |                                |                     |          |          
+            |                                |                     |           --15.38%--schedule
+            |                                |                     |                     __schedule
+            |                                |                     |                     |          
+            |                                |                     |                     |--9.88%--psi_group_change
+            |                                |                     |                     |          
+            |                                |                     |                     |--2.52%--dequeue_task
+            |                                |                     |                     |          dequeue_task_fair
+            |                                |                     |                     |          |          
+            |                                |                     |                     |           --2.39%--dequeue_entity
+            |                                |                     |                     |                     |          
+            |                                |                     |                     |                     |--1.58%--update_load_avg
+            |                                |                     |                     |                     |          |          
+            |                                |                     |                     |                     |          |--0.67%--__update_load_avg_cfs_rq
+            |                                |                     |                     |                     |          |          
+            |                                |                     |                     |                     |           --0.56%--__update_load_avg_se
+            |                                |                     |                     |                     |          
+            |                                |                     |                     |                      --0.63%--update_curr
+            |                                |                     |                     |                                |          
+            |                                |                     |                     |                                 --0.53%--__calc_delta
+            |                                |                     |                     |          
+            |                                |                     |                     |--0.73%--psi_task_switch
+            |                                |                     |                     |          
+            |                                |                     |                      --0.72%--update_rq_clock
+            |                                |                     |                                sched_clock_cpu
+            |                                |                     |                                sched_clock
+            |                                |                     |                                native_sched_clock
+            |                                |                     |          
+            |                                |                     |--9.05%--futex_unqueue
+            |                                |                     |          
+            |                                |                      --6.75%--futex_wait_setup
+            |                                |                                |          
+            |                                |                                 --6.46%--futex_q_lock
+            |                                |                                           |          
+            |                                |                                            --0.69%--_raw_spin_lock
+            |                                |                                                      native_queued_spin_lock_slowpath
+            |                                |          
+            |                                |--9.97%--syscall_exit_to_user_mode
+            |                                |          exit_to_user_mode_prepare
+            |                                |          |          
+            |                                |           --9.70%--exit_to_user_mode_loop
+            |                                |                     __rseq_handle_notify_resume
+            |                                |          
+            |                                 --8.89%--syscall_enter_from_user_mode
+            |                                           |          
+            |                                            --8.78%--syscall_trace_enter.constprop.0
+            |                                                      __secure_computing
+            |                                                      __seccomp_filter
+            |          
+             --0.59%--0x10000006e
+                       (anonymous namespace)::worker
+
+    31.91%     0.00%  [k] __x64_sys_futex                    -      -            
+            |
+            ---do_futex
+               |          
+                --31.41%--futex_wait
+                          |          
+                          |--15.62%--futex_wait_queue
+                          |          |          
+                          |           --15.38%--schedule
+                          |                     __schedule
+                          |                     |          
+                          |                     |--9.88%--psi_group_change
+                          |                     |          
+                          |                     |--2.52%--dequeue_task
+                          |                     |          dequeue_task_fair
+                          |                     |          |          
+                          |                     |           --2.39%--dequeue_entity
+                          |                     |                     |          
+                          |                     |                     |--1.58%--update_load_avg
+                          |                     |                     |          |          
+                          |                     |                     |          |--0.67%--__update_load_avg_cfs_rq
+                          |                     |                     |          |          
+                          |                     |                     |           --0.56%--__update_load_avg_se
+                          |                     |                     |          
+                          |                     |                      --0.63%--update_curr
+                          |                     |                                |          
+                          |                     |                                 --0.53%--__calc_delta
+                          |                     |          
+                          |                     |--0.73%--psi_task_switch
+                          |                     |          
+                          |                      --0.72%--update_rq_clock
+                          |                                sched_clock_cpu
+                          |                                sched_clock
+                          |                                native_sched_clock
+                          |          
+                          |--9.05%--futex_unqueue
+                          |          
+                           --6.75%--futex_wait_setup
+                                     |          
+                                      --6.46%--futex_q_lock
+                                                |          
+                                                 --0.69%--_raw_spin_lock
+                                                           native_queued_spin_lock_slowpath
+
+    31.91%     0.07%  [k] do_futex                           -      -            
+            |          
+             --31.84%--do_futex
+                       |          
+                        --31.41%--futex_wait
+                                  |          
+                                  |--15.62%--futex_wait_queue
+                                  |          |          
+                                  |           --15.38%--schedule
+                                  |                     __schedule
+                                  |                     |          
+                                  |                     |--9.88%--psi_group_change
+                                  |                     |          
+                                  |                     |--2.52%--dequeue_task
+                                  |                     |          dequeue_task_fair
+                                  |                     |          |          
+                                  |                     |           --2.39%--dequeue_entity
+                                  |                     |                     |          
+                                  |                     |                     |--1.58%--update_load_avg
+                                  |                     |                     |          |          
+                                  |                     |                     |          |--0.67%--__update_load_avg_cfs_rq
+                                  |                     |                     |          |          
+                                  |                     |                     |           --0.56%--__update_load_avg_se
+                                  |                     |                     |          
+                                  |                     |                      --0.63%--update_curr
+                                  |                     |                                |          
+                                  |                     |                                 --0.53%--__calc_delta
+                                  |                     |          
+                                  |                     |--0.73%--psi_task_switch
+                                  |                     |          
+                                  |                      --0.72%--update_rq_clock
+                                  |                                sched_clock_cpu
+                                  |                                sched_clock
+                                  |                                native_sched_clock
+                                  |          
+                                  |--9.05%--futex_unqueue
+                                  |          
+                                   --6.75%--futex_wait_setup
+                                             |          
+                                              --6.46%--futex_q_lock
+                                                        |          
+                                                         --0.69%--_raw_spin_lock
+                                                                   native_queued_spin_lock_slowpath
+
+    31.41%     0.00%  [k] futex_wait                         -      -            
+            |          
+            |--15.62%--futex_wait_queue
+            |          |          
+            |           --15.38%--schedule
+            |                     __schedule
+            |                     |          
+            |                     |--9.88%--psi_group_change
+            |                     |          
+            |                     |--2.52%--dequeue_task
+            |                     |          dequeue_task_fair
+            |                     |          |          
+            |                     |           --2.39%--dequeue_entity
+            |                     |                     |          
+            |                     |                     |--1.58%--update_load_avg
+            |                     |                     |          |          
+            |                     |                     |          |--0.67%--__update_load_avg_cfs_rq
+            |                     |                     |          |          
+            |                     |                     |           --0.56%--__update_load_avg_se
+            |                     |                     |          
+            |                     |                      --0.63%--update_curr
+            |                     |                                |          
+            |                     |                                 --0.53%--__calc_delta
+            |                     |          
+            |                     |--0.73%--psi_task_switch
+            |                     |          
+            |                      --0.72%--update_rq_clock
+            |                                sched_clock_cpu
+            |                                sched_clock
+            |                                native_sched_clock
+            |          
+            |--9.05%--futex_unqueue
+            |          
+             --6.75%--futex_wait_setup
+                       |          
+                        --6.46%--futex_q_lock
+                                  |          
+                                   --0.69%--_raw_spin_lock
+                                             native_queued_spin_lock_slowpath
+
+    26.86%     0.00%  [k] 0x000000010000006d                 -      -            
+            |          
+            |--18.09%--(anonymous namespace)::worker
+            |          |          
+            |           --17.81%--__GI___lll_lock_wait
+            |                     entry_SYSCALL_64_after_hwframe
+            |                     do_syscall_64
+            |                     |          
+            |                     |--8.78%--syscall_exit_to_user_mode
+            |                     |          exit_to_user_mode_prepare
+            |                     |          exit_to_user_mode_loop
+            |                     |          __rseq_handle_notify_resume
+            |                     |          
+            |                      --8.78%--syscall_enter_from_user_mode
+            |                                syscall_trace_enter.constprop.0
+            |                                __secure_computing
+            |                                __seccomp_filter
+            |          
+             --8.78%--pthread_mutex_lock@@GLIBC_2.2.5
+
+    24.47%     0.59%  [k] __schedule                         -      -            
+            |          
+             --23.88%--__schedule
+                       |          
+                       |--9.88%--psi_group_change
+                       |          
+                       |--9.03%--pick_next_task
+                       |          |          
+                       |           --8.86%--put_prev_task_fair
+                       |                     |          
+                       |                      --8.78%--check_cfs_rq_runtime
+                       |          
+                       |--2.52%--dequeue_task
+                       |          dequeue_task_fair
+                       |          |          
+                       |           --2.39%--dequeue_entity
+                       |                     |          
+                       |                     |--1.58%--update_load_avg
+                       |                     |          |          
+                       |                     |          |--0.67%--__update_load_avg_cfs_rq
+                       |                     |          |          
+                       |                     |           --0.56%--__update_load_avg_se
+                       |                     |          
+                       |                      --0.63%--update_curr
+                       |                                |          
+                       |                                 --0.53%--__calc_delta
+                       |          
+                       |--1.04%--psi_task_switch
+                       |          |          
+                       |           --0.81%--psi_group_change
+                       |          
+                        --0.72%--update_rq_clock
+                                  sched_clock_cpu
+                                  sched_clock
+                                  native_sched_clock
+
+    24.47%     0.00%  [k] schedule                           -      -            
+            |
+            ---__schedule
+               |          
+               |--9.88%--psi_group_change
+               |          
+               |--9.03%--pick_next_task
+               |          |          
+               |           --8.86%--put_prev_task_fair
+               |                     |          
+               |                      --8.78%--check_cfs_rq_runtime
+               |          
+               |--2.52%--dequeue_task
+               |          dequeue_task_fair
+               |          |          
+               |           --2.39%--dequeue_entity
+               |                     |          
+               |                     |--1.58%--update_load_avg
+               |                     |          |          
+               |                     |          |--0.67%--__update_load_avg_cfs_rq
+               |                     |          |          
+               |                     |           --0.56%--__update_load_avg_se
+               |                     |          
+               |                      --0.63%--update_curr
+               |                                |          
+               |                                 --0.53%--__calc_delta
+               |          
+               |--1.04%--psi_task_switch
+               |          |          
+               |           --0.81%--psi_group_change
+               |          
+                --0.72%--update_rq_clock
+                          sched_clock_cpu
+                          sched_clock
+                          native_sched_clock
+
+    22.83%     0.00%  [k] 0000000000000000                   -      -            
+            |
+            ---(anonymous namespace)::worker
+               |          
+               |--13.87%--pthread_mutex_lock@@GLIBC_2.2.5
+               |          
+                --8.86%--pthread_mutex_unlock@@GLIBC_2.2.5
+
+    22.65%    22.65%  [.] pthread_mutex_lock@@GLIBC_2.2.5    -      -            
+            |          
+            |--13.87%--0
+            |          (anonymous namespace)::worker
+            |          pthread_mutex_lock@@GLIBC_2.2.5
+            |          
+             --8.78%--0x10000006d
+                       pthread_mutex_lock@@GLIBC_2.2.5
+
+    20.35%     0.00%  [k] 0x0000000100000072                 -      -            
+            |
+            ---(anonymous namespace)::worker
+               __GI___lll_lock_wait
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               |          
+               |--19.73%--__x64_sys_futex
+               |          do_futex
+               |          futex_wait
+               |          |          
+               |          |--10.96%--futex_wait_queue
+               |          |          schedule
+               |          |          __schedule
+               |          |          |          
+               |          |          |--9.88%--psi_group_change
+               |          |          |          
+               |          |           --0.89%--dequeue_task
+               |          |                     dequeue_task_fair
+               |          |                     |          
+               |          |                      --0.76%--dequeue_entity
+               |          |                                |          
+               |          |                                 --0.53%--update_curr
+               |          |                                           __calc_delta
+               |          |          
+               |           --8.78%--futex_unqueue
+               |          
+                --0.61%--syscall_exit_to_user_mode
+                          exit_to_user_mode_prepare
+                          exit_to_user_mode_loop
+                          __rseq_handle_notify_resume
+
+    15.62%     0.24%  [k] futex_wait_queue                   -      -            
+            |          
+             --15.38%--futex_wait_queue
+                       schedule
+                       __schedule
+                       |          
+                       |--9.88%--psi_group_change
+                       |          
+                       |--2.52%--dequeue_task
+                       |          dequeue_task_fair
+                       |          |          
+                       |           --2.39%--dequeue_entity
+                       |                     |          
+                       |                     |--1.58%--update_load_avg
+                       |                     |          |          
+                       |                     |          |--0.67%--__update_load_avg_cfs_rq
+                       |                     |          |          
+                       |                     |           --0.56%--__update_load_avg_se
+                       |                     |          
+                       |                      --0.63%--update_curr
+                       |                                |          
+                       |                                 --0.53%--__calc_delta
+                       |          
+                       |--0.73%--psi_task_switch
+                       |          
+                        --0.72%--update_rq_clock
+                                  sched_clock_cpu
+                                  sched_clock
+                                  native_sched_clock
+
+    11.44%     0.00%  [.] 0x0000000100000070                 -      -            
+            |          
+            |--10.65%--(anonymous namespace)::worker
+            |          |          
+            |          |--9.73%--__nanosleep
+            |          |          clock_nanosleep@GLIBC_2.2.5
+            |          |          entry_SYSCALL_64_after_hwframe
+            |          |          do_syscall_64
+            |          |          |          
+            |          |          |--9.09%--__x64_sys_clock_nanosleep
+            |          |          |          common_nsleep
+            |          |          |          hrtimer_nanosleep
+            |          |          |          do_nanosleep
+            |          |          |          schedule
+            |          |          |          __schedule
+            |          |          |          |          
+            |          |          |           --8.78%--pick_next_task
+            |          |          |                     put_prev_task_fair
+            |          |          |                     check_cfs_rq_runtime
+            |          |          |          
+            |          |           --0.64%--syscall_exit_to_user_mode
+            |          |                     exit_to_user_mode_prepare
+            |          |          
+            |           --0.54%--__GI___lll_lock_wait
+            |          
+             --0.79%--pthread_mutex_unlock@@GLIBC_2.2.5
+
+    10.68%    10.68%  [k] psi_group_change                   -      -            
+            |          
+             --9.88%--0x100000072
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wait
+                       futex_wait_queue
+                       schedule
+                       __schedule
+                       psi_group_change
+
+    10.61%     0.64%  [k] exit_to_user_mode_prepare          -      -            
+            |          
+            |--9.97%--exit_to_user_mode_prepare
+            |          |          
+            |           --9.70%--exit_to_user_mode_loop
+            |                     __rseq_handle_notify_resume
+            |          
+             --0.64%--0x100000070
+                       (anonymous namespace)::worker
+                       __nanosleep
+                       clock_nanosleep@GLIBC_2.2.5
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       syscall_exit_to_user_mode
+                       exit_to_user_mode_prepare
+
+    10.61%     0.00%  [k] syscall_exit_to_user_mode          -      -            
+            |
+            ---exit_to_user_mode_prepare
+               |          
+                --9.70%--exit_to_user_mode_loop
+                          __rseq_handle_notify_resume
+
+    10.04%    10.04%  [.] pthread_mutex_unlock@@GLIBC_2.2.5  -      -            
+            |          
+            |--8.86%--0
+            |          (anonymous namespace)::worker
+            |          pthread_mutex_unlock@@GLIBC_2.2.5
+            |          
+             --1.18%--0x100000070
+                       |          
+                        --0.79%--pthread_mutex_unlock@@GLIBC_2.2.5
+
+     9.73%     0.00%  [.] __nanosleep                        -      -            
+            |
+            ---clock_nanosleep@GLIBC_2.2.5
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               |          
+               |--9.09%--__x64_sys_clock_nanosleep
+               |          common_nsleep
+               |          hrtimer_nanosleep
+               |          do_nanosleep
+               |          schedule
+               |          __schedule
+               |          |          
+               |           --8.78%--pick_next_task
+               |                     put_prev_task_fair
+               |                     check_cfs_rq_runtime
+               |          
+                --0.64%--syscall_exit_to_user_mode
+                          exit_to_user_mode_prepare
+
+     9.73%     0.00%  [.] clock_nanosleep@GLIBC_2.2.5        -      -            
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               |          
+               |--9.09%--__x64_sys_clock_nanosleep
+               |          common_nsleep
+               |          hrtimer_nanosleep
+               |          do_nanosleep
+               |          schedule
+               |          __schedule
+               |          |          
+               |           --8.78%--pick_next_task
+               |                     put_prev_task_fair
+               |                     check_cfs_rq_runtime
+               |          
+                --0.64%--syscall_exit_to_user_mode
+                          exit_to_user_mode_prepare
+
+     9.70%     9.70%  [k] __rseq_handle_notify_resume        -      -            
+            |          
+            |--8.78%--0x10000006d
+            |          (anonymous namespace)::worker
+            |          __GI___lll_lock_wait
+            |          entry_SYSCALL_64_after_hwframe
+            |          do_syscall_64
+            |          syscall_exit_to_user_mode
+            |          exit_to_user_mode_prepare
+            |          exit_to_user_mode_loop
+            |          __rseq_handle_notify_resume
+            |          
+             --0.61%--0x100000072
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       syscall_exit_to_user_mode
+                       exit_to_user_mode_prepare
+                       exit_to_user_mode_loop
+                       __rseq_handle_notify_resume
+
+     9.70%     0.00%  [k] exit_to_user_mode_loop             -      -            
+            |
+            ---__rseq_handle_notify_resume
+
+     9.09%     0.00%  [k] __x64_sys_clock_nanosleep          -      -            
+            |
+            ---common_nsleep
+               hrtimer_nanosleep
+               do_nanosleep
+               schedule
+               __schedule
+               |          
+                --8.78%--pick_next_task
+                          put_prev_task_fair
+                          check_cfs_rq_runtime
+
+     9.09%     0.00%  [k] common_nsleep                      -      -            
+            |
+            ---hrtimer_nanosleep
+               do_nanosleep
+               schedule
+               __schedule
+               |          
+                --8.78%--pick_next_task
+                          put_prev_task_fair
+                          check_cfs_rq_runtime
+
+     9.09%     0.00%  [k] hrtimer_nanosleep                  -      -            
+            |
+            ---do_nanosleep
+               schedule
+               __schedule
+               |          
+                --8.78%--pick_next_task
+                          put_prev_task_fair
+                          check_cfs_rq_runtime
+
+     9.09%     0.00%  [k] do_nanosleep                       -      -            
+            |
+            ---schedule
+               __schedule
+               |          
+                --8.78%--pick_next_task
+                          put_prev_task_fair
+                          check_cfs_rq_runtime
+
+     9.05%     9.05%  [k] futex_unqueue                      -      -            
+            |          
+             --8.78%--0x100000072
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wait
+                       futex_unqueue
+
+     9.03%     0.00%  [k] pick_next_task                     -      -            
+            |          
+             --8.86%--put_prev_task_fair
+                       |          
+                        --8.78%--check_cfs_rq_runtime
+
+     8.89%     0.12%  [k] syscall_trace_enter.constprop.0    -      -            
+            |          
+             --8.78%--syscall_trace_enter.constprop.0
+                       __secure_computing
+                       __seccomp_filter
+
+     8.89%     0.00%  [k] syscall_enter_from_user_mode       -      -            
+            |          
+             --8.78%--syscall_trace_enter.constprop.0
+                       __secure_computing
+                       __seccomp_filter
+
+     8.86%     0.00%  [k] put_prev_task_fair                 -      -            
+            |          
+             --8.78%--check_cfs_rq_runtime
+
+     8.78%     8.78%  [k] check_cfs_rq_runtime               -      -            
+            |
+            ---(anonymous namespace)::worker
+               __nanosleep
+               clock_nanosleep@GLIBC_2.2.5
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               __x64_sys_clock_nanosleep
+               common_nsleep
+               hrtimer_nanosleep
+               do_nanosleep
+               schedule
+               __schedule
+               pick_next_task
+               put_prev_task_fair
+               check_cfs_rq_runtime
+
+     8.78%     8.78%  [k] __seccomp_filter                   -      -            
+            |
+            ---(anonymous namespace)::worker
+               __GI___lll_lock_wait
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               syscall_enter_from_user_mode
+               syscall_trace_enter.constprop.0
+               __secure_computing
+               __seccomp_filter
+
+     8.78%     0.00%  [k] __secure_computing                 -      -            
+            |
+            ---__seccomp_filter
+
+     7.76%     0.00%  [k] 0x0000000100000071                 -      -            
+            |
+            ---(anonymous namespace)::worker
+               __GI___lll_lock_wait
+               |          
+                --7.67%--entry_SYSCALL_64_after_hwframe
+                          do_syscall_64
+                          |          
+                           --7.55%--__x64_sys_futex
+                                     do_futex
+                                     |          
+                                      --7.48%--futex_wait
+                                                |          
+                                                |--6.05%--futex_wait_setup
+                                                |          |          
+                                                |           --5.76%--futex_q_lock
+                                                |          
+                                                 --1.43%--futex_wait_queue
+                                                           schedule
+                                                           __schedule
+                                                           |          
+                                                            --0.72%--update_rq_clock
+                                                                      sched_clock_cpu
+                                                                      sched_clock
+                                                                      native_sched_clock
+
+     7.45%     0.00%  [k] 0x000000010000006e                 -      -            
+            |
+            ---(anonymous namespace)::worker
+               |          
+                --7.03%--__GI___lll_lock_wait
+                          |          
+                           --6.79%--entry_SYSCALL_64_after_hwframe
+                                     |          
+                                      --1.70%--do_syscall_64
+                                                |          
+                                                 --1.61%--__x64_sys_futex
+                                                           do_futex
+                                                           futex_wait
+                                                           |          
+                                                           |--0.91%--futex_wait_queue
+                                                           |          schedule
+                                                           |          __schedule
+                                                           |          |          
+                                                           |           --0.54%--dequeue_task
+                                                           |                     dequeue_task_fair
+                                                           |                     dequeue_entity
+                                                           |          
+                                                            --0.69%--futex_wait_setup
+                                                                      futex_q_lock
+                                                                      _raw_spin_lock
+                                                                      native_queued_spin_lock_slowpath
+
+     6.75%     0.00%  [k] futex_wait_setup                   -      -            
+            |          
+             --6.46%--futex_q_lock
+                       |          
+                        --0.69%--_raw_spin_lock
+                                  native_queued_spin_lock_slowpath
+
+     6.46%     5.76%  [k] futex_q_lock                       -      -            
+            |          
+            |--5.76%--0x100000071
+            |          (anonymous namespace)::worker
+            |          __GI___lll_lock_wait
+            |          entry_SYSCALL_64_after_hwframe
+            |          do_syscall_64
+            |          __x64_sys_futex
+            |          do_futex
+            |          futex_wait
+            |          futex_wait_setup
+            |          futex_q_lock
+            |          
+             --0.69%--futex_q_lock
+                       _raw_spin_lock
+                       native_queued_spin_lock_slowpath
+
+     3.31%     0.00%  [k] 0x000000010000006f                 -      -            
+            |
+            ---(anonymous namespace)::worker
+               __GI___lll_lock_wait
+               |          
+                --2.45%--entry_SYSCALL_64_after_hwframe
+                          do_syscall_64
+                          |          
+                           --2.15%--__x64_sys_futex
+                                     do_futex
+                                     futex_wait
+                                     |          
+                                      --1.88%--futex_wait_queue
+                                                |          
+                                                 --1.65%--schedule
+                                                           __schedule
+                                                           |          
+                                                            --0.56%--dequeue_task
+                                                                      dequeue_task_fair
+                                                                      dequeue_entity
+                                                                      update_load_avg
+                                                                      __update_load_avg_se
+
+     2.52%     0.00%  [k] dequeue_task                       -      -            
+            |
+            ---dequeue_task_fair
+               |          
+                --2.39%--dequeue_entity
+                          |          
+                          |--1.58%--update_load_avg
+                          |          |          
+                          |          |--0.67%--__update_load_avg_cfs_rq
+                          |          |          
+                          |           --0.56%--__update_load_avg_se
+                          |          
+                           --0.63%--update_curr
+                                     |          
+                                      --0.53%--__calc_delta
+
+     2.52%     0.00%  [k] dequeue_task_fair                  -      -            
+            |          
+             --2.39%--dequeue_entity
+                       |          
+                       |--1.58%--update_load_avg
+                       |          |          
+                       |          |--0.67%--__update_load_avg_cfs_rq
+                       |          |          
+                       |           --0.56%--__update_load_avg_se
+                       |          
+                        --0.63%--update_curr
+                                  |          
+                                   --0.53%--__calc_delta
+
+     2.39%     0.17%  [k] dequeue_entity                     -      -            
+            |          
+             --2.22%--dequeue_entity
+                       |          
+                       |--1.58%--update_load_avg
+                       |          |          
+                       |          |--0.67%--__update_load_avg_cfs_rq
+                       |          |          
+                       |           --0.56%--__update_load_avg_se
+                       |          
+                        --0.63%--update_curr
+                                  |          
+                                   --0.53%--__calc_delta
+
+     1.58%     0.35%  [k] update_load_avg                    -      -            
+            |          
+             --1.24%--update_load_avg
+                       |          
+                       |--0.67%--__update_load_avg_cfs_rq
+                       |          
+                        --0.56%--__update_load_avg_se
+
+     1.38%     0.44%  [k] sched_clock_cpu                    -      -            
+            |          
+             --0.95%--sched_clock_cpu
+                       sched_clock
+                       native_sched_clock
+
+     1.26%     0.29%  [k] _raw_spin_lock                     -      -            
+            |          
+             --0.97%--_raw_spin_lock
+                       native_queued_spin_lock_slowpath
+
+     1.04%     0.00%  [k] psi_task_switch                    -      -            
+            |          
+             --0.81%--psi_group_change
+
+     1.03%     0.50%  [k] entry_SYSCALL_64                   -      -            
+            |          
+             --0.53%--entry_SYSCALL_64
+
+     1.01%     1.01%  [k] native_sched_clock                 -      -            
+            |          
+             --0.72%--0x100000071
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wait
+                       futex_wait_queue
+                       schedule
+                       __schedule
+                       update_rq_clock
+                       sched_clock_cpu
+                       sched_clock
+                       native_sched_clock
+
+     0.97%     0.97%  [k] native_queued_spin_lock_slowpath   -      -            
+            |          
+             --0.69%--0x10000006e
+                       (anonymous namespace)::worker
+                       __GI___lll_lock_wait
+                       entry_SYSCALL_64_after_hwframe
+                       do_syscall_64
+                       __x64_sys_futex
+                       do_futex
+                       futex_wait
+                       futex_wait_setup
+                       futex_q_lock
+                       _raw_spin_lock
+                       native_queued_spin_lock_slowpath
+
+     0.95%     0.00%  [k] sched_clock                        -      -            
+            |
+            ---native_sched_clock
+
+     0.78%     0.00%  [.] __GI___lll_lock_wake               -      -            
+     0.72%     0.00%  [k] update_rq_clock                    -      -            
+            |
+            ---sched_clock_cpu
+               sched_clock
+               native_sched_clock
+
+     0.67%     0.67%  [k] __update_load_avg_cfs_rq           -      -            
+     0.63%     0.00%  [k] update_curr                        -      -            
+            |          
+             --0.53%--__calc_delta
+
+     0.56%     0.56%  [k] __update_load_avg_se               -      -            
+            |
+            ---(anonymous namespace)::worker
+               __GI___lll_lock_wait
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               __x64_sys_futex
+               do_futex
+               futex_wait
+               futex_wait_queue
+               schedule
+               __schedule
+               dequeue_task
+               dequeue_task_fair
+               dequeue_entity
+               update_load_avg
+               __update_load_avg_se
+
+     0.53%     0.53%  [k] __calc_delta                       -      -            
+            |
+            ---(anonymous namespace)::worker
+               __GI___lll_lock_wait
+               entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               __x64_sys_futex
+               do_futex
+               futex_wait
+               futex_wait_queue
+               schedule
+               __schedule
+               dequeue_task
+               dequeue_task_fair
+               dequeue_entity
+               update_curr
+               __calc_delta
+
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

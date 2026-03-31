@@ -1,0 +1,13 @@
+{
+  "tool": "time",
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "python",
+    "demo_io.py"
+  ],
+  "success": true,
+  "exit_code": 0,
+  "started_at": "2026-03-31T13:51:40.761787+00:00",
+  "finished_at": "2026-03-31T13:51:40.761788+00:00"
+}

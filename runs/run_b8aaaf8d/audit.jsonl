@@ -1,0 +1,13 @@
+{"timestamp": "2026-03-31T13:51:40.761460Z", "node": "orchestrator", "message": "transitioned to planning", "details": {}}
+{"timestamp": "2026-03-31T13:51:40.761629Z", "node": "planner", "message": "planned initial actions", "details": {"tools": ["time", "perf_stat", "pidstat", "iostat"]}}
+{"timestamp": "2026-03-31T13:51:40.761881Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_169fbb3d", "tool": "time", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:51:40.762036Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_f6922829", "tool": "perf_stat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:51:40.762100Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_bd81eeed", "tool": "pidstat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:51:40.762159Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_ca0725c5", "tool": "iostat", "success": true, "exit_code": 0}}
+{"timestamp": "2026-03-31T13:51:40.762425Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_169fbb3d", "tool": "time", "observation_count": 7}}
+{"timestamp": "2026-03-31T13:51:40.762514Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_f6922829", "tool": "perf_stat", "observation_count": 5}}
+{"timestamp": "2026-03-31T13:51:40.762553Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_bd81eeed", "tool": "pidstat", "observation_count": 4}}
+{"timestamp": "2026-03-31T13:51:40.762584Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_ca0725c5", "tool": "iostat", "observation_count": 1}}
+{"timestamp": "2026-03-31T13:51:40.762956Z", "node": "analyzer", "message": "generated hypotheses from rules and structured observations", "details": {"hypothesis_count": 1}}
+{"timestamp": "2026-03-31T13:51:40.763260Z", "node": "verifier", "message": "follow-up action already executed or pending", "details": {"tool": "iostat"}}
+{"timestamp": "2026-03-31T13:51:40.763563Z", "node": "reporter", "message": "generated final report", "details": {"hypothesis_count": 1}}

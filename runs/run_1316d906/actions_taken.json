@@ -1,0 +1,113 @@
+[
+  {
+    "id": "act_eca04929",
+    "tool": "time",
+    "command": [
+      "/usr/bin/time",
+      "-v",
+      "python",
+      "demo_lock.py"
+    ],
+    "reason": "collect baseline process resource usage",
+    "expected_output": "verbose time summary",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_480f75b2",
+    "tool": "perf_stat",
+    "command": [
+      "perf",
+      "stat",
+      "-d",
+      "--",
+      "python",
+      "demo_lock.py"
+    ],
+    "reason": "collect baseline hardware counters",
+    "expected_output": "perf stat summary",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_826e4a17",
+    "tool": "pidstat",
+    "command": [
+      "pidstat",
+      "-dur",
+      "-h",
+      "1",
+      "1"
+    ],
+    "reason": "collect process CPU and wait breakdown",
+    "expected_output": "pidstat process summary",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_a0f3b7ba",
+    "tool": "mpstat",
+    "command": [
+      "mpstat",
+      "1",
+      "1"
+    ],
+    "reason": "add system CPU context for CPU-heavy workload",
+    "expected_output": "mpstat CPU summary",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_490bc051",
+    "tool": "iostat",
+    "command": [
+      "iostat",
+      "-dx",
+      "1",
+      "1"
+    ],
+    "reason": "add disk-level context for possible I/O-heavy workload",
+    "expected_output": "iostat device summary",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_e32b8d81",
+    "tool": "perf_record",
+    "command": [
+      "perf",
+      "record",
+      "-g",
+      "--",
+      "python",
+      "demo_lock.py"
+    ],
+    "reason": "collect call stacks for hotspot and callgraph verification",
+    "expected_output": "perf record callgraph samples",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  },
+  {
+    "id": "act_83da41e7",
+    "tool": "perf_record",
+    "command": [
+      "perf",
+      "record",
+      "-g",
+      "--",
+      "python",
+      "demo_lock.py"
+    ],
+    "reason": "collect call stacks for hotspot and callgraph verification",
+    "expected_output": "perf record callgraph samples",
+    "timeout_sec": 60,
+    "retryable": true,
+    "status": "done"
+  }
+]

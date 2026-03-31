@@ -1,0 +1,13 @@
+{
+  "goal": "Diagnose a workload with lock contention and scheduling stalls.",
+  "target_cmd": ["python", "demo_lock.py"],
+  "workload_label": "lock_contention_demo",
+  "max_verification_rounds": 2,
+  "mock_outputs": {
+    "time": "User time (seconds): 1.80\\nSystem time (seconds): 0.70\\nPercent of CPU this job got: 58%\\nMaximum resident set size (kbytes): 25000\\nMajor (requiring I/O) page faults: 0\\nVoluntary context switches: 900\\nInvoluntary context switches: 410\\n",
+    "perf_stat": "900.00 task-clock\\n65.0% CPUs utilized\\n900,000,000 cycles\\n500,000,000 instructions\\n0.56 insn per cycle\\nlock_wait_pct=18.0\\n",
+    "pidstat": "Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command\\nAverage:        0      1002   40.00   15.00    0.00   20.00   55.00     3  demo_lock\\n",
+    "mpstat": "avg_cpu=55.0\\niowait=5.0\\ncswch_per_sec=22000\\nrun_queue=9\\n",
+    "perf_record": "demo_lock;pthread_mutex_lock\\ndemo_lock;worker_spin\\n"
+  }
+}

@@ -1,0 +1,28 @@
+time:
+  enabled: true
+  timeout_sec: 120
+  parser: time_parser
+perf_stat:
+  enabled: true
+  timeout_sec: 120
+  parser: perf_stat_parser
+perf_record:
+  enabled: true
+  timeout_sec: 180
+  parser: perf_record_parser
+pidstat:
+  enabled: true
+  timeout_sec: 60
+  parser: pidstat_parser
+mpstat:
+  enabled: true
+  timeout_sec: 60
+  parser: generic_parser
+iostat:
+  enabled: true
+  timeout_sec: 60
+  parser: generic_parser
+flamegraph:
+  enabled: false
+  timeout_sec: 180
+  parser: generic_parser

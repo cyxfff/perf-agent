@@ -1,0 +1,12 @@
+{"timestamp": "2026-03-31T15:04:14.928040Z", "node": "orchestrator", "message": "transitioned to planning", "details": {}}
+{"timestamp": "2026-03-31T15:04:14.928348Z", "node": "planner", "message": "planned initial actions", "details": {"tools": ["time", "perf_stat", "pidstat", "mpstat"]}}
+{"timestamp": "2026-03-31T15:04:14.928722Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_3e5dcf22", "tool": "time", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T15:04:14.928786Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_01facd29", "tool": "perf_stat", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T15:04:14.928841Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_e5d8ef7a", "tool": "pidstat", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T15:04:14.928896Z", "node": "collector", "message": "executed action", "details": {"action_id": "act_100571b4", "tool": "mpstat", "success": true, "exit_code": 0, "duration_sec": 0.0}}
+{"timestamp": "2026-03-31T15:04:14.929480Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_3e5dcf22", "tool": "time", "observation_count": 7}}
+{"timestamp": "2026-03-31T15:04:14.929585Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_01facd29", "tool": "perf_stat", "observation_count": 6}}
+{"timestamp": "2026-03-31T15:04:14.929626Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_e5d8ef7a", "tool": "pidstat", "observation_count": 4}}
+{"timestamp": "2026-03-31T15:04:14.929664Z", "node": "parser", "message": "parsed action output", "details": {"action_id": "act_100571b4", "tool": "mpstat", "observation_count": 3}}
+{"timestamp": "2026-03-31T15:05:48.682074Z", "node": "analyzer", "message": "generated hypotheses from rules and structured observations", "details": {"hypothesis_count": 1}}
+{"timestamp": "2026-03-31T15:08:59.693115Z", "node": "reporter", "message": "generated final report", "details": {"hypothesis_count": 1}}

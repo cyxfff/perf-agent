@@ -1,0 +1,13 @@
+{
+  "goal": "Diagnose a CPU intensive workload with high user time.",
+  "target_cmd": ["python", "demo_cpu.py"],
+  "workload_label": "cpu_bound_demo",
+  "source_dir": "src/perf_agent",
+  "max_verification_rounds": 2,
+  "mock_outputs": {
+    "time": "User time (seconds): 3.20\\nSystem time (seconds): 0.10\\nPercent of CPU this job got: 99%\\nMaximum resident set size (kbytes): 20480\\nMajor (requiring I/O) page faults: 0\\nVoluntary context switches: 12\\nInvoluntary context switches: 31\\n",
+    "perf_stat": "1,234.56 task-clock\\n98.7% CPUs utilized\\n4,200,000,000 cycles\\n2,100,000,000 instructions\\n0.50 insn per cycle\\n12,500 cache-misses\\n",
+    "pidstat": "Average:      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command\\nAverage:        0      1000   94.00    4.00    0.00    1.00   98.00     2  demo_cpu\\n",
+    "mpstat": "avg_cpu=98.0\\niowait=1.0\\ncswch_per_sec=1500\\n"
+  }
+}

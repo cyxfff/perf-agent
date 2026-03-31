@@ -1,0 +1,40 @@
+{
+  "action_id": "act_5cd0ae37",
+  "tool": "perf_record",
+  "command": [
+    "perf",
+    "record",
+    "-o",
+    "/tmp/act_5cd0ae37_stfgfil_.perf.data",
+    "--call-graph",
+    "fp",
+    "--",
+    "examples/bin/multiprocess_fanout_demo",
+    "3",
+    "250",
+    "24000"
+  ],
+  "report_command": [
+    "perf",
+    "report",
+    "--stdio",
+    "--sort",
+    "symbol",
+    "--percent-limit",
+    "0.5",
+    "-i",
+    "/tmp/act_5cd0ae37_stfgfil_.perf.data"
+  ],
+  "script_command": [
+    "perf",
+    "script",
+    "-F",
+    "comm,pid,tid,time,ip,sym,dso",
+    "-i",
+    "/tmp/act_5cd0ae37_stfgfil_.perf.data"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 1.4362,
+  "error_message": null
+}

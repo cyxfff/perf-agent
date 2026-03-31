@@ -1,0 +1,18 @@
+
+ Performance counter stats for 'examples/bin/multithread_cpu_demo 4 400 18000':
+
+   <not supported>      cpu_core/topdown-be-bound/                                              (0.00%)
+            145565      cpu_core/cache-references/                                            
+     <not counted>      cpu_atom/cache-references/                                              (0.00%)
+             38116      cpu_core/cache-misses/                                                
+     <not counted>      cpu_atom/cache-misses/                                                  (0.00%)
+             38116      cpu_core/longest_lat_cache.miss/                                        (99.82%)
+            166389      cpu_core/l2_rqsts.miss/                                               
+            150048      cpu_core/mem_load_completed.l1_miss_any/                                      
+
+       0.087026678 seconds time elapsed
+
+       0.344233000 seconds user
+       0.000000000 seconds sys
+
+

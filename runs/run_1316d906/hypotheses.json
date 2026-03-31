@@ -1,0 +1,41 @@
+[
+  {
+    "id": "hyp_3daa7fc3",
+    "kind": "lock_contention",
+    "summary": "Elevated lock wait and scheduling churn suggest lock contention.",
+    "reasoning_basis": [
+      "Derived from observations: lock_wait_pct, context_switches_per_sec, callgraph_samples, callgraph_samples"
+    ],
+    "supporting_observation_ids": [
+      "obs_ebfb2028",
+      "obs_3f41f60f",
+      "obs_d753a346",
+      "obs_0c3b33d1"
+    ],
+    "contradicting_observation_ids": [],
+    "confidence": 0.8,
+    "needs_verification": true,
+    "suggested_actions": [
+      "Collect perf record stacks and look for futex or lock-owner hotspots."
+    ]
+  },
+  {
+    "id": "hyp_9ca7893f",
+    "kind": "scheduler_issue",
+    "summary": "High context-switch or run-queue pressure suggests a scheduler issue.",
+    "reasoning_basis": [
+      "Derived from observations: involuntary_context_switches, context_switches_per_sec, run_queue"
+    ],
+    "supporting_observation_ids": [
+      "obs_a3c87c59",
+      "obs_3f41f60f",
+      "obs_9e37f109"
+    ],
+    "contradicting_observation_ids": [],
+    "confidence": 0.69,
+    "needs_verification": true,
+    "suggested_actions": [
+      "Inspect run queue pressure and context-switch behavior with mpstat or sched traces."
+    ]
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "action_id": "act_2c6ba90a",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-d",
+    "--",
+    "python",
+    "bench.py"
+  ],
+  "exit_code": 2,
+  "success": false,
+  "duration_sec": 0.0706,
+  "error_message": null
+}

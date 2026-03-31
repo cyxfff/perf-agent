@@ -1,0 +1,77 @@
+[
+  {
+    "round_index": 1,
+    "summary": "\u7b2c 1 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a lock_contention\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 0 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 0 \u4e2a\u3002",
+    "top_observation_ids": [
+      "obs_44d6464f",
+      "obs_4ff064c0",
+      "obs_a919adca",
+      "obs_0182a5a9",
+      "obs_60962e76",
+      "obs_2682e24a",
+      "obs_6af20cea",
+      "obs_a1336d4e",
+      "obs_6e25dbc2",
+      "obs_663d58fc"
+    ],
+    "highlighted_metrics": [
+      "voluntary_context_switches",
+      "cache_misses",
+      "context_switches",
+      "cpu_utilization_pct",
+      "involuntary_context_switches",
+      "cache_references",
+      "cpu_migrations",
+      "user_time_sec",
+      "system_time_sec",
+      "max_rss_kb"
+    ],
+    "hotspot_symbols": [],
+    "timeline_metrics": [],
+    "unresolved_questions": [
+      "\u662f\u5426\u9700\u8981\u8fdb\u4e00\u6b65\u533a\u5206 lock_contention \u4e0e\u5176\u4ed6\u5019\u9009\u74f6\u9888\u3002",
+      "\u5f53\u524d\u8fd8\u7f3a\u5c11\u65f6\u95f4\u5e8f\u5217\u8bc1\u636e\uff0c\u5c1a\u4e0d\u80fd\u5224\u65ad\u74f6\u9888\u662f\u5426\u9636\u6bb5\u6027\u51fa\u73b0\u3002",
+      "\u5f53\u524d\u8fd8\u7f3a\u5c11\u70ed\u70b9\u51fd\u6570\u7ea7\u8bc1\u636e\uff0c\u5c1a\u4e0d\u80fd\u7a33\u5b9a\u6620\u5c04\u5230\u8c03\u7528\u8def\u5f84\u3002"
+    ]
+  },
+  {
+    "round_index": 2,
+    "summary": "\u7b2c 2 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a lock_contention\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 5 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 0 \u4e2a\u3002",
+    "top_observation_ids": [
+      "obs_44d6464f",
+      "obs_4ff064c0",
+      "obs_a919adca",
+      "obs_940568fa",
+      "obs_5bc1d203",
+      "obs_1cb226dc",
+      "obs_20ff572f",
+      "obs_c6de086e",
+      "obs_307532ed",
+      "obs_0182a5a9"
+    ],
+    "highlighted_metrics": [
+      "voluntary_context_switches",
+      "cache_misses",
+      "context_switches",
+      "callgraph_samples",
+      "hot_symbol_pct",
+      "hot_symbol_pct",
+      "hot_symbol_pct",
+      "hot_symbol_pct",
+      "hot_symbol_pct",
+      "cpu_utilization_pct"
+    ],
+    "hotspot_symbols": [
+      "(anonymous namespace)::worker              -      -",
+      "0000000000000000                           -      -",
+      "entry_SYSCALL_64_after_hwframe             -      -",
+      "do_syscall_64                              -      -",
+      "pthread_mutex_lock@@GLIBC_2.2.5            -      -"
+    ],
+    "timeline_metrics": [],
+    "unresolved_questions": [
+      "\u662f\u5426\u9700\u8981\u8fdb\u4e00\u6b65\u533a\u5206 lock_contention \u4e0e\u5176\u4ed6\u5019\u9009\u74f6\u9888\u3002",
+      "\u5f53\u524d\u8fd8\u7f3a\u5c11\u65f6\u95f4\u5e8f\u5217\u8bc1\u636e\uff0c\u5c1a\u4e0d\u80fd\u5224\u65ad\u74f6\u9888\u662f\u5426\u9636\u6bb5\u6027\u51fa\u73b0\u3002"
+    ]
+  }
+]

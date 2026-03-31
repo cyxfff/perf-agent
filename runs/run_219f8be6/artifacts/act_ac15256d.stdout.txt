@@ -1,0 +1,1 @@
+800.00 task-clock\n40.0% CPUs utilized\n300,000,000 cycles\n150,000,000 instructions\n0.50 insn per cycle\n

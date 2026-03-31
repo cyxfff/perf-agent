@@ -1,0 +1,16 @@
+
+ Performance counter stats for '/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo 6 120000':
+
+          96858559      cpu_core/cycles/                 #    2.117 G/sec                       (89.11%)
+          36985430      cpu_atom/cycles/                 #  808.237 M/sec                       (24.39%)
+         155118793      cpu_core/instructions/           #    3.390 G/sec                       (89.11%)
+          54833763      cpu_atom/instructions/           #    1.198 G/sec                       (24.39%)
+             46.32 msec task-clock                       #    0.095 CPUs utilized             
+             45.20 msec cpu-clock                        #    0.093 CPUs utilized             
+
+       0.486661902 seconds time elapsed
+
+       0.015357000 seconds user
+       0.038394000 seconds sys
+
+

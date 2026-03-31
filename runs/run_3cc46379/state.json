@@ -1,0 +1,2461 @@
+{
+  "run_id": "run_3cc46379",
+  "status": "done",
+  "executable_path": "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+  "target_args": [
+    "6",
+    "120000"
+  ],
+  "target_cmd": [
+    "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+    "6",
+    "120000"
+  ],
+  "target_pid": null,
+  "workload_label": null,
+  "source_dir": "/home/tchen/agent/perf_agent/examples/cpp",
+  "build_cmd": [],
+  "source_files": [
+    "/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo.cpp",
+    "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp"
+  ],
+  "source_language_hints": [
+    "cpp"
+  ],
+  "source_findings": [
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+      "line_no": 13,
+      "symbol_hint": "worker",
+      "issue_type": "\u70ed\u70b9\u51fd\u6570\u5b9a\u4f4d",
+      "rationale": "perf record / report \u663e\u793a\u70ed\u70b9\u7b26\u53f7 worker\uff0c\u8be5\u6e90\u7801\u4f4d\u7f6e\u4e0e\u70ed\u70b9\u8c03\u7528\u8def\u5f84\u76f4\u63a5\u76f8\u5173\u3002",
+      "snippet": "void worker(std::size_t iterations) {",
+      "related_hypothesis": "lock_contention"
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+      "line_no": 38,
+      "symbol_hint": "worker",
+      "issue_type": "\u70ed\u70b9\u51fd\u6570\u5b9a\u4f4d",
+      "rationale": "perf record / report \u663e\u793a\u70ed\u70b9\u7b26\u53f7 worker\uff0c\u8be5\u6e90\u7801\u4f4d\u7f6e\u4e0e\u70ed\u70b9\u8c03\u7528\u8def\u5f84\u76f4\u63a5\u76f8\u5173\u3002",
+      "snippet": "threads.emplace_back(worker, iterations);",
+      "related_hypothesis": "lock_contention"
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+      "line_no": 10,
+      "symbol_hint": null,
+      "issue_type": "\u9501\u7ade\u4e89",
+      "rationale": "\u68c0\u6d4b\u5230\u4e92\u65a5\u9501\u76f8\u5173\u4ee3\u7801\uff0c\u53ef\u80fd\u4e0e\u9501\u7ade\u4e89\u6709\u5173\u3002",
+      "snippet": "std::mutex global_mutex;",
+      "related_hypothesis": "lock_contention"
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+      "line_no": 10,
+      "symbol_hint": null,
+      "issue_type": "\u5171\u4eab\u4e34\u754c\u533a",
+      "rationale": "\u68c0\u6d4b\u5230\u5171\u4eab\u72b6\u6001\u6216\u4e34\u754c\u533a\u547d\u540d\u75d5\u8ff9\u3002",
+      "snippet": "std::mutex global_mutex;",
+      "related_hypothesis": "lock_contention"
+    }
+  ],
+  "environment": {
+    "os_name": "Linux",
+    "kernel_release": "6.2.0-37-generic",
+    "arch": "x86_64",
+    "cpu_model": "13th Gen Intel(R) Core(TM) i5-13600K",
+    "logical_cores": 20,
+    "physical_cores": 14,
+    "perf_available": true,
+    "perf_version": "perf version 6.2.16",
+    "available_events": [
+      "branch-misses",
+      "branches",
+      "cache-misses",
+      "cache-references",
+      "context-switches",
+      "cpu-clock",
+      "cpu-migrations",
+      "cycles",
+      "instructions",
+      "page-faults",
+      "task-clock",
+      "topdown-bad-spec",
+      "topdown-be-bound",
+      "topdown-fe-bound",
+      "topdown-retiring"
+    ],
+    "event_sources": [
+      "breakpoint",
+      "cpu_atom",
+      "cpu_core",
+      "cstate_core",
+      "cstate_pkg",
+      "i915",
+      "intel_bts",
+      "intel_pt",
+      "kprobe",
+      "msr",
+      "power",
+      "software",
+      "tracepoint",
+      "uncore_arb_0",
+      "uncore_arb_1",
+      "uncore_cbox_0",
+      "uncore_cbox_1",
+      "uncore_cbox_2",
+      "uncore_cbox_3",
+      "uncore_cbox_4",
+      "uncore_cbox_5",
+      "uncore_cbox_6",
+      "uncore_cbox_7",
+      "uncore_clock",
+      "uncore_imc_0",
+      "uncore_imc_1",
+      "uncore_imc_free_running_0",
+      "uncore_imc_free_running_1",
+      "uprobe"
+    ],
+    "callgraph_modes": [
+      "fp",
+      "dwarf",
+      "lbr"
+    ],
+    "topdown_supported": true,
+    "perf_permissions": "-1",
+    "executable_kind": "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=63e347c69c9c5f121298a6b9608a9335175ad21c, for GNU/Linux 3.2.0, with debug_info, not stripped",
+    "executable_stripped": false,
+    "executable_has_symbols": true,
+    "notes": [
+      "\u68c0\u6d4b\u5230 topdown \u76f8\u5173\u4e8b\u4ef6\uff0c\u53ef\u5728\u540e\u7eed\u5b9e\u9a8c\u4e2d\u4f18\u5148\u5c1d\u8bd5\u3002"
+    ]
+  },
+  "planned_intents": [
+    {
+      "name": "hot_function_callgraph",
+      "question": "\u9700\u8981\u5b9a\u4f4d\u70ed\u70b9\u51fd\u6570\u548c\u4e3b\u8981\u8c03\u7528\u94fe\u3002",
+      "phase": "verification",
+      "priority": 10,
+      "requested_by": "verifier"
+    },
+    {
+      "name": "temporal_behavior",
+      "question": "\u9700\u8981\u5224\u65ad\u70ed\u70b9\u548c\u6548\u7387\u95ee\u9898\u662f\u5426\u96c6\u4e2d\u5728\u67d0\u4e2a\u65f6\u95f4\u9636\u6bb5\u3002",
+      "phase": "verification",
+      "priority": 15,
+      "requested_by": "verifier"
+    },
+    {
+      "name": "temporal_behavior",
+      "question": "\u9700\u8981\u5224\u65ad\u4e0a\u4e0b\u6587\u5207\u6362\u548c\u9501\u7ade\u4e89\u662f\u5426\u968f\u65f6\u95f4\u6ce2\u52a8\u3002",
+      "phase": "verification",
+      "priority": 35,
+      "requested_by": "verifier"
+    }
+  ],
+  "event_mappings": [
+    {
+      "round_index": 1,
+      "phase": "baseline",
+      "intent": "baseline_runtime",
+      "tool": "time",
+      "mode": "runtime",
+      "selected_events": [],
+      "fallback_used": false,
+      "rationale": "\u7528 /usr/bin/time -v \u5efa\u7acb\u7a0b\u5e8f\u8fd0\u884c\u57fa\u7ebf\u3002",
+      "display_name": "/usr/bin/time / \u8fd0\u884c\u65f6\u57fa\u7ebf",
+      "availability_notes": []
+    },
+    {
+      "round_index": 1,
+      "phase": "baseline",
+      "intent": "instruction_efficiency",
+      "tool": "perf_stat",
+      "mode": "stat",
+      "selected_events": [
+        "cycles",
+        "instructions",
+        "task-clock",
+        "cpu-clock"
+      ],
+      "fallback_used": false,
+      "rationale": "\u5224\u65ad cycles\u3001instructions \u548c IPC \u7684\u5065\u5eb7\u5ea6\u3002\u5f53\u524d\u4f7f\u7528\u9996\u9009\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a cycles, instructions, task-clock, cpu-clock\u3002",
+      "display_name": "perf stat / \u6307\u4ee4\u6548\u7387",
+      "availability_notes": []
+    },
+    {
+      "round_index": 1,
+      "phase": "baseline",
+      "intent": "cache_memory_pressure",
+      "tool": "perf_stat",
+      "mode": "stat",
+      "selected_events": [
+        "cache-references",
+        "cache-misses"
+      ],
+      "fallback_used": true,
+      "rationale": "\u5224\u65ad cache miss\u3001\u5185\u5b58\u538b\u529b\u4ee5\u53ca\u524d\u540e\u7aef\u505c\u987f\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a cache-references, cache-misses\u3002",
+      "display_name": "perf stat / \u7f13\u5b58\u4e0e\u5185\u5b58\u538b\u529b",
+      "availability_notes": [
+        "\u90e8\u5206\u9996\u9009\u4e8b\u4ef6\u5728\u5f53\u524d\u673a\u5668\u4e0a\u4e0d\u53ef\u7528\uff0c\u5df2\u81ea\u52a8\u9000\u5316\u5230\u53ef\u7528\u901a\u7528\u4e8b\u4ef6\u3002"
+      ]
+    },
+    {
+      "round_index": 1,
+      "phase": "baseline",
+      "intent": "scheduler_context",
+      "tool": "perf_stat",
+      "mode": "stat",
+      "selected_events": [
+        "context-switches",
+        "cpu-migrations",
+        "page-faults"
+      ],
+      "fallback_used": false,
+      "rationale": "\u5224\u65ad\u8c03\u5ea6\u5207\u6362\u3001\u8fc1\u79fb\u4e0e\u7cfb\u7edf\u7ea7 CPU \u4e0a\u4e0b\u6587\u3002\u5f53\u524d\u4f7f\u7528\u9996\u9009\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a context-switches, cpu-migrations, page-faults\u3002",
+      "display_name": "perf stat / \u8c03\u5ea6\u4e0a\u4e0b\u6587",
+      "availability_notes": []
+    },
+    {
+      "round_index": 1,
+      "phase": "baseline",
+      "intent": "scheduler_context",
+      "tool": "pidstat",
+      "mode": "system",
+      "selected_events": [],
+      "fallback_used": false,
+      "rationale": "\u8865\u5145\u8fdb\u7a0b\u7ea7 CPU \u4e0e\u7b49\u5f85\u62c6\u5206\u3002",
+      "display_name": "pidstat / \u8c03\u5ea6\u4e0a\u4e0b\u6587",
+      "availability_notes": []
+    },
+    {
+      "round_index": 1,
+      "phase": "baseline",
+      "intent": "scheduler_context",
+      "tool": "mpstat",
+      "mode": "system",
+      "selected_events": [],
+      "fallback_used": false,
+      "rationale": "\u8865\u5145\u7cfb\u7edf\u7ea7 CPU \u4e0e\u8c03\u5ea6\u4e0a\u4e0b\u6587\u3002",
+      "display_name": "mpstat / \u8c03\u5ea6\u4e0a\u4e0b\u6587",
+      "availability_notes": []
+    },
+    {
+      "round_index": 1,
+      "phase": "baseline",
+      "intent": "io_wait_detail",
+      "tool": "iostat",
+      "mode": "system",
+      "selected_events": [],
+      "fallback_used": false,
+      "rationale": "\u7528 iostat \u770b\u8bbe\u5907\u5229\u7528\u7387\u548c\u7b49\u5f85\u5ef6\u8fdf\u3002",
+      "display_name": "iostat / I/O \u7b49\u5f85",
+      "availability_notes": []
+    },
+    {
+      "round_index": 2,
+      "phase": "verification",
+      "intent": "hot_function_callgraph",
+      "tool": "perf_record",
+      "mode": "record",
+      "selected_events": [],
+      "fallback_used": false,
+      "rationale": "\u4f7f\u7528 perf record \u91c7\u6837\u70ed\u70b9\u51fd\u6570\u548c\u8c03\u7528\u94fe\uff0c\u8c03\u7528\u6808\u6a21\u5f0f\u4e3a fp\u3002",
+      "display_name": "perf record / \u70ed\u70b9\u51fd\u6570\u8c03\u7528\u94fe",
+      "availability_notes": []
+    },
+    {
+      "round_index": 2,
+      "phase": "verification",
+      "intent": "temporal_behavior",
+      "tool": "perf_stat",
+      "mode": "stat",
+      "selected_events": [
+        "cycles",
+        "instructions",
+        "cache-misses",
+        "context-switches"
+      ],
+      "fallback_used": false,
+      "rationale": "\u4f7f\u7528 perf stat interval mode \u89c2\u5bdf IPC\u3001cache \u548c\u8c03\u5ea6\u6307\u6807\u968f\u65f6\u95f4\u7684\u6ce2\u52a8\u3002",
+      "display_name": "perf stat / \u65f6\u95f4\u5e8f\u5217\u884c\u4e3a",
+      "availability_notes": []
+    }
+  ],
+  "planning_rounds_done": 2,
+  "evidence_packs": [
+    {
+      "round_index": 1,
+      "summary": "\u7b2c 1 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a lock_contention\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 0 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 0 \u4e2a\u3002",
+      "top_observation_ids": [
+        "obs_7bf5bc9b",
+        "obs_d9076f63",
+        "obs_f93cbb8b",
+        "obs_d4bca736",
+        "obs_1295b5e9",
+        "obs_af121260",
+        "obs_eeb3cfa0",
+        "obs_5498e3b0",
+        "obs_66b039c6",
+        "obs_9607078d"
+      ],
+      "highlighted_metrics": [
+        "voluntary_context_switches",
+        "cache_misses",
+        "context_switches",
+        "cpu_utilization_pct",
+        "involuntary_context_switches",
+        "cache_references",
+        "cpu_migrations",
+        "user_time_sec",
+        "system_time_sec",
+        "max_rss_kb"
+      ],
+      "hotspot_symbols": [],
+      "timeline_metrics": [],
+      "unresolved_questions": [
+        "\u662f\u5426\u9700\u8981\u8fdb\u4e00\u6b65\u533a\u5206 lock_contention \u4e0e\u5176\u4ed6\u5019\u9009\u74f6\u9888\u3002",
+        "\u5f53\u524d\u8fd8\u7f3a\u5c11\u65f6\u95f4\u5e8f\u5217\u8bc1\u636e\uff0c\u5c1a\u4e0d\u80fd\u5224\u65ad\u74f6\u9888\u662f\u5426\u9636\u6bb5\u6027\u51fa\u73b0\u3002",
+        "\u5f53\u524d\u8fd8\u7f3a\u5c11\u70ed\u70b9\u51fd\u6570\u7ea7\u8bc1\u636e\uff0c\u5c1a\u4e0d\u80fd\u7a33\u5b9a\u6620\u5c04\u5230\u8c03\u7528\u8def\u5f84\u3002"
+      ]
+    },
+    {
+      "round_index": 2,
+      "summary": "\u7b2c 2 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a lock_contention\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 5 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 5 \u4e2a\u3002",
+      "top_observation_ids": [
+        "obs_c2289c7f",
+        "obs_7a1ee230",
+        "obs_a4c2507c",
+        "obs_508182e0",
+        "obs_e99370f8",
+        "obs_bd7920bb",
+        "obs_d0dbc1d5",
+        "obs_daabca4f",
+        "obs_7eb2d5aa",
+        "obs_e6dd8ca1"
+      ],
+      "highlighted_metrics": [
+        "cache_misses",
+        "context_switches"
+      ],
+      "hotspot_symbols": [
+        "(anonymous namespace)::worker",
+        "entry_SYSCALL_64_after_hwframe",
+        "do_syscall_64",
+        "0000000000000000",
+        "__x64_sys_futex"
+      ],
+      "timeline_metrics": [
+        "cache_misses",
+        "context_switches",
+        "cycles",
+        "instructions",
+        "ipc"
+      ],
+      "unresolved_questions": [
+        "\u662f\u5426\u9700\u8981\u8fdb\u4e00\u6b65\u533a\u5206 lock_contention \u4e0e\u5176\u4ed6\u5019\u9009\u74f6\u9888\u3002"
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "id": "obs_5498e3b0",
+      "source": "time",
+      "category": "cpu",
+      "metric": "user_time_sec",
+      "value": 0.0,
+      "unit": "seconds",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.610260Z",
+      "labels": {
+        "action_id": "act_a0a68b4e"
+      },
+      "raw_excerpt": "User time (seconds): 0.00",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_66b039c6",
+      "source": "time",
+      "category": "cpu",
+      "metric": "system_time_sec",
+      "value": 0.05,
+      "unit": "seconds",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.610260Z",
+      "labels": {
+        "action_id": "act_a0a68b4e"
+      },
+      "raw_excerpt": "System time (seconds): 0.05",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_d4bca736",
+      "source": "time",
+      "category": "cpu",
+      "metric": "cpu_utilization_pct",
+      "value": 13,
+      "unit": "percent",
+      "normalized_value": 0.13,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.610260Z",
+      "labels": {
+        "action_id": "act_a0a68b4e"
+      },
+      "raw_excerpt": "Percent of CPU this job got: 13%",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_9607078d",
+      "source": "time",
+      "category": "memory",
+      "metric": "max_rss_kb",
+      "value": 4000,
+      "unit": "kb",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.610260Z",
+      "labels": {
+        "action_id": "act_a0a68b4e"
+      },
+      "raw_excerpt": "Maximum resident set size (kbytes): 4000",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_d33d43c8",
+      "source": "time",
+      "category": "memory",
+      "metric": "major_faults",
+      "value": 0,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.610260Z",
+      "labels": {
+        "action_id": "act_a0a68b4e"
+      },
+      "raw_excerpt": "Major (requiring I/O) page faults: 0",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_7bf5bc9b",
+      "source": "time",
+      "category": "scheduler",
+      "metric": "voluntary_context_switches",
+      "value": 23239,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.610260Z",
+      "labels": {
+        "action_id": "act_a0a68b4e"
+      },
+      "raw_excerpt": "Voluntary context switches: 23239",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_1295b5e9",
+      "source": "time",
+      "category": "scheduler",
+      "metric": "involuntary_context_switches",
+      "value": 2,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.610260Z",
+      "labels": {
+        "action_id": "act_a0a68b4e"
+      },
+      "raw_excerpt": "Involuntary context switches: 2",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_9708ec76",
+      "source": "time",
+      "category": "system",
+      "metric": "elapsed_time_sec",
+      "value": 0.47,
+      "unit": "seconds",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.610260Z",
+      "labels": {
+        "action_id": "act_a0a68b4e"
+      },
+      "raw_excerpt": "Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.47",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_90727819",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 74402995,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.611161Z",
+      "labels": {
+        "action_id": "act_3293bd75",
+        "event_name": "cycles",
+        "raw_event_name": "cpu_core/cycles"
+      },
+      "raw_excerpt": "74402995      cpu_core/cycles/                 #    3.049 G/sec                       (93.08%)",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_59849fba",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 120319928,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.611161Z",
+      "labels": {
+        "action_id": "act_3293bd75",
+        "event_name": "instructions",
+        "raw_event_name": "cpu_core/instructions"
+      },
+      "raw_excerpt": "120319928      cpu_core/instructions/           #    4.930 G/sec                       (93.08%)",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_af121260",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_references",
+      "value": 376996,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.612220Z",
+      "labels": {
+        "action_id": "act_38b1ed6e",
+        "event_name": "cache-references",
+        "raw_event_name": "cpu_core/cache-references"
+      },
+      "raw_excerpt": "376996      cpu_core/cache-references/",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_d9076f63",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 32583,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.612220Z",
+      "labels": {
+        "action_id": "act_38b1ed6e",
+        "event_name": "cache-misses",
+        "raw_event_name": "cpu_core/cache-misses"
+      },
+      "raw_excerpt": "32583      cpu_core/cache-misses/",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_f93cbb8b",
+      "source": "perf_stat",
+      "category": "scheduler",
+      "metric": "context_switches",
+      "value": 18341,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.612941Z",
+      "labels": {
+        "action_id": "act_8a0a98fb",
+        "event_name": "context-switches",
+        "raw_event_name": "context-switches"
+      },
+      "raw_excerpt": "18341      context-switches",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_eeb3cfa0",
+      "source": "perf_stat",
+      "category": "scheduler",
+      "metric": "cpu_migrations",
+      "value": 45,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.612941Z",
+      "labels": {
+        "action_id": "act_8a0a98fb",
+        "event_name": "cpu-migrations",
+        "raw_event_name": "cpu-migrations"
+      },
+      "raw_excerpt": "45      cpu-migrations",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_1f1ead65",
+      "source": "perf_stat",
+      "category": "memory",
+      "metric": "page_faults",
+      "value": 144,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:56.612941Z",
+      "labels": {
+        "action_id": "act_8a0a98fb",
+        "event_name": "page-faults",
+        "raw_event_name": "page-faults"
+      },
+      "raw_excerpt": "144      page-faults",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_aa113244",
+      "source": "mpstat",
+      "category": "system",
+      "metric": "01",
+      "value": "38:55     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle",
+      "unit": null,
+      "normalized_value": null,
+      "scope": "system",
+      "timestamp": "2026-03-31T17:38:56.613605Z",
+      "labels": {
+        "action_id": "act_716a66d7",
+        "source": "mpstat"
+      },
+      "raw_excerpt": "01:38:55     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_c1bdcb18",
+      "source": "mpstat",
+      "category": "system",
+      "metric": "01",
+      "value": "38:56     all    0.30    0.00    0.05    0.15    0.00    0.00    0.00    0.00    0.00   99.50",
+      "unit": null,
+      "normalized_value": null,
+      "scope": "system",
+      "timestamp": "2026-03-31T17:38:56.613605Z",
+      "labels": {
+        "action_id": "act_716a66d7",
+        "source": "mpstat"
+      },
+      "raw_excerpt": "01:38:56     all    0.30    0.00    0.05    0.15    0.00    0.00    0.00    0.00    0.00   99.50",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_b9756596",
+      "source": "mpstat",
+      "category": "system",
+      "metric": "average",
+      "value": "all    0.30    0.00    0.05    0.15    0.00    0.00    0.00    0.00    0.00   99.50",
+      "unit": null,
+      "normalized_value": null,
+      "scope": "system",
+      "timestamp": "2026-03-31T17:38:56.613605Z",
+      "labels": {
+        "action_id": "act_716a66d7",
+        "source": "mpstat"
+      },
+      "raw_excerpt": "Average:     all    0.30    0.00    0.05    0.15    0.00    0.00    0.00    0.00    0.00   99.50",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_25d878e8",
+      "source": "perf_record",
+      "category": "callgraph",
+      "metric": "callgraph_samples",
+      "value": 3876,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "callchain",
+      "timestamp": "2026-03-31T17:38:58.432331Z",
+      "labels": {
+        "action_id": "act_0952e0cd"
+      },
+      "raw_excerpt": "# To display the perf.data header info, please use --header/--header-only options.",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_758a9323",
+      "source": "perf_record",
+      "category": "callgraph",
+      "metric": "hot_symbol_pct",
+      "value": 87.52,
+      "unit": "percent",
+      "normalized_value": 0.8752,
+      "scope": "function",
+      "timestamp": "2026-03-31T17:38:58.432356Z",
+      "labels": {
+        "action_id": "act_0952e0cd",
+        "symbol": "(anonymous namespace)::worker",
+        "rank": "1"
+      },
+      "raw_excerpt": "87.52%     4.58%  [.] (anonymous namespace)::worker                                                                                  -      -",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_7e787e49",
+      "source": "perf_record",
+      "category": "callgraph",
+      "metric": "hot_symbol_pct",
+      "value": 53.35,
+      "unit": "percent",
+      "normalized_value": 0.5335,
+      "scope": "function",
+      "timestamp": "2026-03-31T17:38:58.432375Z",
+      "labels": {
+        "action_id": "act_0952e0cd",
+        "symbol": "entry_SYSCALL_64_after_hwframe",
+        "rank": "2"
+      },
+      "raw_excerpt": "53.35%     0.00%  [k] entry_SYSCALL_64_after_hwframe                                                                                 -      -",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_d09d01b1",
+      "source": "perf_record",
+      "category": "callgraph",
+      "metric": "hot_symbol_pct",
+      "value": 53.35,
+      "unit": "percent",
+      "normalized_value": 0.5335,
+      "scope": "function",
+      "timestamp": "2026-03-31T17:38:58.432390Z",
+      "labels": {
+        "action_id": "act_0952e0cd",
+        "symbol": "do_syscall_64",
+        "rank": "3"
+      },
+      "raw_excerpt": "53.35%     0.00%  [k] do_syscall_64                                                                                                  -      -",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_cb743468",
+      "source": "perf_record",
+      "category": "callgraph",
+      "metric": "hot_symbol_pct",
+      "value": 52.33,
+      "unit": "percent",
+      "normalized_value": 0.5233,
+      "scope": "function",
+      "timestamp": "2026-03-31T17:38:58.432403Z",
+      "labels": {
+        "action_id": "act_0952e0cd",
+        "symbol": "0000000000000000",
+        "rank": "4"
+      },
+      "raw_excerpt": "52.33%     0.00%  [k] 0000000000000000                                                                                               -      -",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_dcb216bd",
+      "source": "perf_record",
+      "category": "callgraph",
+      "metric": "hot_symbol_pct",
+      "value": 28.2,
+      "unit": "percent",
+      "normalized_value": 0.282,
+      "scope": "function",
+      "timestamp": "2026-03-31T17:38:58.432412Z",
+      "labels": {
+        "action_id": "act_0952e0cd",
+        "symbol": "__x64_sys_futex",
+        "rank": "5"
+      },
+      "raw_excerpt": "28.20%     0.41%  [k] __x64_sys_futex                                                                                                -      -",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_85b59d2f",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 23369984,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cycles",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.100"
+      },
+      "raw_excerpt": "0.100103887,23369984,,cpu_core/cycles/,6115136,92.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_00c78009",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 16410072,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cycles",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.100"
+      },
+      "raw_excerpt": "0.100103887,16410072,,cpu_atom/cycles/,515213,7.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_dd9f1a39",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 36910974,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "instructions",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.100"
+      },
+      "raw_excerpt": "0.100103887,36910974,,cpu_core/instructions/,6115136,92.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_6d690843",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 23281229,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "instructions",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.100"
+      },
+      "raw_excerpt": "0.100103887,23281229,,cpu_atom/instructions/,515213,7.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_c2289c7f",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 24175,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cache-misses",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.100"
+      },
+      "raw_excerpt": "0.100103887,24175,,cpu_core/cache-misses/,6115136,92.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_7a1ee230",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 2419,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cache-misses",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.100"
+      },
+      "raw_excerpt": "0.100103887,2419,,cpu_atom/cache-misses/,515213,7.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_a4c2507c",
+      "source": "perf_stat",
+      "category": "scheduler",
+      "metric": "context_switches",
+      "value": 2397,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "context-switches",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.100"
+      },
+      "raw_excerpt": "0.100103887,2397,,context-switches,6630349,100.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_0113ad44",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 20657759,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cycles",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.200"
+      },
+      "raw_excerpt": "0.200223138,20657759,,cpu_core/cycles/,4853479,88.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_b5b651ae",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 11150608,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cycles",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.200"
+      },
+      "raw_excerpt": "0.200223138,11150608,,cpu_atom/cycles/,613388,14.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_7282434c",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 33803258,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "instructions",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.200"
+      },
+      "raw_excerpt": "0.200223138,33803258,,cpu_core/instructions/,4853479,88.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_3051d46d",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 17203550,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "instructions",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.200"
+      },
+      "raw_excerpt": "0.200223138,17203550,,cpu_atom/instructions/,613388,14.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_508182e0",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 1356,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cache-misses",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.200"
+      },
+      "raw_excerpt": "0.200223138,1356,,cpu_core/cache-misses/,4853479,88.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_e99370f8",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 99,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cache-misses",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.200"
+      },
+      "raw_excerpt": "0.200223138,99,,cpu_atom/cache-misses/,613388,14.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_bd7920bb",
+      "source": "perf_stat",
+      "category": "scheduler",
+      "metric": "context_switches",
+      "value": 2411,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "context-switches",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.200"
+      },
+      "raw_excerpt": "0.200223138,2411,,context-switches,5466867,100.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_06b61bdc",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 20821043,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cycles",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.300"
+      },
+      "raw_excerpt": "0.300352900,20821043,,cpu_core/cycles/,4742166,87.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_4604dc60",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 5138082,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cycles",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.300"
+      },
+      "raw_excerpt": "0.300352900,5138082,,cpu_atom/cycles/,708370,33.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_5affefcc",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 34076359,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "instructions",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.300"
+      },
+      "raw_excerpt": "0.300352900,34076359,,cpu_core/instructions/,4742166,87.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_50a7f528",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 8085038,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "instructions",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.300"
+      },
+      "raw_excerpt": "0.300352900,8085038,,cpu_atom/instructions/,708370,33.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_d0dbc1d5",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 672,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cache-misses",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.300"
+      },
+      "raw_excerpt": "0.300352900,672,,cpu_core/cache-misses/,4742166,87.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_daabca4f",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 12,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cache-misses",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.300"
+      },
+      "raw_excerpt": "0.300352900,12,,cpu_atom/cache-misses/,708370,33.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_7eb2d5aa",
+      "source": "perf_stat",
+      "category": "scheduler",
+      "metric": "context_switches",
+      "value": 2402,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "context-switches",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.300"
+      },
+      "raw_excerpt": "0.300352900,2402,,context-switches,5450536,100.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_b4c01d88",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 22268242,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cycles",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.401"
+      },
+      "raw_excerpt": "0.400519746,22268242,,cpu_core/cycles/,4011818,71.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_403fcb17",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 4073430,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cycles",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.401"
+      },
+      "raw_excerpt": "0.400519746,4073430,,cpu_atom/cycles/,1610632,95.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_f375c49d",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 36310986,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "instructions",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.401"
+      },
+      "raw_excerpt": "0.400519746,36310986,,cpu_core/instructions/,4011818,71.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_e330db76",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 6600424,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "instructions",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.401"
+      },
+      "raw_excerpt": "0.400519746,6600424,,cpu_atom/instructions/,1610632,95.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_e6dd8ca1",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 976,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cache-misses",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.401"
+      },
+      "raw_excerpt": "0.400519746,976,,cpu_core/cache-misses/,4011818,71.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_f9c46ac2",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 58,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cache-misses",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.401"
+      },
+      "raw_excerpt": "0.400519746,58,,cpu_atom/cache-misses/,1610632,95.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_e1e8fc43",
+      "source": "perf_stat",
+      "category": "scheduler",
+      "metric": "context_switches",
+      "value": 2392,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "context-switches",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.401"
+      },
+      "raw_excerpt": "0.400519746,2392,,context-switches,5622450,100.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_eb964abf",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 3812666,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cycles",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.471"
+      },
+      "raw_excerpt": "0.470860570,3812666,,cpu_core/cycles/,926986,100.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_8672da5f",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "cycles",
+      "value": 8729391,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cycles",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.471"
+      },
+      "raw_excerpt": "0.470860570,8729391,,cpu_atom/cycles/,1864935,66.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_ae53d0be",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 6525795,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "instructions",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.471"
+      },
+      "raw_excerpt": "0.470860570,6525795,,cpu_core/instructions/,926986,100.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_a67f7f7a",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "instructions",
+      "value": 14767785,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "instructions",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.471"
+      },
+      "raw_excerpt": "0.470860570,14767785,,cpu_atom/instructions/,1864935,66.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_30b79c0d",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 5497,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cache-misses",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.471"
+      },
+      "raw_excerpt": "0.470860570,5497,,cpu_core/cache-misses/,926986,100.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_f6d1d178",
+      "source": "perf_stat",
+      "category": "cache",
+      "metric": "cache_misses",
+      "value": 348,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "cache-misses",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.471"
+      },
+      "raw_excerpt": "0.470860570,348,,cpu_atom/cache-misses/,1864935,66.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_3dab1c25",
+      "source": "perf_stat",
+      "category": "scheduler",
+      "metric": "context_switches",
+      "value": 836,
+      "unit": "count",
+      "normalized_value": null,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "event_name": "context-switches",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.471"
+      },
+      "raw_excerpt": "0.470860570,836,,context-switches,2791921,100.00,,",
+      "evidence_level": "direct",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_9b6dc86f",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "ipc",
+      "value": 1.5131,
+      "unit": null,
+      "normalized_value": 1.5131,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.100",
+        "derived_from": "instructions,cycles"
+      },
+      "raw_excerpt": "time=0.100s ipc=1.5131",
+      "evidence_level": "derived",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_18daca6d",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "ipc",
+      "value": 1.6036,
+      "unit": null,
+      "normalized_value": 1.6036,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.200",
+        "derived_from": "instructions,cycles"
+      },
+      "raw_excerpt": "time=0.200s ipc=1.6036",
+      "evidence_level": "derived",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_02f45df0",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "ipc",
+      "value": 1.6241,
+      "unit": null,
+      "normalized_value": 1.6241,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.300",
+        "derived_from": "instructions,cycles"
+      },
+      "raw_excerpt": "time=0.300s ipc=1.6241",
+      "evidence_level": "derived",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_d6184b74",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "ipc",
+      "value": 1.629,
+      "unit": null,
+      "normalized_value": 1.629,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.401",
+        "derived_from": "instructions,cycles"
+      },
+      "raw_excerpt": "time=0.401s ipc=1.6290",
+      "evidence_level": "derived",
+      "parser_version": "v1"
+    },
+    {
+      "id": "obs_4e6262be",
+      "source": "perf_stat",
+      "category": "cpu",
+      "metric": "ipc",
+      "value": 1.6978,
+      "unit": null,
+      "normalized_value": 1.6978,
+      "scope": "process",
+      "timestamp": "2026-03-31T17:38:58.432479Z",
+      "labels": {
+        "action_id": "act_17afa1e7",
+        "series_type": "timeline",
+        "time_bucket_sec": "0.471",
+        "derived_from": "instructions,cycles"
+      },
+      "raw_excerpt": "time=0.471s ipc=1.6978",
+      "evidence_level": "derived",
+      "parser_version": "v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "hyp_f4f77e8c",
+      "kind": "lock_contention",
+      "summary": "\u9501\u7b49\u5f85\u6216\u9ad8\u9891\u4e0a\u4e0b\u6587\u5207\u6362\u7279\u5f81\u660e\u663e\uff0c\u7591\u4f3c\u5b58\u5728\u9501\u7ade\u4e89\u3002",
+      "reasoning_basis": [
+        "\u4f9d\u636e\u89c2\u6d4b\u6307\u6807: voluntary_context_switches, context_switches, callgraph_samples, context_switches, context_switches, context_switches, context_switches, context_switches"
+      ],
+      "supporting_observation_ids": [
+        "obs_7bf5bc9b",
+        "obs_f93cbb8b",
+        "obs_25d878e8",
+        "obs_a4c2507c",
+        "obs_bd7920bb",
+        "obs_7eb2d5aa",
+        "obs_e1e8fc43",
+        "obs_3dab1c25"
+      ],
+      "contradicting_observation_ids": [],
+      "confidence": 0.95,
+      "needs_verification": true,
+      "suggested_actions": [
+        "\u5efa\u8bae\u91c7\u96c6 perf record \u8c03\u7528\u6808\uff0c\u68c0\u67e5\u9501\u6301\u6709\u8005\u548c\u7b49\u5f85\u70ed\u70b9\u3002"
+      ]
+    },
+    {
+      "id": "hyp_15d4cf70",
+      "kind": "scheduler_issue",
+      "summary": "\u4e0a\u4e0b\u6587\u5207\u6362\u6216\u8fd0\u884c\u961f\u5217\u538b\u529b\u504f\u9ad8\uff0c\u7591\u4f3c\u5b58\u5728\u8c03\u5ea6\u95ee\u9898\u3002",
+      "reasoning_basis": [
+        "\u4f9d\u636e\u89c2\u6d4b\u6307\u6807: voluntary_context_switches, involuntary_context_switches"
+      ],
+      "supporting_observation_ids": [
+        "obs_7bf5bc9b",
+        "obs_1295b5e9"
+      ],
+      "contradicting_observation_ids": [],
+      "confidence": 0.65,
+      "needs_verification": true,
+      "suggested_actions": [
+        "\u5efa\u8bae\u8865\u5145 mpstat \u6216\u8c03\u5ea6\u8ddf\u8e2a\uff0c\u68c0\u67e5\u4e0a\u4e0b\u6587\u5207\u6362\u548c\u8fd0\u884c\u961f\u5217\u538b\u529b\u3002"
+      ]
+    }
+  ],
+  "actions_taken": [
+    {
+      "id": "act_a0a68b4e",
+      "tool": "time",
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+        "6",
+        "120000"
+      ],
+      "reason": "\u5148\u62ff\u5230\u8fd0\u884c\u65f6\u957f\u3001CPU \u5360\u7528\u3001\u5185\u5b58\u5360\u7528\u548c\u4e0a\u4e0b\u6587\u5207\u6362\u57fa\u7ebf\u3002",
+      "expected_output": "time output",
+      "timeout_sec": 120,
+      "retryable": true,
+      "status": "done",
+      "intent": "baseline_runtime",
+      "phase": "baseline",
+      "event_names": [],
+      "call_graph_mode": null,
+      "display_name": "/usr/bin/time / \u8fd0\u884c\u65f6\u57fa\u7ebf",
+      "strategy_note": "\u7528 /usr/bin/time -v \u5efa\u7acb\u7a0b\u5e8f\u8fd0\u884c\u57fa\u7ebf\u3002",
+      "sample_interval_ms": null
+    },
+    {
+      "id": "act_3293bd75",
+      "tool": "perf_stat",
+      "command": [
+        "perf",
+        "stat",
+        "-e",
+        "cycles,instructions,task-clock,cpu-clock",
+        "--",
+        "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+        "6",
+        "120000"
+      ],
+      "reason": "\u5224\u65ad\u6307\u4ee4\u9000\u4f11\u6548\u7387\u3001cycles \u548c IPC \u662f\u5426\u5f02\u5e38\u3002",
+      "expected_output": "perf stat event counters",
+      "timeout_sec": 120,
+      "retryable": true,
+      "status": "done",
+      "intent": "instruction_efficiency",
+      "phase": "baseline",
+      "event_names": [
+        "cycles",
+        "instructions",
+        "task-clock",
+        "cpu-clock"
+      ],
+      "call_graph_mode": null,
+      "display_name": "perf stat / \u6307\u4ee4\u6548\u7387",
+      "strategy_note": "\u5224\u65ad cycles\u3001instructions \u548c IPC \u7684\u5065\u5eb7\u5ea6\u3002\u5f53\u524d\u4f7f\u7528\u9996\u9009\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a cycles, instructions, task-clock, cpu-clock\u3002",
+      "sample_interval_ms": null
+    },
+    {
+      "id": "act_38b1ed6e",
+      "tool": "perf_stat",
+      "command": [
+        "perf",
+        "stat",
+        "-e",
+        "cache-references,cache-misses",
+        "--",
+        "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+        "6",
+        "120000"
+      ],
+      "reason": "\u5224\u65ad cache miss\u3001\u524d\u540e\u7aef\u505c\u987f\u548c\u5185\u5b58\u538b\u529b\u662f\u5426\u660e\u663e\u3002",
+      "expected_output": "perf stat event counters",
+      "timeout_sec": 120,
+      "retryable": true,
+      "status": "done",
+      "intent": "cache_memory_pressure",
+      "phase": "baseline",
+      "event_names": [
+        "cache-references",
+        "cache-misses"
+      ],
+      "call_graph_mode": null,
+      "display_name": "perf stat / \u7f13\u5b58\u4e0e\u5185\u5b58\u538b\u529b",
+      "strategy_note": "\u5224\u65ad cache miss\u3001\u5185\u5b58\u538b\u529b\u4ee5\u53ca\u524d\u540e\u7aef\u505c\u987f\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a cache-references, cache-misses\u3002",
+      "sample_interval_ms": null
+    },
+    {
+      "id": "act_8a0a98fb",
+      "tool": "perf_stat",
+      "command": [
+        "perf",
+        "stat",
+        "-e",
+        "context-switches,cpu-migrations,page-faults",
+        "--",
+        "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+        "6",
+        "120000"
+      ],
+      "reason": "\u89c2\u5bdf\u8c03\u5ea6\u3001\u4e0a\u4e0b\u6587\u5207\u6362\u548c\u8fc1\u79fb\u60c5\u51b5\u3002",
+      "expected_output": "perf stat event counters",
+      "timeout_sec": 120,
+      "retryable": true,
+      "status": "done",
+      "intent": "scheduler_context",
+      "phase": "baseline",
+      "event_names": [
+        "context-switches",
+        "cpu-migrations",
+        "page-faults"
+      ],
+      "call_graph_mode": null,
+      "display_name": "perf stat / \u8c03\u5ea6\u4e0a\u4e0b\u6587",
+      "strategy_note": "\u5224\u65ad\u8c03\u5ea6\u5207\u6362\u3001\u8fc1\u79fb\u4e0e\u7cfb\u7edf\u7ea7 CPU \u4e0a\u4e0b\u6587\u3002\u5f53\u524d\u4f7f\u7528\u9996\u9009\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a context-switches, cpu-migrations, page-faults\u3002",
+      "sample_interval_ms": null
+    },
+    {
+      "id": "act_8d509dc7",
+      "tool": "pidstat",
+      "command": [
+        "pidstat",
+        "-dur",
+        "-h",
+        "1",
+        "1"
+      ],
+      "reason": "\u89c2\u5bdf\u8c03\u5ea6\u3001\u4e0a\u4e0b\u6587\u5207\u6362\u548c\u8fc1\u79fb\u60c5\u51b5\u3002",
+      "expected_output": "pidstat output",
+      "timeout_sec": 60,
+      "retryable": true,
+      "status": "done",
+      "intent": "scheduler_context",
+      "phase": "baseline",
+      "event_names": [],
+      "call_graph_mode": null,
+      "display_name": "pidstat / \u8c03\u5ea6\u4e0a\u4e0b\u6587",
+      "strategy_note": "\u8865\u5145\u8fdb\u7a0b\u7ea7 CPU \u4e0e\u7b49\u5f85\u62c6\u5206\u3002",
+      "sample_interval_ms": null
+    },
+    {
+      "id": "act_716a66d7",
+      "tool": "mpstat",
+      "command": [
+        "mpstat",
+        "1",
+        "1"
+      ],
+      "reason": "\u89c2\u5bdf\u8c03\u5ea6\u3001\u4e0a\u4e0b\u6587\u5207\u6362\u548c\u8fc1\u79fb\u60c5\u51b5\u3002",
+      "expected_output": "mpstat output",
+      "timeout_sec": 60,
+      "retryable": true,
+      "status": "done",
+      "intent": "scheduler_context",
+      "phase": "baseline",
+      "event_names": [],
+      "call_graph_mode": null,
+      "display_name": "mpstat / \u8c03\u5ea6\u4e0a\u4e0b\u6587",
+      "strategy_note": "\u8865\u5145\u7cfb\u7edf\u7ea7 CPU \u4e0e\u8c03\u5ea6\u4e0a\u4e0b\u6587\u3002",
+      "sample_interval_ms": null
+    },
+    {
+      "id": "act_ece348eb",
+      "tool": "iostat",
+      "command": [
+        "iostat",
+        "-dx",
+        "1",
+        "1"
+      ],
+      "reason": "\u8865\u5145\u7cfb\u7edf\u5c42 I/O \u7b49\u5f85\u548c\u8bbe\u5907\u5229\u7528\u7387\u4fe1\u606f\u3002",
+      "expected_output": "iostat output",
+      "timeout_sec": 60,
+      "retryable": true,
+      "status": "done",
+      "intent": "io_wait_detail",
+      "phase": "baseline",
+      "event_names": [],
+      "call_graph_mode": null,
+      "display_name": "iostat / I/O \u7b49\u5f85",
+      "strategy_note": "\u7528 iostat \u770b\u8bbe\u5907\u5229\u7528\u7387\u548c\u7b49\u5f85\u5ef6\u8fdf\u3002",
+      "sample_interval_ms": null
+    },
+    {
+      "id": "act_0952e0cd",
+      "tool": "perf_record",
+      "command": [
+        "perf",
+        "record",
+        "--call-graph",
+        "fp",
+        "--",
+        "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+        "6",
+        "120000"
+      ],
+      "reason": "\u9700\u8981\u5b9a\u4f4d\u70ed\u70b9\u51fd\u6570\u548c\u4e3b\u8981\u8c03\u7528\u94fe\u3002",
+      "expected_output": "perf record callgraph samples",
+      "timeout_sec": 180,
+      "retryable": true,
+      "status": "done",
+      "intent": "hot_function_callgraph",
+      "phase": "verification",
+      "event_names": [],
+      "call_graph_mode": "fp",
+      "display_name": "perf record / \u70ed\u70b9\u51fd\u6570\u8c03\u7528\u94fe",
+      "strategy_note": "\u4f7f\u7528 perf record \u91c7\u6837\u70ed\u70b9\u51fd\u6570\u548c\u8c03\u7528\u94fe\uff0c\u8c03\u7528\u6808\u6a21\u5f0f\u4e3a fp\u3002",
+      "sample_interval_ms": null
+    },
+    {
+      "id": "act_17afa1e7",
+      "tool": "perf_stat",
+      "command": [
+        "perf",
+        "stat",
+        "-x,",
+        "-I",
+        "100",
+        "-e",
+        "cycles,instructions,cache-misses,context-switches",
+        "--",
+        "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+        "6",
+        "120000"
+      ],
+      "reason": "\u9700\u8981\u5224\u65ad\u70ed\u70b9\u548c\u6548\u7387\u95ee\u9898\u662f\u5426\u96c6\u4e2d\u5728\u67d0\u4e2a\u65f6\u95f4\u9636\u6bb5\u3002",
+      "expected_output": "perf stat event counters",
+      "timeout_sec": 120,
+      "retryable": true,
+      "status": "done",
+      "intent": "temporal_behavior",
+      "phase": "verification",
+      "event_names": [
+        "cycles",
+        "instructions",
+        "cache-misses",
+        "context-switches"
+      ],
+      "call_graph_mode": null,
+      "display_name": "perf stat / \u65f6\u95f4\u5e8f\u5217\u884c\u4e3a",
+      "strategy_note": "\u4f7f\u7528 perf stat interval mode \u89c2\u5bdf IPC\u3001cache \u548c\u8c03\u5ea6\u6307\u6807\u968f\u65f6\u95f4\u7684\u6ce2\u52a8\u3002",
+      "sample_interval_ms": 100
+    }
+  ],
+  "pending_actions": [],
+  "artifacts": {
+    "target.json": "runs/run_3cc46379/target.json",
+    "source_manifest.json": "runs/run_3cc46379/source_manifest.json",
+    "environment.json": "runs/run_3cc46379/environment.json",
+    "act_a0a68b4e.stdout": "runs/run_3cc46379/artifacts/act_a0a68b4e.stdout.txt",
+    "act_a0a68b4e.stderr": "runs/run_3cc46379/artifacts/act_a0a68b4e.stderr.txt",
+    "act_a0a68b4e.artifact.0": "runs/run_3cc46379/artifacts/act_a0a68b4e.stdout.txt",
+    "act_a0a68b4e.artifact.1": "runs/run_3cc46379/artifacts/act_a0a68b4e.stderr.txt",
+    "act_a0a68b4e.artifact.2": "runs/run_3cc46379/artifacts/act_a0a68b4e.json",
+    "act_3293bd75.stdout": "runs/run_3cc46379/artifacts/act_3293bd75.stdout.txt",
+    "act_3293bd75.stderr": "runs/run_3cc46379/artifacts/act_3293bd75.stderr.txt",
+    "act_3293bd75.artifact.0": "runs/run_3cc46379/artifacts/act_3293bd75.stdout.txt",
+    "act_3293bd75.artifact.1": "runs/run_3cc46379/artifacts/act_3293bd75.stderr.txt",
+    "act_3293bd75.artifact.2": "runs/run_3cc46379/artifacts/act_3293bd75.json",
+    "act_38b1ed6e.stdout": "runs/run_3cc46379/artifacts/act_38b1ed6e.stdout.txt",
+    "act_38b1ed6e.stderr": "runs/run_3cc46379/artifacts/act_38b1ed6e.stderr.txt",
+    "act_38b1ed6e.artifact.0": "runs/run_3cc46379/artifacts/act_38b1ed6e.stdout.txt",
+    "act_38b1ed6e.artifact.1": "runs/run_3cc46379/artifacts/act_38b1ed6e.stderr.txt",
+    "act_38b1ed6e.artifact.2": "runs/run_3cc46379/artifacts/act_38b1ed6e.json",
+    "act_8a0a98fb.stdout": "runs/run_3cc46379/artifacts/act_8a0a98fb.stdout.txt",
+    "act_8a0a98fb.stderr": "runs/run_3cc46379/artifacts/act_8a0a98fb.stderr.txt",
+    "act_8a0a98fb.artifact.0": "runs/run_3cc46379/artifacts/act_8a0a98fb.stdout.txt",
+    "act_8a0a98fb.artifact.1": "runs/run_3cc46379/artifacts/act_8a0a98fb.stderr.txt",
+    "act_8a0a98fb.artifact.2": "runs/run_3cc46379/artifacts/act_8a0a98fb.json",
+    "act_8d509dc7.stdout": "runs/run_3cc46379/artifacts/act_8d509dc7.stdout.txt",
+    "act_8d509dc7.artifact.0": "runs/run_3cc46379/artifacts/act_8d509dc7.stdout.txt",
+    "act_8d509dc7.artifact.1": "runs/run_3cc46379/artifacts/act_8d509dc7.json",
+    "act_716a66d7.stdout": "runs/run_3cc46379/artifacts/act_716a66d7.stdout.txt",
+    "act_716a66d7.artifact.0": "runs/run_3cc46379/artifacts/act_716a66d7.stdout.txt",
+    "act_716a66d7.artifact.1": "runs/run_3cc46379/artifacts/act_716a66d7.json",
+    "act_ece348eb.stdout": "runs/run_3cc46379/artifacts/act_ece348eb.stdout.txt",
+    "act_ece348eb.artifact.0": "runs/run_3cc46379/artifacts/act_ece348eb.stdout.txt",
+    "act_ece348eb.artifact.1": "runs/run_3cc46379/artifacts/act_ece348eb.json",
+    "act_0952e0cd.stdout": "runs/run_3cc46379/artifacts/act_0952e0cd.stdout.txt",
+    "act_0952e0cd.stderr": "runs/run_3cc46379/artifacts/act_0952e0cd.stderr.txt",
+    "act_0952e0cd.artifact.0": "runs/run_3cc46379/artifacts/act_0952e0cd.record.stdout.txt",
+    "act_0952e0cd.artifact.1": "runs/run_3cc46379/artifacts/act_0952e0cd.stderr.txt",
+    "act_0952e0cd.artifact.2": "runs/run_3cc46379/artifacts/act_0952e0cd.perf.data",
+    "act_0952e0cd.artifact.3": "runs/run_3cc46379/artifacts/act_0952e0cd.stdout.txt",
+    "act_0952e0cd.artifact.4": "runs/run_3cc46379/artifacts/act_0952e0cd.json",
+    "act_17afa1e7.stdout": "runs/run_3cc46379/artifacts/act_17afa1e7.stdout.txt",
+    "act_17afa1e7.stderr": "runs/run_3cc46379/artifacts/act_17afa1e7.stderr.txt",
+    "act_17afa1e7.artifact.0": "runs/run_3cc46379/artifacts/act_17afa1e7.stdout.txt",
+    "act_17afa1e7.artifact.1": "runs/run_3cc46379/artifacts/act_17afa1e7.stderr.txt",
+    "act_17afa1e7.artifact.2": "runs/run_3cc46379/artifacts/act_17afa1e7.json",
+    "report.json": "runs/run_3cc46379/report.json",
+    "report.md": "runs/run_3cc46379/report.md",
+    "report.html": "runs/run_3cc46379/report.html"
+  },
+  "final_report": {
+    "executive_summary": "\u5f53\u524d\u6700\u53ef\u80fd\u7684\u74f6\u9888\u65b9\u5411\u662f \u9501\u7ade\u4e89\uff0c\u7f6e\u4fe1\u5ea6\u4e3a 0.95\u3002",
+    "target": {
+      "command": [
+        "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+        "6",
+        "120000"
+      ],
+      "executable_path": "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+      "source_dir": "/home/tchen/agent/perf_agent/examples/cpp",
+      "source_file_count": 2,
+      "runtime_notes": [
+        "verification_rounds=1",
+        "actions_executed=9"
+      ]
+    },
+    "environment_summary": [
+      "\u67b6\u6784: x86_64",
+      "\u5185\u6838: 6.2.0-37-generic",
+      "CPU: 13th Gen Intel(R) Core(TM) i5-13600K",
+      "\u903b\u8f91\u6838\u6570: 20",
+      "perf: \u53ef\u7528 perf version 6.2.16",
+      "\u53ef\u7528\u4e8b\u4ef6\u6570: 15",
+      "\u8c03\u7528\u6808\u6a21\u5f0f: fp, dwarf, lbr",
+      "perf_event_paranoid: -1",
+      "\u68c0\u6d4b\u5230 topdown \u76f8\u5173\u4e8b\u4ef6\uff0c\u53ef\u5728\u540e\u7eed\u5b9e\u9a8c\u4e2d\u4f18\u5148\u5c1d\u8bd5\u3002"
+    ],
+    "experiment_history": [
+      "\u7b2c 1 \u8f6e [baseline] /usr/bin/time / \u8fd0\u884c\u65f6\u57fa\u7ebf: \u7528 /usr/bin/time -v \u5efa\u7acb\u7a0b\u5e8f\u8fd0\u884c\u57fa\u7ebf\u3002",
+      "\u7b2c 1 \u8f6e [baseline] perf stat / \u6307\u4ee4\u6548\u7387: \u5224\u65ad cycles\u3001instructions \u548c IPC \u7684\u5065\u5eb7\u5ea6\u3002\u5f53\u524d\u4f7f\u7528\u9996\u9009\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a cycles, instructions, task-clock, cpu-clock\u3002",
+      "\u7b2c 1 \u8f6e [baseline] perf stat / \u7f13\u5b58\u4e0e\u5185\u5b58\u538b\u529b: \u5224\u65ad cache miss\u3001\u5185\u5b58\u538b\u529b\u4ee5\u53ca\u524d\u540e\u7aef\u505c\u987f\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a cache-references, cache-misses\u3002\uff0c\u5df2\u9000\u5316\u5230\u5f53\u524d\u673a\u5668\u53ef\u7528\u65b9\u6848",
+      "\u7b2c 1 \u8f6e [baseline] perf stat / \u8c03\u5ea6\u4e0a\u4e0b\u6587: \u5224\u65ad\u8c03\u5ea6\u5207\u6362\u3001\u8fc1\u79fb\u4e0e\u7cfb\u7edf\u7ea7 CPU \u4e0a\u4e0b\u6587\u3002\u5f53\u524d\u4f7f\u7528\u9996\u9009\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a context-switches, cpu-migrations, page-faults\u3002",
+      "\u7b2c 1 \u8f6e [baseline] pidstat / \u8c03\u5ea6\u4e0a\u4e0b\u6587: \u8865\u5145\u8fdb\u7a0b\u7ea7 CPU \u4e0e\u7b49\u5f85\u62c6\u5206\u3002",
+      "\u7b2c 1 \u8f6e [baseline] mpstat / \u8c03\u5ea6\u4e0a\u4e0b\u6587: \u8865\u5145\u7cfb\u7edf\u7ea7 CPU \u4e0e\u8c03\u5ea6\u4e0a\u4e0b\u6587\u3002",
+      "\u7b2c 1 \u8f6e [baseline] iostat / I/O \u7b49\u5f85: \u7528 iostat \u770b\u8bbe\u5907\u5229\u7528\u7387\u548c\u7b49\u5f85\u5ef6\u8fdf\u3002",
+      "\u7b2c 2 \u8f6e [verification] perf record / \u70ed\u70b9\u51fd\u6570\u8c03\u7528\u94fe: \u4f7f\u7528 perf record \u91c7\u6837\u70ed\u70b9\u51fd\u6570\u548c\u8c03\u7528\u94fe\uff0c\u8c03\u7528\u6808\u6a21\u5f0f\u4e3a fp\u3002",
+      "\u7b2c 2 \u8f6e [verification] perf stat / \u65f6\u95f4\u5e8f\u5217\u884c\u4e3a: \u4f7f\u7528 perf stat interval mode \u89c2\u5bdf IPC\u3001cache \u548c\u8c03\u5ea6\u6307\u6807\u968f\u65f6\u95f4\u7684\u6ce2\u52a8\u3002"
+    ],
+    "evidence_summary": [
+      "\u7b2c 2 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a lock_contention\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 5 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 5 \u4e2a\u3002",
+      "\u91cd\u70b9\u6307\u6807: cache_misses, context_switches",
+      "\u70ed\u70b9\u7b26\u53f7: (anonymous namespace)::worker, entry_SYSCALL_64_after_hwframe, do_syscall_64, 0000000000000000, __x64_sys_futex",
+      "\u65f6\u95f4\u5e8f\u5217\u6307\u6807: cache_misses, context_switches, cycles, instructions, ipc",
+      "\u662f\u5426\u9700\u8981\u8fdb\u4e00\u6b65\u533a\u5206 lock_contention \u4e0e\u5176\u4ed6\u5019\u9009\u74f6\u9888\u3002"
+    ],
+    "chart_specs": [
+      {
+        "chart_id": "hypothesis-confidence",
+        "title": "\u5019\u9009\u74f6\u9888\u7f6e\u4fe1\u5ea6\u5bf9\u6bd4",
+        "chart_type": "bar",
+        "metrics": [
+          "hypothesis_confidence"
+        ],
+        "rationale": "\u6240\u6709\u62a5\u544a\u90fd\u5e94\u5148\u5c55\u793a\u5f53\u524d\u6700\u4e3b\u8981\u7684\u74f6\u9888\u5019\u9009\u53ca\u5176\u76f8\u5bf9\u7f6e\u4fe1\u5ea6\u3002",
+        "focus": "overall_diagnosis"
+      },
+      {
+        "chart_id": "timeline-ipc",
+        "title": "ipc \u65f6\u95f4\u5e8f\u5217",
+        "chart_type": "line",
+        "metrics": [
+          "ipc"
+        ],
+        "rationale": "\u5b58\u5728\u65f6\u95f4\u5e8f\u5217\u89c2\u6d4b\u65f6\uff0c\u5e94\u76f4\u63a5\u5c55\u793a\u5173\u952e\u6307\u6807\u968f\u65f6\u95f4\u7684\u53d8\u5316\u8d8b\u52bf\u3002",
+        "focus": "temporal_behavior"
+      },
+      {
+        "chart_id": "timeline-cache_misses",
+        "title": "cache_misses \u65f6\u95f4\u5e8f\u5217",
+        "chart_type": "line",
+        "metrics": [
+          "cache_misses"
+        ],
+        "rationale": "\u5b58\u5728\u65f6\u95f4\u5e8f\u5217\u89c2\u6d4b\u65f6\uff0c\u5e94\u76f4\u63a5\u5c55\u793a\u5173\u952e\u6307\u6807\u968f\u65f6\u95f4\u7684\u53d8\u5316\u8d8b\u52bf\u3002",
+        "focus": "temporal_behavior"
+      },
+      {
+        "chart_id": "hotspot-symbols",
+        "title": "\u70ed\u70b9\u51fd\u6570\u5360\u6bd4",
+        "chart_type": "bar",
+        "metrics": [
+          "hot_symbol_pct"
+        ],
+        "rationale": "\u5df2\u7ecf\u62ff\u5230\u70ed\u70b9\u51fd\u6570\u6837\u672c\u540e\uff0c\u5e94\u5c55\u793a\u6700\u70ed\u51fd\u6570\u5206\u5e03\uff0c\u5e2e\u52a9\u9a8c\u8bc1\u70ed\u70b9\u662f\u5426\u96c6\u4e2d\u3002",
+        "focus": "hotspot_distribution"
+      }
+    ],
+    "detected_bottlenecks": [
+      "lock_contention",
+      "scheduler_issue"
+    ],
+    "supporting_evidence": [
+      "\u9501\u7ade\u4e89: time.voluntary_context_switches=23239",
+      "\u9501\u7ade\u4e89: perf_stat.context_switches=18341",
+      "\u9501\u7ade\u4e89: perf_record.callgraph_samples=3876",
+      "\u9501\u7ade\u4e89: perf_stat.context_switches=2397",
+      "\u9501\u7ade\u4e89: perf_stat.context_switches=2411",
+      "\u9501\u7ade\u4e89: perf_stat.context_switches=2402",
+      "\u9501\u7ade\u4e89: perf_stat.context_switches=2392",
+      "\u9501\u7ade\u4e89: perf_stat.context_switches=836",
+      "\u8c03\u5ea6\u538b\u529b: time.voluntary_context_switches=23239",
+      "\u8c03\u5ea6\u538b\u529b: time.involuntary_context_switches=2"
+    ],
+    "rejected_alternatives": [
+      "\u8c03\u5ea6\u538b\u529b \u7684\u8bc1\u636e\u5f3a\u5ea6\u4f4e\u4e8e\u9996\u8981\u5019\u9009\u3002"
+    ],
+    "source_findings": [
+      {
+        "file_path": "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+        "line_no": 13,
+        "symbol_hint": "worker",
+        "issue_type": "\u70ed\u70b9\u51fd\u6570\u5b9a\u4f4d",
+        "rationale": "perf record / report \u663e\u793a\u70ed\u70b9\u7b26\u53f7 worker\uff0c\u8be5\u6e90\u7801\u4f4d\u7f6e\u4e0e\u70ed\u70b9\u8c03\u7528\u8def\u5f84\u76f4\u63a5\u76f8\u5173\u3002",
+        "snippet": "void worker(std::size_t iterations) {",
+        "related_hypothesis": "lock_contention"
+      },
+      {
+        "file_path": "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+        "line_no": 38,
+        "symbol_hint": "worker",
+        "issue_type": "\u70ed\u70b9\u51fd\u6570\u5b9a\u4f4d",
+        "rationale": "perf record / report \u663e\u793a\u70ed\u70b9\u7b26\u53f7 worker\uff0c\u8be5\u6e90\u7801\u4f4d\u7f6e\u4e0e\u70ed\u70b9\u8c03\u7528\u8def\u5f84\u76f4\u63a5\u76f8\u5173\u3002",
+        "snippet": "threads.emplace_back(worker, iterations);",
+        "related_hypothesis": "lock_contention"
+      },
+      {
+        "file_path": "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+        "line_no": 10,
+        "symbol_hint": null,
+        "issue_type": "\u9501\u7ade\u4e89",
+        "rationale": "\u68c0\u6d4b\u5230\u4e92\u65a5\u9501\u76f8\u5173\u4ee3\u7801\uff0c\u53ef\u80fd\u4e0e\u9501\u7ade\u4e89\u6709\u5173\u3002",
+        "snippet": "std::mutex global_mutex;",
+        "related_hypothesis": "lock_contention"
+      },
+      {
+        "file_path": "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+        "line_no": 10,
+        "symbol_hint": null,
+        "issue_type": "\u5171\u4eab\u4e34\u754c\u533a",
+        "rationale": "\u68c0\u6d4b\u5230\u5171\u4eab\u72b6\u6001\u6216\u4e34\u754c\u533a\u547d\u540d\u75d5\u8ff9\u3002",
+        "snippet": "std::mutex global_mutex;",
+        "related_hypothesis": "lock_contention"
+      }
+    ],
+    "confidence_overall": 0.95,
+    "recommended_next_steps": [
+      "\u5efa\u8bae\u91c7\u96c6 perf record \u8c03\u7528\u6808\uff0c\u68c0\u67e5\u9501\u6301\u6709\u8005\u548c\u7b49\u5f85\u70ed\u70b9\u3002",
+      "\u5efa\u8bae\u8865\u5145 mpstat \u6216\u8c03\u5ea6\u8ddf\u8e2a\uff0c\u68c0\u67e5\u4e0a\u4e0b\u6587\u5207\u6362\u548c\u8fd0\u884c\u961f\u5217\u538b\u529b\u3002"
+    ],
+    "artifacts": [
+      "runs/run_3cc46379/artifacts/act_0952e0cd.json",
+      "runs/run_3cc46379/artifacts/act_0952e0cd.perf.data",
+      "runs/run_3cc46379/artifacts/act_0952e0cd.record.stdout.txt",
+      "runs/run_3cc46379/artifacts/act_0952e0cd.stderr.txt",
+      "runs/run_3cc46379/artifacts/act_0952e0cd.stdout.txt",
+      "runs/run_3cc46379/artifacts/act_17afa1e7.json",
+      "runs/run_3cc46379/artifacts/act_17afa1e7.stderr.txt",
+      "runs/run_3cc46379/artifacts/act_17afa1e7.stdout.txt",
+      "runs/run_3cc46379/artifacts/act_3293bd75.json",
+      "runs/run_3cc46379/artifacts/act_3293bd75.stderr.txt",
+      "runs/run_3cc46379/artifacts/act_3293bd75.stdout.txt",
+      "runs/run_3cc46379/artifacts/act_38b1ed6e.json",
+      "runs/run_3cc46379/artifacts/act_38b1ed6e.stderr.txt",
+      "runs/run_3cc46379/artifacts/act_38b1ed6e.stdout.txt",
+      "runs/run_3cc46379/artifacts/act_716a66d7.json",
+      "runs/run_3cc46379/artifacts/act_716a66d7.stdout.txt",
+      "runs/run_3cc46379/artifacts/act_8a0a98fb.json",
+      "runs/run_3cc46379/artifacts/act_8a0a98fb.stderr.txt",
+      "runs/run_3cc46379/artifacts/act_8a0a98fb.stdout.txt",
+      "runs/run_3cc46379/artifacts/act_8d509dc7.json",
+      "runs/run_3cc46379/artifacts/act_8d509dc7.stdout.txt",
+      "runs/run_3cc46379/artifacts/act_a0a68b4e.json",
+      "runs/run_3cc46379/artifacts/act_a0a68b4e.stderr.txt",
+      "runs/run_3cc46379/artifacts/act_a0a68b4e.stdout.txt",
+      "runs/run_3cc46379/artifacts/act_ece348eb.json",
+      "runs/run_3cc46379/artifacts/act_ece348eb.stdout.txt",
+      "runs/run_3cc46379/environment.json",
+      "runs/run_3cc46379/source_manifest.json",
+      "runs/run_3cc46379/target.json"
+    ]
+  },
+  "max_verification_rounds": 2,
+  "verification_rounds_done": 1,
+  "error_message": null,
+  "audit_log": [
+    {
+      "timestamp": "2026-03-31T17:38:52.510054Z",
+      "node": "orchestrator",
+      "message": "transitioned to running",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-03-31T17:38:52.510557Z",
+      "node": "runner",
+      "message": "prepared runtime target",
+      "details": {
+        "target_cmd": [
+          "/home/tchen/agent/perf_agent/examples/bin/lock_contention_demo",
+          "6",
+          "120000"
+        ],
+        "source_file_count": 2
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:52.596609Z",
+      "node": "environment_profiler",
+      "message": "profiled environment capability",
+      "details": {
+        "arch": "x86_64",
+        "cpu_model": "13th Gen Intel(R) Core(TM) i5-13600K",
+        "perf_available": true,
+        "event_count": 15,
+        "callgraph_modes": [
+          "fp",
+          "dwarf",
+          "lbr"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:52.597177Z",
+      "node": "planner",
+      "message": "planned baseline experiment round",
+      "details": {
+        "round_index": 1,
+        "intents": [
+          "baseline_runtime",
+          "instruction_efficiency",
+          "cache_memory_pressure",
+          "scheduler_context",
+          "io_wait_detail"
+        ],
+        "tools": [
+          "time",
+          "perf_stat",
+          "perf_stat",
+          "perf_stat",
+          "pidstat",
+          "mpstat",
+          "iostat"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:53.074941Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_a0a68b4e",
+        "tool": "time",
+        "intent": "baseline_runtime",
+        "success": true,
+        "exit_code": 0,
+        "duration_sec": 0.4771
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:53.557351Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_3293bd75",
+        "tool": "perf_stat",
+        "intent": "instruction_efficiency",
+        "success": true,
+        "exit_code": 0,
+        "duration_sec": 0.4823
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:54.108119Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_38b1ed6e",
+        "tool": "perf_stat",
+        "intent": "cache_memory_pressure",
+        "success": true,
+        "exit_code": 0,
+        "duration_sec": 0.5506
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:54.591981Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_8a0a98fb",
+        "tool": "perf_stat",
+        "intent": "scheduler_context",
+        "success": true,
+        "exit_code": 0,
+        "duration_sec": 0.4836
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:55.594628Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_8d509dc7",
+        "tool": "pidstat",
+        "intent": "scheduler_context",
+        "success": true,
+        "exit_code": 0,
+        "duration_sec": 1.0025
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.600434Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_716a66d7",
+        "tool": "mpstat",
+        "intent": "scheduler_context",
+        "success": true,
+        "exit_code": 0,
+        "duration_sec": 1.0055
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.607099Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_ece348eb",
+        "tool": "iostat",
+        "intent": "io_wait_detail",
+        "success": true,
+        "exit_code": 0,
+        "duration_sec": 0.0064
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.611003Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_a0a68b4e",
+        "tool": "time",
+        "observation_count": 8
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.612086Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_3293bd75",
+        "tool": "perf_stat",
+        "observation_count": 2
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.612814Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_38b1ed6e",
+        "tool": "perf_stat",
+        "observation_count": 2
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.613466Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_8a0a98fb",
+        "tool": "perf_stat",
+        "observation_count": 3
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.613546Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_8d509dc7",
+        "tool": "pidstat",
+        "observation_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.613753Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_716a66d7",
+        "tool": "mpstat",
+        "observation_count": 3
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.613870Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_ece348eb",
+        "tool": "iostat",
+        "observation_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.621721Z",
+      "node": "analyzer",
+      "message": "generated hypotheses from rules and structured observations",
+      "details": {
+        "hypothesis_count": 2,
+        "evidence_pack_summary": "\u7b2c 1 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a lock_contention\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 0 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 0 \u4e2a\u3002"
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:56.624507Z",
+      "node": "verifier",
+      "message": "scheduled follow-up verification round",
+      "details": {
+        "intents": [
+          "hot_function_callgraph",
+          "temporal_behavior",
+          "temporal_behavior"
+        ],
+        "tools": [
+          "perf_record",
+          "perf_stat"
+        ],
+        "evidence_gaps": [
+          "Evidence is incomplete for hypothesis lock_contention."
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:57.948947Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_0952e0cd",
+        "tool": "perf_record",
+        "intent": "hot_function_callgraph",
+        "success": true,
+        "exit_code": 0,
+        "duration_sec": 1.3219
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:58.430696Z",
+      "node": "collector",
+      "message": "executed action",
+      "details": {
+        "action_id": "act_17afa1e7",
+        "tool": "perf_stat",
+        "intent": "temporal_behavior",
+        "success": true,
+        "exit_code": 0,
+        "duration_sec": 0.4817
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:58.432436Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_0952e0cd",
+        "tool": "perf_record",
+        "observation_count": 6
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:58.434428Z",
+      "node": "parser",
+      "message": "parsed action output",
+      "details": {
+        "action_id": "act_17afa1e7",
+        "tool": "perf_stat",
+        "observation_count": 40
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:58.437277Z",
+      "node": "analyzer",
+      "message": "generated hypotheses from rules and structured observations",
+      "details": {
+        "hypothesis_count": 2,
+        "evidence_pack_summary": "\u7b2c 2 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a lock_contention\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 5 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 5 \u4e2a\u3002"
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:58.439260Z",
+      "node": "verifier",
+      "message": "all follow-up actions were already executed or pending",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-03-31T17:38:58.440941Z",
+      "node": "source_analyzer",
+      "message": "completed source scan",
+      "details": {
+        "finding_count": 4,
+        "top_hypothesis": "lock_contention"
+      }
+    },
+    {
+      "timestamp": "2026-03-31T17:38:58.442870Z",
+      "node": "reporter",
+      "message": "generated final report",
+      "details": {
+        "hypothesis_count": 2
+      }
+    }
+  ],
+  "parsed_action_ids": [
+    "act_a0a68b4e",
+    "act_3293bd75",
+    "act_38b1ed6e",
+    "act_8a0a98fb",
+    "act_8d509dc7",
+    "act_716a66d7",
+    "act_ece348eb",
+    "act_0952e0cd",
+    "act_17afa1e7"
+  ],
+  "goal": null,
+  "mock_outputs": {},
+  "cwd": null,
+  "env": {},
+  "progress_messages": []
+}

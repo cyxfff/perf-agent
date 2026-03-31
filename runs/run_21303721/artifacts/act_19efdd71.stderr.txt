@@ -1,0 +1,14 @@
+
+ Performance counter stats for 'examples/bin/multithread_cpu_demo 4 400 18000':
+
+                35      context-switches                                                      
+                 4      cpu-migrations                                                        
+               293      page-faults                                                           
+             14419      cpu_core/mem_inst_retired.lock_loads/                                      
+
+       0.087044899 seconds time elapsed
+
+       0.344486000 seconds user
+       0.000000000 seconds sys
+
+

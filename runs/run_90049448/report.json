@@ -1,0 +1,37 @@
+{
+  "executive_summary": "Primary suspected bottleneck: lock_contention (confidence=0.73).",
+  "detected_bottlenecks": [
+    "lock_contention",
+    "scheduler_issue"
+  ],
+  "supporting_evidence": [
+    "lock_contention: perf_stat.lock_wait_pct=18.0",
+    "lock_contention: mpstat.context_switches_per_sec=22000",
+    "lock_contention: perf_record.callgraph_samples=2",
+    "scheduler_issue: time.involuntary_context_switches=410",
+    "scheduler_issue: mpstat.context_switches_per_sec=22000",
+    "scheduler_issue: mpstat.run_queue=9"
+  ],
+  "rejected_alternatives": [
+    "scheduler_issue had weaker support than the top candidate."
+  ],
+  "confidence_overall": 0.73,
+  "recommended_next_steps": [
+    "Collect perf record stacks and look for futex or lock-owner hotspots.",
+    "Inspect run queue pressure and context-switch behavior with mpstat or sched traces."
+  ],
+  "artifacts": [
+    "runs/run_90049448/artifacts/act_08ed642e.json",
+    "runs/run_90049448/artifacts/act_08ed642e.stdout.txt",
+    "runs/run_90049448/artifacts/act_3e7bb3af.json",
+    "runs/run_90049448/artifacts/act_3e7bb3af.stdout.txt",
+    "runs/run_90049448/artifacts/act_8d82835b.json",
+    "runs/run_90049448/artifacts/act_8d82835b.stdout.txt",
+    "runs/run_90049448/artifacts/act_a19506d0.json",
+    "runs/run_90049448/artifacts/act_a19506d0.stdout.txt",
+    "runs/run_90049448/artifacts/act_cd9ee73b.json",
+    "runs/run_90049448/artifacts/act_cd9ee73b.stdout.txt",
+    "runs/run_90049448/artifacts/act_efa84ef1.json",
+    "runs/run_90049448/artifacts/act_efa84ef1.stdout.txt"
+  ]
+}

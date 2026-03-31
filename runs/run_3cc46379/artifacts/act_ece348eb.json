@@ -1,0 +1,14 @@
+{
+  "action_id": "act_ece348eb",
+  "tool": "iostat",
+  "command": [
+    "iostat",
+    "-dx",
+    "1",
+    "1"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0062,
+  "error_message": null
+}
