@@ -109,7 +109,46 @@ source .venv/bin/activate
 pip install -e .[dev]
 ```
 
-### 6.2 运行真实样例
+### 6.2 交互模式
+
+现在除了单次 `analyze` 命令，还支持一个交互式入口：
+
+```bash
+perf-agent interactive
+```
+
+进入后你可以直接用自然语言补上下文：
+
+```text
+帮我分析 examples/bin/multiprocess_fanout_demo，源码在 examples/cpp。
+```
+
+如果当前输入里已经包含足够的目标信息，系统会直接开始分析；如果信息还不够，就会先补充上下文或继续追问。
+
+也可以用本地 slash command，这些命令不会交给模型理解，而是先在本地截胡：
+
+```text
+/set exe examples/bin/cpu_bound_demo
+/set source examples/cpp
+/show
+/run
+/approve
+/deny
+/history
+/compact
+/debug query
+/debug request
+/clear
+/exit
+```
+
+如果你希望在离线、本地回退或单测场景下完全禁用 LLM intake / analyzer / verifier / reporter，可以这样运行：
+
+```bash
+PERF_AGENT_DISABLE_LLM=1 perf-agent interactive
+```
+
+### 6.3 运行真实样例
 
 建议把待测程序编译成带调试信息的版本，这样 `addr2line` 才能更稳定地映射到源码行号。对 C/C++ 程序，推荐至少带上：
 
@@ -154,23 +193,119 @@ perf-agent analyze --quiet --exe examples/bin/cpu_bound_demo --source-dir exampl
 ```bash
 perf-agent analyze --exe ./my_binary -- --input case.txt
 perf-agent analyze --exe ./my_binary --source-dir ./src
+perf-agent analyze --safety-config configs/safety.yaml --exe ./my_binary -- --input case.txt
 perf-agent analyze --quiet --exe ./my_binary -- --input case.txt
 perf-agent analyze -- python app.py
 perf-agent analyze --cmd "python app.py --input data.txt"
 perf-agent analyze --pid 12345
 perf-agent analyze --config configs/tools.yaml -- python bench.py
+perf-agent interactive --safety-config configs/safety.yaml
 ```
 
 运行过程中，CLI 会直接告诉你：
 
 - 当前在哪个阶段
 - 探测到了什么架构和 `perf` 能力
+- 如果当前机器连着 Android / Harmony 设备，会自动读取 `adb devices -l`，发现在线设备并给出自动选择理由
 - 当前选择了哪些分析意图
 - 当前用的是 `perf stat` 还是 `perf record`
 - 采了哪些事件，是否发生了 fallback
 - 报告输出路径在哪里
 
-## 8. 输入任务格式
+交互模式下还会维护一个会话上下文，自动记住：
+
+- 当前可执行文件 / 目标命令 / PID
+- 当前源码目录
+- 最近的对话消息和 compact 摘要
+- 最近一次分析运行结果
+
+另外，CLI 和交互模式现在都带有一层本地风险分级闸口：
+
+- 高风险命令：直接拒绝执行，例如 `rm -rf`、格式化磁盘、`curl | sh`、写入 `~/.bashrc` / `/etc/environment` 这类持久环境文件
+- 中风险命令：先询问确认，例如读取 `~/.bashrc`、通过 `bash -lc` / `python -c` 这类内联方式执行目标、可能修改包环境的安装命令
+- 低风险命令：正常进入分析流程
+
+在交互模式里，遇到中风险目标时需要显式输入 `/approve` 才会继续；输入 `/deny` 会取消这次执行。`analyze` 模式下如果运行在交互终端里，也会先弹出确认提示。
+
+## 8.1 可插拔沙箱策略
+
+为了在换平台或换安全策略时不改代码，沙箱运行时已经外置到 [safety.yaml](/home/tchen/agent/perf_agent/configs/safety.yaml)：
+
+- `sandbox_enabled`：是否启用对目标程序的额外隔离
+- `preferred_runtimes`：优先尝试哪些运行时
+- `default_runtime`：指定固定运行时，或用 `auto`
+- `fallback_to_none`：找不到运行时时是否退回普通执行
+- `runtimes.*`：每个运行时的检测方式、模板或 bubblewrap 挂载策略
+
+当前支持的运行时类型：
+
+- `none`：不额外隔离
+- `bubblewrap`：通过只读/可写挂载和 `bwrap` 包裹目标命令
+- `template`：按模板拼接，例如 `firejail` 这类前缀式运行时
+
+默认配置为了兼容现有流程，`sandbox_enabled` 先保持 `false`。如果你想启用：
+
+```yaml
+sandbox_enabled: true
+preferred_runtimes:
+  - bubblewrap
+  - firejail
+  - none
+```
+
+也可以不改默认文件，直接换一份策略文件：
+
+```bash
+perf-agent analyze --safety-config /path/to/your_safety.yaml --exe ./my_binary
+```
+
+或者用环境变量临时覆盖：
+
+```bash
+PERF_AGENT_SANDBOX_ENABLED=1 PERF_AGENT_SANDBOX_RUNTIME=bubblewrap perf-agent analyze --exe ./my_binary
+```
+
+## 9. Prompt 处理与上下文压缩
+
+交互模式不是把所有文本原样扔给模型，而是先经过一层本地 prompt pipeline：
+
+1. `process_user_input_base`
+   - 归一化空白字符
+   - 识别附件、文件、目录、图片路径
+   - 如果输入是 slash command，就优先走本地命令分支
+
+2. `process_text_prompt`
+   - 把文本和附件统一变成结构化 message block
+   - 形成 `UserMessage`
+
+3. `QueryAssembler`
+   - `applyToolResultBudget`
+   - `snipCompactIfNeeded`
+   - `microcompact`
+   - `contextCollapse`
+   - `autocompact`
+
+4. `PreparedModelRequest`
+   - 把最终消息视图、system prompt 分段和工具 schema 组装成请求预览
+
+所以这层做的其实是：
+
+- 先判定哪些输入应该本地截胡
+- 再决定哪些历史该带进当前 query
+- 最后把上下文压到可控大小
+
+如果启用了 LLM，交互层会再做一次 structured parse，把模糊中文输入尽量转成：
+
+- `executable_path`
+- `target_cmd`
+- `source_dir`
+- `target_pid`
+- `goal`
+- `should_run_analysis`
+
+如果没有启用 LLM，就退回本地规则和澄清提问。
+
+## 10. 输入任务格式
 
 当前 JSON 任务格式支持这些字段：
 
@@ -199,7 +334,7 @@ perf-agent analyze --config configs/tools.yaml -- python bench.py
 }
 ```
 
-## 9. 状态流转
+## 11. 状态流转
 
 当前状态机流程如下：
 
@@ -220,7 +355,7 @@ init
  -> done
 ```
 
-## 10. 实验设计逻辑
+## 12. 实验设计逻辑
 
 系统不是固定写死“先跑哪个工具”，而是：
 
@@ -242,11 +377,14 @@ init
    - hot function callgraph
 
 3. 然后映射到机器可执行事件
-   - 优先使用当前机器可用的首选事件
-   - 如果缺失，则退化到通用事件
-   - 把 fallback 原因写进审计和报告
+- 不是单纯“匹配到哪个事件就用哪个”
+- 会先区分 `hardware / software / tracepoint / raw / metric / PMU`
+- 再根据分析意图决定优先级
+- 指令效率、cache、分支这类硬件语义：优先选语义稳定的硬件事件；在 ARM / Android / Harmony 这类平台上，如果同时存在 architected raw 事件，也会优先考虑 raw 对齐
+- 调度、迁移、等待：优先 software event，再考虑 tracepoint
+- 如果缺失，则退化到通用事件，并把 fallback 原因写进审计和报告
 
-## 11. Evidence Pack
+## 13. Evidence Pack
 
 每一轮分析结束后，系统会生成一个 `evidence pack`，内容包括：
 
@@ -264,7 +402,7 @@ runs/<run_id>/evidence_packs.json
 
 同时会出现在最终报告的“证据摘要”部分。
 
-## 12. 报告与可视化
+## 14. 报告与可视化
 
 HTML 报告不是自由画图，而是根据证据类型选图：
 
@@ -277,7 +415,7 @@ HTML 报告不是自由画图，而是根据证据类型选图：
 
 也就是说，图表是证据展示的一部分，不是单纯美化页面。
 
-## 13. 输出产物
+## 15. 输出产物
 
 每次运行都会写出这些文件：
 
@@ -295,7 +433,63 @@ HTML 报告不是自由画图，而是根据证据类型选图：
 - `report.html`
 - `artifacts/*`
 
-## 14. 真实样例源码
+交互会话还会额外写出：
+
+- `runs/interactive_sessions/<session_id>.json`
+
+`artifacts/` 不再是单层平铺目录，而是按“环境探测 / 通用命令原始输出 / 调用链采样原始输出”分层：
+
+注意：这些子目录是按需生成的。某一轮运行如果没有触发对应类型的实验，就不会出现对应子目录。
+
+```text
+runs/<run_id>/
+├── actions_taken.json
+├── environment.json
+├── evidence_packs.json
+├── hypotheses.json
+├── observations.json
+├── report.html
+├── report.json
+├── report.md
+├── state.json
+├── target.json
+├── source_manifest.json
+└── artifacts/
+    ├── environment/
+    │   └── perf_list.txt
+    ├── raw/
+    │   └── commands/
+    │       └── <action_id>/
+    │           ├── stdout.txt
+    │           ├── stderr.txt
+    │           └── action.json
+    └── callgraph/
+        └── <action_id>/
+            ├── perf.data
+            ├── record.stdout.txt
+            ├── record.stderr.txt
+            ├── report.txt
+            ├── report.stderr.txt
+            ├── script.txt
+            ├── script.stderr.txt
+            └── action.json
+```
+
+可以这样理解：
+
+- 根目录下的 `*.json / *.md / *.html` 是整理后的状态、结论和报告
+- `artifacts/environment/` 是环境探测时保存的能力快照，例如 `perf list`
+- `artifacts/raw/commands/` 是普通采样工具的原始 `stdout / stderr` 和动作元数据
+- `artifacts/callgraph/` 是 `perf record` 相关的大体积证据，包括 `perf.data`、`perf report` 和 `perf script`
+
+这样做的目的是：
+
+- 复盘时更容易快速定位原始证据
+- 后续 parser、规则和报告可以继续复用同一批原始文件
+- `state.artifacts` 里的键保持兼容，目录整理不会打断现有解析链路
+- 这个目录分层对新生成的 run 生效，历史 run 不会自动迁移
+
+## 16. 真实样例源码
 
 当前仓库自带这些 C++ 样例：
 
@@ -311,7 +505,7 @@ HTML 报告不是自由画图，而是根据证据类型选图：
 - `examples/bin/multithread_cpu_demo`
 - `examples/bin/multiprocess_fanout_demo`
 
-## 15. 当前边界
+## 17. 当前边界
 
 这个项目现在已经能做：
 
@@ -332,7 +526,7 @@ HTML 报告不是自由画图，而是根据证据类型选图：
 - 共享库热点跨仓源码映射
 - 完整 flamegraph 生成链
 
-## 16. 未来可继续增强的方向
+## 18. 未来可继续增强的方向
 
 比较值得继续做的增强项有：
 

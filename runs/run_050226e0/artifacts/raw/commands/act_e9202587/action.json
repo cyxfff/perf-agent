@@ -1,0 +1,13 @@
+{
+  "action_id": "act_e9202587",
+  "tool": "time",
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.3408,
+  "error_message": null
+}

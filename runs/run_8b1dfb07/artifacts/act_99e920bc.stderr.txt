@@ -1,3 +1,0 @@
-cpu_bound_demo checksum=1.99032e+10
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.000 MB (null) ]

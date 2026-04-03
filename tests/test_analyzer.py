@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 
 from perf_agent.agents.analyzer import Analyzer
 from perf_agent.agents.verifier import Verifier
+from perf_agent.models.environment import EnvironmentCapability
 from perf_agent.models.hypothesis import Hypothesis
 from perf_agent.models.observation import Observation
 from perf_agent.models.state import AnalysisState
@@ -55,6 +56,11 @@ def test_verifier_requests_follow_up_collection_for_low_confidence_cpu_case() ->
         goal="Diagnose CPU bottleneck",
         target_cmd=["python", "demo.py"],
         max_verification_rounds=2,
+        environment=EnvironmentCapability(
+            perf_available=True,
+            available_events=["cycles", "instructions"],
+            callgraph_modes=["fp"],
+        ),
         hypotheses=[
             Hypothesis(
                 id="hyp_2",

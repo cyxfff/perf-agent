@@ -1,0 +1,1 @@
+simpleperf E event_selection_set.cpp:275] Event type 'raw-l2d-cache' is not supported on the device

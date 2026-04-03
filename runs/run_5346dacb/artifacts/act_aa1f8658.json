@@ -1,0 +1,16 @@
+{
+  "action_id": "act_aa1f8658",
+  "tool": "time",
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "/home/tchen/agent/perf_agent/examples/bin/phased_cache_wave_demo",
+    "8",
+    "140",
+    "128"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 3.2069,
+  "error_message": null
+}

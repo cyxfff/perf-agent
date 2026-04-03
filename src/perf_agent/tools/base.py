@@ -10,7 +10,9 @@ from pydantic import BaseModel, Field
 
 from perf_agent.models.action import PlannedAction
 from perf_agent.models.state import AnalysisState
+from perf_agent.security.sandbox import SandboxManager
 from perf_agent.storage.artifact_store import ArtifactStore
+from perf_agent.tools.backend import BackendSpec, build_device_shell_command, select_backend
 
 
 class ToolResult(BaseModel):
@@ -37,14 +39,42 @@ class Tool(Protocol):
 class BaseCommandTool:
     name: str
 
+    def __init__(self, sandbox_manager: SandboxManager | None = None) -> None:
+        self.sandbox_manager = sandbox_manager
+
     def build_command(self, state: AnalysisState, action: PlannedAction) -> list[str]:
         return action.command
 
+    def profiling_backend(self, state: AnalysisState) -> BackendSpec:
+        return select_backend(state)
+
+    def artifact_dir(self, action: PlannedAction) -> str:
+        return f"artifacts/raw/commands/{action.id}"
+
+    def artifact_path(self, action: PlannedAction, filename: str) -> str:
+        return f"{self.artifact_dir(action)}/{filename}"
+
+    def sandbox_target_command(self, state: AnalysisState, action: PlannedAction) -> list[str]:
+        if not state.target_cmd or self.sandbox_manager is None:
+            return state.target_cmd
+        wrapped, resolution = self.sandbox_manager.wrap_target_command(state.target_cmd, state)
+        action.sandbox_runtime = resolution.runtime_name if resolution.applied else None
+        action.sandbox_summary = resolution.reason if resolution.reason and resolution.runtime_name != "none" else None
+        return wrapped
+
+    def remote_target_command(self, state: AnalysisState, action: PlannedAction) -> list[str]:
+        return list(state.target_cmd or [])
+
+    def build_device_command(self, backend: BackendSpec, command: list[str]) -> list[str]:
+        if backend.device_serial is None:
+            raise ValueError("Device backend selected but device serial is missing.")
+        return build_device_shell_command(backend.device_serial, command)
+
     def run(self, state: AnalysisState, action: PlannedAction, store: ArtifactStore) -> ToolResult:
         if self.name in state.mock_outputs:
-            stdout_path = store.save_text(f"artifacts/{action.id}.stdout.txt", state.mock_outputs[self.name])
+            stdout_path = store.save_text(self.artifact_path(action, "stdout.txt"), state.mock_outputs[self.name])
             meta_path = store.save_json(
-                f"artifacts/{action.id}.json",
+                self.artifact_path(action, "action.json"),
                 {
                     "action_id": action.id,
                     "tool": self.name,
@@ -103,16 +133,16 @@ class BaseCommandTool:
             stderr = str(exc)
 
         if stdout:
-            path = store.save_text(f"artifacts/{action.id}.stdout.txt", stdout)
+            path = store.save_text(self.artifact_path(action, "stdout.txt"), stdout)
             stdout_path = str(path)
             artifact_paths.append(str(path))
         if stderr:
-            path = store.save_text(f"artifacts/{action.id}.stderr.txt", stderr)
+            path = store.save_text(self.artifact_path(action, "stderr.txt"), stderr)
             stderr_path = str(path)
             artifact_paths.append(str(path))
 
         meta_path = store.save_json(
-            f"artifacts/{action.id}.json",
+            self.artifact_path(action, "action.json"),
             {
                 "action_id": action.id,
                 "tool": self.name,

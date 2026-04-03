@@ -1,0 +1,16 @@
+{
+  "action_id": "act_285c3b1f",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "SLOTS,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound,cycles,Instructions",
+    "--",
+    "examples/bin/multiprocess_fanout_demo"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0827,
+  "error_message": null
+}

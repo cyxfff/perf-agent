@@ -64,11 +64,11 @@ class ParserNode:
             if artifact_path.suffix != ".txt":
                 continue
             name = artifact_path.name
-            if name.endswith(".script.txt"):
+            if name.endswith(".script.txt") or name == "script.txt":
                 sections.append(f"=== script ===\n{artifact_path.read_text(encoding='utf-8')}")
-            elif name.endswith(".report.stderr.txt"):
+            elif name.endswith(".report.stderr.txt") or name == "report.stderr.txt":
                 sections.append(f"=== report_stderr ===\n{artifact_path.read_text(encoding='utf-8')}")
-            elif name.endswith(".script.stderr.txt"):
+            elif name.endswith(".script.stderr.txt") or name == "script.stderr.txt":
                 sections.append(f"=== script_stderr ===\n{artifact_path.read_text(encoding='utf-8')}")
         if stderr_path:
             sections.append(f"=== record_stderr ===\n{Path(stderr_path).read_text(encoding='utf-8')}")

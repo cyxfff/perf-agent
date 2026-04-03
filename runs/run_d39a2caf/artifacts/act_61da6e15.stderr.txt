@@ -1,0 +1,17 @@
+
+ Performance counter stats for '/home/tchen/agent/perf_agent/examples/bin/phased_cache_wave_demo 8 140 128':
+
+         426401167      cpu_core/cache-references/                                            
+     <not counted>      cpu_atom/cache-references/                                              (0.00%)
+         336087092      cpu_core/cache-misses/                                                
+     <not counted>      cpu_atom/cache-misses/                                                  (0.00%)
+         426401167      cpu_core/longest_lat_cache.reference/                                        (50.00%)
+         336087092      cpu_core/longest_lat_cache.miss/                                        (50.00%)
+   <not supported>      cpu_core/topdown-be-bound/                                              (0.00%)
+
+       3.188697679 seconds time elapsed
+
+       2.984578000 seconds user
+       0.204039000 seconds sys
+
+

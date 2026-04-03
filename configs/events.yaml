@@ -24,13 +24,24 @@ temporal_behavior:
   preferred_events:
     - cycles
     - instructions
+    - cache-references
     - cache-misses
+    - mem_load_retired.l1_hit
+    - mem_load_retired.l1_miss
+    - l2_rqsts.references
+    - l2_rqsts.miss
+    - longest_lat_cache.reference
+    - longest_lat_cache.miss
+    - branches
+    - branch-misses
     - context-switches
-    - topdown-fe-bound
-    - topdown-be-bound
   fallback_events:
     - cycles
     - instructions
+    - cache-references
+    - cache-misses
+    - branches
+    - branch-misses
     - context-switches
   mode: stat
 
@@ -49,18 +60,31 @@ cache_memory_pressure:
   preferred_tools:
     - perf_stat
   preferred_events:
-    - topdown-be-bound
-    - tma_memory_bound
     - cache-references
     - cache-misses
-    - longest_lat_cache.miss
+    - mem_load_retired.l1_hit
+    - mem_load_retired.l1_miss
+    - l2_rqsts.references
     - l2_rqsts.miss
-    - mem_load_completed.l1_miss_any
+    - longest_lat_cache.reference
+    - longest_lat_cache.miss
+    - l1d-cache
+    - l1d-cache-refill
+    - l2d-cache
+    - l2d-cache-refill
+    - ll-cache
+    - ll-cache-miss
+    - topdown-be-bound
+    - tma_memory_bound
     - stalled-cycles-backend
     - stalled-cycles-frontend
   fallback_events:
     - cache-misses
     - cache-references
+    - l2_rqsts.references
+    - l2_rqsts.miss
+    - longest_lat_cache.reference
+    - longest_lat_cache.miss
     - stalled-cycles-backend
   mode: stat
 

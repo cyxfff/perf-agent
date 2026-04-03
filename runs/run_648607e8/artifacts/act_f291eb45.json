@@ -1,0 +1,16 @@
+{
+  "action_id": "act_f291eb45",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "topdown-be-bound,cache-references,cache-misses,longest_lat_cache.miss,l2_rqsts.miss,mem_load_completed.l1_miss_any",
+    "--",
+    "examples/bin/multiprocess_fanout_demo"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0841,
+  "error_message": null
+}

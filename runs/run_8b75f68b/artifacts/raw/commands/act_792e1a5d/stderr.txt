@@ -1,0 +1,18 @@
+
+ Performance counter stats for '/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo':
+
+            58,861      cpu_core/cache-references/                                            
+     <not counted>      cpu_atom/cache-references/                                              (0.00%)
+            21,323      cpu_core/cache-misses/                                                
+     <not counted>      cpu_atom/cache-misses/                                                  (0.00%)
+     1,734,901,913      cpu_core/mem_load_retired.l1_hit/                                      
+            32,399      cpu_core/mem_load_retired.l1_miss/                                      
+         3,766,497      cpu_core/l2_rqsts.references/                                         
+            69,237      cpu_core/L2_RQSTS.MISS/                                               
+
+       0.339684986 seconds time elapsed
+
+       0.339636000 seconds user
+       0.000000000 seconds sys
+
+

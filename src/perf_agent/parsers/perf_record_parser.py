@@ -9,9 +9,16 @@ from perf_agent.utils.ids import new_id
 
 
 HOT_SYMBOL_PATTERN = re.compile(r"^\s*([\d.]+)%\s+[\d.]+%\s+\[.\]\s+(.+?)(?:\s{2,}[-\d].*)?$")
+SIMPLEPERF_HOT_SYMBOL_PATTERN = re.compile(r"^\s*([\d.]+)%\s+(.+?)\s*$")
 SECTION_PATTERN = re.compile(r"^===\s+([a-z_]+)\s+===$", re.MULTILINE)
 SAMPLE_HEADER_PATTERN = re.compile(r"^(?P<comm>\S+)\s+(?P<pid>\d+)/(?P<tid>\d+)\s+(?P<time>[\d.]+):\s*$")
 FRAME_PATTERN = re.compile(r"^\s*(?P<ip>[0-9a-f]+)\s+(?P<sym>.+?)\s+\((?P<dso>.+?)\)\s*$")
+SIMPLEPERF_SAMPLE_SPLIT = re.compile(r"(?=^sample:\s*$)", re.MULTILINE)
+SIMPLEPERF_THREAD_NAME_PATTERN = re.compile(r"^\s*thread_name:\s*(.+)$", re.MULTILINE)
+SIMPLEPERF_THREAD_ID_PATTERN = re.compile(r"^\s*thread_id:\s*(\d+)$", re.MULTILINE)
+SIMPLEPERF_SYMBOL_PATTERN = re.compile(r"^\s*symbol:\s*(.+)$", re.MULTILINE)
+SIMPLEPERF_FILE_PATTERN = re.compile(r"^\s*file:\s*(.+)$", re.MULTILINE)
+SIMPLEPERF_IP_PATTERN = re.compile(r"^\s*vaddr_in_file:\s*([0-9a-fA-F]+)$", re.MULTILINE)
 
 
 def parse_text(text: str, source: str, action_id: str | None = None) -> list[Observation]:
@@ -49,7 +56,11 @@ def _split_sections(text: str) -> tuple[str, str]:
             continue
         buffer.append(line)
     flush()
-    return ("\n".join(report_parts), "\n".join(script_parts))
+    report_text = "\n".join(report_parts)
+    script_text = "\n".join(script_parts)
+    if not report_text and not script_text:
+        return (text, "")
+    return (report_text, script_text)
 
 
 def _parse_report(text: str, source: str, action_id: str | None, timestamp: datetime) -> list[Observation]:
@@ -61,6 +72,10 @@ def _parse_report(text: str, source: str, action_id: str | None, timestamp: date
     rank = 0
     for line in lines:
         match = HOT_SYMBOL_PATTERN.match(line)
+        if match is None:
+            simpleperf_match = SIMPLEPERF_HOT_SYMBOL_PATTERN.match(line)
+            if simpleperf_match and not line.lstrip().startswith(("Overhead", "Cmdline:", "Arch:", "Event:", "Samples:", "Event count:")):
+                match = simpleperf_match
         if not match:
             continue
         rank += 1
@@ -78,7 +93,7 @@ def _parse_report(text: str, source: str, action_id: str | None, timestamp: date
                 timestamp=timestamp,
                 labels={
                     "action_id": action_id or "",
-                    "symbol": match.group(2).strip(),
+                    "symbol": _normalize_report_symbol(match.group(2).strip()),
                     "rank": str(rank),
                 },
                 raw_excerpt=line,
@@ -90,6 +105,8 @@ def _parse_report(text: str, source: str, action_id: str | None, timestamp: date
 
 
 def _parse_script(text: str, source: str, action_id: str | None, timestamp: datetime) -> list[Observation]:
+    if "sample:" in text and SAMPLE_HEADER_PATTERN.search(text) is None:
+        return _parse_simpleperf_samples(text, source, action_id, timestamp)
     blocks = [block for block in re.split(r"\n\s*\n", text) if block.strip()]
     if not blocks:
         return []
@@ -268,6 +285,129 @@ def _parse_script(text: str, source: str, action_id: str | None, timestamp: date
     return observations
 
 
+def _parse_simpleperf_samples(text: str, source: str, action_id: str | None, timestamp: datetime) -> list[Observation]:
+    blocks = [block.strip() for block in SIMPLEPERF_SAMPLE_SPLIT.split(text) if block.strip().startswith("sample:")]
+    if not blocks:
+        return []
+
+    total_samples = 0
+    thread_counts: Counter[tuple[str, str, str]] = Counter()
+    frame_counts: Counter[tuple[str, str, str, str, str, str]] = Counter()
+    observations: list[Observation] = []
+
+    for block in blocks:
+        thread_id_match = SIMPLEPERF_THREAD_ID_PATTERN.search(block)
+        thread_name_match = SIMPLEPERF_THREAD_NAME_PATTERN.search(block)
+        symbol_match = SIMPLEPERF_SYMBOL_PATTERN.search(block)
+        file_match = SIMPLEPERF_FILE_PATTERN.search(block)
+        ip_match = SIMPLEPERF_IP_PATTERN.search(block)
+        if thread_id_match is None or thread_name_match is None:
+            continue
+        tid = thread_id_match.group(1).strip()
+        comm = thread_name_match.group(1).strip()
+        pid = tid
+        total_samples += 1
+        if _is_accountable_comm(comm):
+            thread_counts[(comm, pid, tid)] += 1
+            if symbol_match is not None:
+                symbol = symbol_match.group(1).strip()
+                dso = file_match.group(1).strip() if file_match is not None else "[unknown]"
+                ip = ip_match.group(1).strip() if ip_match is not None else "0"
+                frame_counts[(ip, symbol, dso, comm, pid, tid)] += 1
+
+    observations.append(
+        Observation(
+            id=new_id("obs"),
+            source=source,
+            category="callgraph",
+            metric="callgraph_samples",
+            value=total_samples,
+            unit="count",
+            scope="callchain",
+            timestamp=timestamp,
+            labels={"action_id": action_id or ""},
+            raw_excerpt="sample:",
+        )
+    )
+
+    thread_total = sum(thread_counts.values())
+    for rank, ((comm, pid, tid), count) in enumerate(thread_counts.most_common(10), start=1):
+        pct = 100.0 * count / thread_total if thread_total else 0.0
+        observations.extend(
+            [
+                Observation(
+                    id=new_id("obs"),
+                    source=source,
+                    category="callgraph",
+                    metric="thread_sample_count",
+                    value=count,
+                    unit="count",
+                    scope="thread",
+                    timestamp=timestamp,
+                    labels={
+                        "action_id": action_id or "",
+                        "comm": comm,
+                        "pid": pid,
+                        "tid": tid,
+                        "rank": str(rank),
+                        "thread_role": "main_thread",
+                    },
+                    raw_excerpt=f"{comm} tid={tid} samples={count}",
+                ),
+                Observation(
+                    id=new_id("obs"),
+                    source=source,
+                    category="callgraph",
+                    metric="thread_sample_pct",
+                    value=round(pct, 4),
+                    unit="percent",
+                    normalized_value=round(pct / 100.0, 4),
+                    scope="thread",
+                    timestamp=timestamp,
+                    labels={
+                        "action_id": action_id or "",
+                        "comm": comm,
+                        "pid": pid,
+                        "tid": tid,
+                        "rank": str(rank),
+                        "thread_role": "main_thread",
+                    },
+                    raw_excerpt=f"{comm} tid={tid} share={pct:.2f}%",
+                ),
+            ]
+        )
+
+    frame_total = sum(frame_counts.values())
+    for rank, ((ip, symbol, dso, comm, pid, tid), count) in enumerate(frame_counts.most_common(10), start=1):
+        pct = 100.0 * count / frame_total if frame_total else 0.0
+        observations.append(
+            Observation(
+                id=new_id("obs"),
+                source=source,
+                category="callgraph",
+                metric="hot_frame_sample_pct",
+                value=round(pct, 4),
+                unit="percent",
+                normalized_value=round(pct / 100.0, 4),
+                scope="function",
+                timestamp=timestamp,
+                labels={
+                    "action_id": action_id or "",
+                    "symbol": symbol,
+                    "dso": dso,
+                    "ip": ip,
+                    "comm": comm,
+                    "pid": pid,
+                    "tid": tid,
+                    "rank": str(rank),
+                },
+                raw_excerpt=f"{ip} {symbol} ({dso})",
+            )
+        )
+
+    return observations
+
+
 def _first_user_frame(lines: list[str]) -> dict[str, str] | None:
     for line in lines:
         match = FRAME_PATTERN.match(line)
@@ -287,3 +427,9 @@ def _first_user_frame(lines: list[str]) -> dict[str, str] | None:
 def _is_accountable_comm(comm: str) -> bool:
     lowered = comm.lower()
     return lowered not in {"perf-exec", "perf"} and not lowered.startswith("perf-")
+
+
+def _normalize_report_symbol(value: str) -> str:
+    if "[.]" in value:
+        return value.split("[.]", 1)[1].strip()
+    return value.strip()

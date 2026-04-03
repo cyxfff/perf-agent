@@ -1,0 +1,19 @@
+{
+  "action_id": "act_ff746f44",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-x,",
+    "-I",
+    "100",
+    "-e",
+    "cycles,Instructions,cache-misses,context-switches,topdown-fe-bound,topdown-be-bound",
+    "--",
+    "examples/bin/multiprocess_fanout_demo"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.1053,
+  "error_message": null
+}

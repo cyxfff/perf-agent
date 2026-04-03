@@ -1,0 +1,18 @@
+{
+  "action_id": "act_4871d2d8",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "topdown-be-bound",
+    "--",
+    "examples/bin/cpu_bound_demo",
+    "120",
+    "4000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0157,
+  "error_message": null
+}

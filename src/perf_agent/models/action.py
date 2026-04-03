@@ -21,3 +21,5 @@ class PlannedAction(BaseModel):
     display_name: str | None = None
     strategy_note: str | None = None
     sample_interval_ms: int | None = None
+    sandbox_runtime: str | None = None
+    sandbox_summary: str | None = None

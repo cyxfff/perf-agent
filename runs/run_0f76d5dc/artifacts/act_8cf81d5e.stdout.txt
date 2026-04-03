@@ -1,1 +1,0 @@
-avg_cpu=98.0\niowait=1.0\ncswch_per_sec=1500\n

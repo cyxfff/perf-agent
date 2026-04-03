@@ -1,0 +1,151 @@
+[
+  {
+    "id": "act_f2a4b7ee",
+    "tool": "perf_stat",
+    "command": [
+      "adb",
+      "-s",
+      "10.87.51.151:5555",
+      "shell",
+      "simpleperf stat -e cpu-cycles,instructions,task-clock,cpu-clock sh -c 'n=0; while [ $n -lt 800000 ]; do n=$((n+1)); done'"
+    ],
+    "reason": "\u5224\u65ad\u6307\u4ee4\u9000\u4f11\u6548\u7387\u3001cycles \u548c IPC \u662f\u5426\u5f02\u5e38\u3002",
+    "expected_output": "perf stat event counters",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "failed",
+    "intent": "instruction_efficiency",
+    "phase": "baseline",
+    "event_names": [
+      "cpu-cycles",
+      "instructions",
+      "task-clock",
+      "cpu-clock"
+    ],
+    "call_graph_mode": null,
+    "display_name": "simpleperf stat / \u6307\u4ee4\u6548\u7387",
+    "strategy_note": "\u5224\u65ad cycles\u3001instructions \u548c IPC \u7684\u5065\u5eb7\u5ea6\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a cpu-cycles, instructions, task-clock, cpu-clock\u3002",
+    "sample_interval_ms": null,
+    "sandbox_runtime": null,
+    "sandbox_summary": null
+  },
+  {
+    "id": "act_19a6f909",
+    "tool": "perf_stat",
+    "command": [
+      "adb",
+      "-s",
+      "10.87.51.151:5555",
+      "shell",
+      "simpleperf stat -e cache-references,cache-misses,L1-dcache-loads,L1-dcache-load-misses sh -c 'n=0; while [ $n -lt 800000 ]; do n=$((n+1)); done'"
+    ],
+    "reason": "\u5224\u65ad cache miss\u3001\u524d\u540e\u7aef\u505c\u987f\u548c\u5185\u5b58\u538b\u529b\u662f\u5426\u660e\u663e\u3002",
+    "expected_output": "perf stat event counters",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "failed",
+    "intent": "cache_memory_pressure",
+    "phase": "baseline",
+    "event_names": [
+      "cache-references",
+      "cache-misses",
+      "L1-dcache-loads",
+      "L1-dcache-load-misses"
+    ],
+    "call_graph_mode": null,
+    "display_name": "simpleperf stat / \u7f13\u5b58\u4e0e\u5185\u5b58\u538b\u529b [1/2]",
+    "strategy_note": "\u5224\u65ad cache miss\u3001\u5185\u5b58\u538b\u529b\u4ee5\u53ca\u524d\u540e\u7aef\u505c\u987f\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a cache-references, cache-misses, L1-dcache-loads, L1-dcache-load-misses, raw-l2d-cache, raw-l2d-cache-refill, stalled-cycles-backend, stalled-cycles-frontend\u3002 \u7b2c 1/2 \u6279\u3002",
+    "sample_interval_ms": null,
+    "sandbox_runtime": null,
+    "sandbox_summary": null
+  },
+  {
+    "id": "act_b3184432",
+    "tool": "perf_stat",
+    "command": [
+      "adb",
+      "-s",
+      "10.87.51.151:5555",
+      "shell",
+      "simpleperf stat -e raw-l2d-cache,raw-l2d-cache-refill,stalled-cycles-backend,stalled-cycles-frontend sh -c 'n=0; while [ $n -lt 800000 ]; do n=$((n+1)); done'"
+    ],
+    "reason": "\u5224\u65ad cache miss\u3001\u524d\u540e\u7aef\u505c\u987f\u548c\u5185\u5b58\u538b\u529b\u662f\u5426\u660e\u663e\u3002",
+    "expected_output": "perf stat event counters",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "failed",
+    "intent": "cache_memory_pressure",
+    "phase": "baseline",
+    "event_names": [
+      "raw-l2d-cache",
+      "raw-l2d-cache-refill",
+      "stalled-cycles-backend",
+      "stalled-cycles-frontend"
+    ],
+    "call_graph_mode": null,
+    "display_name": "simpleperf stat / \u7f13\u5b58\u4e0e\u5185\u5b58\u538b\u529b [2/2]",
+    "strategy_note": "\u5224\u65ad cache miss\u3001\u5185\u5b58\u538b\u529b\u4ee5\u53ca\u524d\u540e\u7aef\u505c\u987f\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a cache-references, cache-misses, L1-dcache-loads, L1-dcache-load-misses, raw-l2d-cache, raw-l2d-cache-refill, stalled-cycles-backend, stalled-cycles-frontend\u3002 \u7b2c 2/2 \u6279\u3002",
+    "sample_interval_ms": null,
+    "sandbox_runtime": null,
+    "sandbox_summary": null
+  },
+  {
+    "id": "act_4446a10d",
+    "tool": "perf_stat",
+    "command": [
+      "adb",
+      "-s",
+      "10.87.51.151:5555",
+      "shell",
+      "simpleperf stat -e stalled-cycles-frontend,stalled-cycles-backend,cpu-cycles,instructions sh -c 'n=0; while [ $n -lt 800000 ]; do n=$((n+1)); done'"
+    ],
+    "reason": "\u5982\u679c\u5e73\u53f0\u652f\u6301\uff0c\u8fdb\u4e00\u6b65\u533a\u5206 frontend\u3001backend\u3001bad speculation \u4e0e retiring\u3002",
+    "expected_output": "perf stat event counters",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "failed",
+    "intent": "frontend_backend_bound",
+    "phase": "baseline",
+    "event_names": [
+      "stalled-cycles-frontend",
+      "stalled-cycles-backend",
+      "cpu-cycles",
+      "instructions"
+    ],
+    "call_graph_mode": null,
+    "display_name": "simpleperf stat / \u524d\u540e\u7aef\u505c\u987f",
+    "strategy_note": "\u5224\u65ad cache miss\u3001\u5185\u5b58\u538b\u529b\u4ee5\u53ca\u524d\u540e\u7aef\u505c\u987f\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a stalled-cycles-frontend, stalled-cycles-backend, cpu-cycles, instructions\u3002",
+    "sample_interval_ms": null,
+    "sandbox_runtime": null,
+    "sandbox_summary": null
+  },
+  {
+    "id": "act_6406776f",
+    "tool": "perf_stat",
+    "command": [
+      "adb",
+      "-s",
+      "10.87.51.151:5555",
+      "shell",
+      "simpleperf stat -e context-switches,cpu-migrations,page-faults sh -c 'n=0; while [ $n -lt 800000 ]; do n=$((n+1)); done'"
+    ],
+    "reason": "\u89c2\u5bdf\u8c03\u5ea6\u3001\u4e0a\u4e0b\u6587\u5207\u6362\u548c\u8fc1\u79fb\u60c5\u51b5\u3002",
+    "expected_output": "perf stat event counters",
+    "timeout_sec": 120,
+    "retryable": true,
+    "status": "failed",
+    "intent": "scheduler_context",
+    "phase": "baseline",
+    "event_names": [
+      "context-switches",
+      "cpu-migrations",
+      "page-faults"
+    ],
+    "call_graph_mode": null,
+    "display_name": "simpleperf stat / \u8c03\u5ea6\u4e0a\u4e0b\u6587",
+    "strategy_note": "\u5224\u65ad\u8c03\u5ea6\u5207\u6362\u3001\u8fc1\u79fb\u4e0e\u7cfb\u7edf\u7ea7 CPU \u4e0a\u4e0b\u6587\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a context-switches, cpu-migrations, page-faults\u3002",
+    "sample_interval_ms": null,
+    "sandbox_runtime": null,
+    "sandbox_summary": null
+  }
+]

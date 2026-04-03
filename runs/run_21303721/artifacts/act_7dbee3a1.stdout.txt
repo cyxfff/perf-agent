@@ -1,4 +1,0 @@
-Linux 6.2.0-37-generic (orange) 	04/01/26 	_x86_64_	(20 CPU)
-
-# Time        UID       PID    %usr %system  %guest   %wait    %CPU   CPU  minflt/s  majflt/s     VSZ     RSS   %MEM   kB_rd/s   kB_wr/s kB_ccwr/s iodelay  Command
-03:06:34     1032        63    0.00    0.00    0.00    0.00    0.00     4      1.00      0.00   11804    2080   0.01      0.00      0.00      0.00       0  pidstat

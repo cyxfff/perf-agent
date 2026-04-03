@@ -14,6 +14,7 @@ from perf_agent.agents.source_analyzer import SourceAnalyzer
 from perf_agent.agents.verifier import Verifier
 from perf_agent.llm.client import LLMClient
 from perf_agent.models.state import AnalysisState
+from perf_agent.security.sandbox import SandboxManager
 from perf_agent.storage.json_store import JSONArtifactStore
 from perf_agent.storage.run_log import RunLog
 from perf_agent.tools.runner import ToolRunner
@@ -25,13 +26,15 @@ class Orchestrator:
         self,
         output_root: str | Path = "runs",
         tool_config_path: str | None = None,
+        safety_config_path: str | None = None,
         rule_config_path: str | None = None,
         prompt_config_path: str | None = None,
         event_config_path: str | None = None,
         show_progress: bool = True,
     ) -> None:
         self.output_root = Path(output_root)
-        self.runner = ToolRunner()
+        self.sandbox_manager = SandboxManager(config_path=safety_config_path)
+        self.runner = ToolRunner(sandbox_manager=self.sandbox_manager)
         self.tool_configs = load_tool_configs(tool_config_path)
         self.progress = ConsoleProgress(enabled=show_progress)
         self.planner = Planner(
@@ -55,7 +58,7 @@ class Orchestrator:
         store = JSONArtifactStore(state.output_dir(self.output_root))
         collector = Collector(self.runner, store, progress=self.progress)
         runner = Runner(store)
-        environment_profiler = EnvironmentProfiler(store)
+        environment_profiler = EnvironmentProfiler(store, sandbox_manager=self.sandbox_manager)
         run_log = RunLog(state.output_dir(self.output_root) / "audit.jsonl")
 
         while state.status not in {"done", "failed"}:
@@ -90,11 +93,23 @@ class Orchestrator:
             state = environment_profiler.run(state)
             env = state.environment
             self.progress.info(
-                f"架构 {env.arch or '未知'}，CPU {env.cpu_model or '未知'}，perf {'可用' if env.perf_available else '不可用'}。"
+                f"架构 {env.arch or '未知'}，CPU {env.cpu_model or '未知'}，采样后端 {'可用' if env.perf_available else '不可用'}。"
             )
             self.progress.info(
                 f"可用事件 {len(env.available_events)} 个，调用栈模式: {', '.join(env.callgraph_modes) or '未探测到'}。"
             )
+            if env.profiling_backend_summary:
+                self.progress.info(env.profiling_backend_summary)
+            if env.adb_available:
+                self.progress.info(f"ADB 设备: 已发现 {len(env.connected_devices)} 台。")
+                if env.selected_device_summary:
+                    self.progress.info(env.selected_device_summary)
+            if env.sandbox_enabled:
+                self.progress.info(
+                    f"隔离运行时: 已配置 {env.configured_sandbox_runtime or 'auto'}，当前选择 {env.selected_sandbox_runtime or 'none'}。"
+                )
+                if env.available_sandbox_runtimes:
+                    self.progress.info(f"可用隔离运行时: {', '.join(env.available_sandbox_runtimes)}")
             state.status = "planning"
             return state
 

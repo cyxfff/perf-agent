@@ -1,0 +1,18 @@
+
+ Performance counter stats for 'examples/bin/multiprocess_fanout_demo':
+
+   <not supported>      cpu_core/topdown-be-bound/                                              (0.00%)
+            146335      cpu_core/cache-references/                                            
+     <not counted>      cpu_atom/cache-references/                                              (0.00%)
+             31351      cpu_core/cache-misses/                                                
+     <not counted>      cpu_atom/cache-misses/                                                  (0.00%)
+             31351      cpu_core/longest_lat_cache.miss/                                        (99.69%)
+            160532      cpu_core/l2_rqsts.miss/                                               
+            165883      cpu_core/mem_load_completed.l1_miss_any/                                      
+
+       0.073555886 seconds time elapsed
+
+       0.214247000 seconds user
+       0.004627000 seconds sys
+
+

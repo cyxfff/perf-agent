@@ -1,0 +1,39 @@
+{
+  "action_id": "act_936eaa44",
+  "tool": "perf_record",
+  "command": [
+    "perf",
+    "record",
+    "-o",
+    "/tmp/act_936eaa44_x_bf9iqh.perf.data",
+    "--call-graph",
+    "fp",
+    "--",
+    "examples/bin/cpu_bound_demo",
+    "10",
+    "100"
+  ],
+  "report_command": [
+    "perf",
+    "report",
+    "--stdio",
+    "--sort",
+    "symbol",
+    "--percent-limit",
+    "0.5",
+    "-i",
+    "/tmp/act_936eaa44_x_bf9iqh.perf.data"
+  ],
+  "script_command": [
+    "perf",
+    "script",
+    "-F",
+    "comm,pid,tid,time,ip,sym,dso",
+    "-i",
+    "/tmp/act_936eaa44_x_bf9iqh.perf.data"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 1.5486,
+  "error_message": null
+}

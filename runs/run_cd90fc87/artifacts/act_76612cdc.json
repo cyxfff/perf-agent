@@ -1,0 +1,15 @@
+{
+  "action_id": "act_76612cdc",
+  "tool": "time",
+  "command": [
+    "/usr/bin/time",
+    "-v",
+    "examples/bin/cpu_bound_demo",
+    "700",
+    "18000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.15,
+  "error_message": null
+}

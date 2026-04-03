@@ -1,0 +1,37 @@
+{
+  "action_id": "act_5decabe9",
+  "tool": "perf_record",
+  "command": [
+    "perf",
+    "record",
+    "-o",
+    "/tmp/act_5decabe9_cy943fmz.perf.data",
+    "--call-graph",
+    "fp",
+    "--",
+    "examples/bin/multiprocess_fanout_demo"
+  ],
+  "report_command": [
+    "perf",
+    "report",
+    "--stdio",
+    "--sort",
+    "symbol",
+    "--percent-limit",
+    "0.5",
+    "-i",
+    "/tmp/act_5decabe9_cy943fmz.perf.data"
+  ],
+  "script_command": [
+    "perf",
+    "script",
+    "-F",
+    "comm,pid,tid,time,ip,sym,dso",
+    "-i",
+    "/tmp/act_5decabe9_cy943fmz.perf.data"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 1.8172,
+  "error_message": null
+}

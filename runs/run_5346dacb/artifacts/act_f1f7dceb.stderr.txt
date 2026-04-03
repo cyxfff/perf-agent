@@ -1,0 +1,14 @@
+
+ Performance counter stats for '/home/tchen/agent/perf_agent/examples/bin/phased_cache_wave_demo 8 140 128':
+
+                33      context-switches                                                      
+                 2      cpu-migrations                                                        
+            262292      page-faults                                                           
+           3275129      cpu_core/mem_inst_retired.lock_loads/                                      
+
+       3.194869953 seconds time elapsed
+
+       2.994694000 seconds user
+       0.199912000 seconds sys
+
+

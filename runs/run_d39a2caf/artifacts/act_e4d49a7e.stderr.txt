@@ -1,0 +1,16 @@
+
+ Performance counter stats for '/home/tchen/agent/perf_agent/examples/bin/phased_cache_wave_demo 8 140 128':
+
+       16264987629      cpu_core/cycles/                 #    5.093 G/sec                     
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+       25620732480      cpu_core/Instructions/           #    8.023 G/sec                       (50.00%)
+           3193.57 msec task-clock                       #    1.000 CPUs utilized             
+           3193.56 msec cpu-clock                        #    1.000 CPUs utilized             
+       97585087830      cpu_core/SLOTS/                  #   30.557 G/sec                     
+
+       3.194077926 seconds time elapsed
+
+       3.017836000 seconds user
+       0.176107000 seconds sys
+
+

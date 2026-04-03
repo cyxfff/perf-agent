@@ -1,0 +1,16 @@
+{
+  "action_id": "act_efe45cef",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "cache-references,cache-misses,mem_load_retired.l1_hit,mem_load_retired.l1_miss,l2_rqsts.references,L2_RQSTS.MISS",
+    "--",
+    "/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.3488,
+  "error_message": null
+}

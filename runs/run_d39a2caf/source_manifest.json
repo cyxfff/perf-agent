@@ -1,0 +1,14 @@
+{
+  "root": "/home/tchen/agent/perf_agent/examples/cpp",
+  "files": [
+    "/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo.cpp",
+    "/home/tchen/agent/perf_agent/examples/cpp/lock_contention_demo.cpp",
+    "/home/tchen/agent/perf_agent/examples/cpp/multiprocess_fanout_demo.cpp",
+    "/home/tchen/agent/perf_agent/examples/cpp/multithread_cpu_demo.cpp",
+    "/home/tchen/agent/perf_agent/examples/cpp/phased_cache_wave_demo.cpp"
+  ],
+  "languages": [
+    "cpp"
+  ],
+  "file_count": 5
+}

@@ -1,0 +1,16 @@
+
+ Performance counter stats for 'examples/bin/cpu_bound_demo 700 18000':
+
+         761357877      cpu_core/cycles/                 #    5.101 G/sec                     
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+        2941583336      cpu_core/Instructions/           #   19.708 G/sec                       (50.00%)
+            149.26 msec task-clock                       #    0.999 CPUs utilized             
+            149.26 msec cpu-clock                        #    0.999 CPUs utilized             
+        4563678792      cpu_core/SLOTS/                  #   30.576 G/sec                     
+
+       0.149395163 seconds time elapsed
+
+       0.149373000 seconds user
+       0.000000000 seconds sys
+
+

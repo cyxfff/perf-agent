@@ -1,0 +1,5 @@
+Linux 6.2.0-37-generic (orange) 	2026年04月03日 	_x86_64_	(20 CPU)
+
+22时09分31秒  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+22时09分32秒  all    0.50    0.00    0.25    0.05    0.00    0.00    0.00    0.00    0.00   99.20
+Average:     all    0.50    0.00    0.25    0.05    0.00    0.00    0.00    0.00    0.00   99.20

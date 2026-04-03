@@ -1,0 +1,11 @@
+
+ Performance counter stats for '/home/tchen/agent/perf_agent/examples/bin/phased_cache_wave_demo 8 140 128':
+
+   <not supported>      cpu_core/topdown-be-bound/                                              (0.00%)
+
+       3.201662730 seconds time elapsed
+
+       3.001698000 seconds user
+       0.199846000 seconds sys
+
+

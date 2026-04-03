@@ -1,0 +1,17 @@
+{
+  "action_id": "act_92847247",
+  "tool": "perf_stat",
+  "command": [
+    "adb",
+    "-s",
+    "10.87.51.151:5555",
+    "shell",
+    "sh",
+    "-c",
+    "simpleperf stat -e stalled-cycles-frontend,stalled-cycles-backend,cpu-cycles,instructions sh -c 'n=0; while [ $n -lt 800000 ]; do n=$((n+1)); done'"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0477,
+  "error_message": null
+}

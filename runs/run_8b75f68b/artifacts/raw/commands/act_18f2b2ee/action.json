@@ -1,0 +1,19 @@
+{
+  "action_id": "act_18f2b2ee",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-x,",
+    "-I",
+    "100",
+    "-e",
+    "mem_load_retired.l1_hit,mem_load_retired.l1_miss,l2_rqsts.references,L2_RQSTS.MISS",
+    "--",
+    "/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.3492,
+  "error_message": null
+}

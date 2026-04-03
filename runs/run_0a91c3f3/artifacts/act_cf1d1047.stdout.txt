@@ -1,0 +1,5 @@
+Linux 6.2.0-37-generic (orange) 	04/03/26 	_x86_64_	(20 CPU)
+
+01:20:48     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+01:20:49     all    0.15    0.00    0.00    0.10    0.00    0.00    0.00    0.00    0.00   99.75
+Average:     all    0.15    0.00    0.00    0.10    0.00    0.00    0.00    0.00    0.00   99.75

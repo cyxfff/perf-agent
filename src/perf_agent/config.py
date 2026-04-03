@@ -25,6 +25,15 @@ class PromptTemplates(BaseModel):
     analyzer_prompt: str
     verifier_prompt: str
     reporter_prompt: str
+    interactive_intake_prompt: str = (
+        "You are the interactive intake layer for a performance analysis CLI.\n"
+        "Read the current session context, normalized user message, attachments, and compacted recent history.\n"
+        "Your job is to convert fuzzy user intent into a structured request.\n"
+        "Do not invent file paths, commands, or PIDs that are not supported by the input.\n"
+        "Prefer asking for clarification when the target program is still ambiguous.\n"
+        "If the user clearly wants to launch analysis, set should_run_analysis=true.\n"
+        "Return structured JSON only."
+    )
 
 
 class EventIntentConfig(BaseModel):
@@ -33,6 +42,29 @@ class EventIntentConfig(BaseModel):
     fallback_events: list[str] = Field(default_factory=list)
     mode: str = "stat"
     call_graph_modes: list[str] = Field(default_factory=list)
+
+
+class SandboxRuntimeConfig(BaseModel):
+    enabled: bool = True
+    kind: str = "template"
+    executable: str | None = None
+    detection: str = "which"
+    description: str | None = None
+    template: list[str] = Field(default_factory=list)
+    extra_args: list[str] = Field(default_factory=list)
+    read_only_paths: list[str] = Field(default_factory=list)
+    writable_paths: list[str] = Field(default_factory=list)
+    workdir: str | None = "{cwd}"
+    network_access: bool = True
+    variables: dict[str, str] = Field(default_factory=dict)
+
+
+class SafetyConfig(BaseModel):
+    sandbox_enabled: bool = False
+    default_runtime: str = "auto"
+    preferred_runtimes: list[str] = Field(default_factory=lambda: ["none"])
+    fallback_to_none: bool = True
+    runtimes: dict[str, SandboxRuntimeConfig] = Field(default_factory=dict)
 
 
 def load_yaml(path: str | Path) -> dict:
@@ -62,3 +94,9 @@ def load_event_intent_configs(path: str | Path | None = None) -> dict[str, Event
     config_path = Path(path) if path is not None else project_root() / "configs" / "events.yaml"
     raw = load_yaml(config_path)
     return {name: EventIntentConfig.model_validate(payload) for name, payload in raw.items()}
+
+
+def load_safety_config(path: str | Path | None = None) -> SafetyConfig:
+    config_path = Path(path) if path is not None else project_root() / "configs" / "safety.yaml"
+    raw = load_yaml(config_path) if config_path.exists() else {}
+    return SafetyConfig.model_validate(raw)

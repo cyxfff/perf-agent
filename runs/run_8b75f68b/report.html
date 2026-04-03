@@ -1,0 +1,1265 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>性能分析报告</title>
+  <style>
+    :root {
+      --bg: #eef5ff;
+      --panel: rgba(248, 252, 255, 0.9);
+      --panel-strong: rgba(251, 254, 255, 0.98);
+      --ink: #0f2238;
+      --muted: #5f7390;
+      --muted-strong: #28405e;
+      --line: rgba(70, 112, 168, 0.18);
+      --line-strong: rgba(70, 112, 168, 0.32);
+      --accent: #2563eb;
+      --accent-soft: rgba(37, 99, 235, 0.12);
+      --accent-2: #0f5d91;
+      --accent-2-soft: rgba(15, 93, 145, 0.12);
+      --shadow: 0 22px 60px rgba(19, 54, 99, 0.09);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --mono: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+      --sans: "IBM Plex Sans", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+      --serif: "Iowan Old Style", "Noto Serif CJK SC", "Source Han Serif SC", Georgia, serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(37,99,235,0.12), transparent 22%),
+        radial-gradient(circle at 88% 12%, rgba(14,116,144,0.1), transparent 24%),
+        linear-gradient(180deg, #f4f8fd 0%, #ebf2fb 44%, #e8f0fa 100%);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.28;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.28) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(circle at center, black 48%, transparent 100%);
+    }
+    .page {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 28px 24px 56px;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 30px 30px 26px;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(245,250,255,0.96) 52%, rgba(235,244,255,0.92) 100%);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      right: -80px;
+      top: -90px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(37,99,235,0.16), transparent 68%);
+    }
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .hero h1 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 1.06;
+      letter-spacing: -0.04em;
+      font-weight: 760;
+      font-family: var(--serif);
+    }
+    .hero-sub {
+      margin-top: 14px;
+      max-width: 760px;
+      color: var(--muted-strong);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      margin-top: 26px;
+    }
+    .hero-main {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .metric-card, .panel, .chart-card, .observation-card, .source-card, .hypothesis-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+    .metric-card {
+      padding: 16px 18px;
+    }
+    .metric-label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .metric-value {
+      margin-top: 8px;
+      font-size: 30px;
+      font-weight: 720;
+      line-height: 1;
+    }
+    .metric-footnote {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted-strong);
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(37, 99, 235, 0.16);
+      background: rgba(255,255,255,0.6);
+      color: var(--muted-strong);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .chip--accent {
+      background: var(--accent-soft);
+      color: #1746a2;
+      border-color: rgba(37, 99, 235, 0.24);
+    }
+    .chip--teal {
+      background: var(--accent-2-soft);
+      color: #0b4e79;
+      border-color: rgba(15, 93, 145, 0.24);
+    }
+    .toolbar {
+      position: sticky;
+      top: 14px;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      margin: 22px 0;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(248, 252, 255, 0.9);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 12px 30px rgba(19, 54, 99, 0.06);
+    }
+    .tab-row, .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .tab-button, .filter-chip, .ghost-button, .inline-toggle {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.78);
+      color: var(--muted-strong);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 160ms ease;
+    }
+    .tab-button:hover, .filter-chip:hover, .ghost-button:hover, .inline-toggle:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+    }
+    .tab-button.is-active, .filter-chip.is-active {
+      background: linear-gradient(135deg, rgba(37,99,235,0.16), rgba(14,116,144,0.14));
+      color: var(--ink);
+      border-color: rgba(37,99,235,0.28);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+    }
+    .search-shell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 280px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.78);
+    }
+    .search-shell input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      padding: 10px 0;
+    }
+    .tab-pane {
+      display: none;
+      margin-top: 18px;
+    }
+    .tab-pane.is-active {
+      display: block;
+    }
+    .report-section {
+      margin-top: 26px;
+    }
+    .report-section + .report-section {
+      margin-top: 18px;
+    }
+    .section-kicker {
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 18px;
+    }
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+    .panel {
+      padding: 20px 22px;
+    }
+    .panel h2, .panel h3 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+    .panel-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .panel-list li {
+      padding: 11px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.64);
+      border: 1px solid rgba(111,95,76,0.08);
+      line-height: 1.65;
+      color: var(--muted-strong);
+    }
+    .panel-list li strong {
+      color: var(--ink);
+    }
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+    .grid--2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .grid--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.04em;
+    }
+    .section-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .section-lead {
+      margin: 8px 0 18px;
+      max-width: 880px;
+      color: var(--muted-strong);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .hypothesis-grid, .source-grid, .chart-grid, .evidence-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .chart-strip {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .hypothesis-card, .source-card, .chart-card, .observation-card {
+      padding: 18px;
+    }
+    .metric-card, .panel, .chart-card, .observation-card, .source-card, .hypothesis-card,
+    .panel-list li, .artifact-item, .meta-pill, .callout, .hint, .metric-value, .metric-footnote,
+    .obs-value, .obs-source, .obs-tags, .chart-label strong, .chart-label span, .code-line, .code-line-no,
+    .expandable summary, .expandable-body, .hero-sub, .section-lead {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .chart-card {
+      position: relative;
+      overflow: hidden;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+    .chart-card.is-zoomable {
+      cursor: zoom-in;
+    }
+    .chart-card.is-zoomable:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 24px 56px rgba(19, 54, 99, 0.12);
+      border-color: rgba(37, 99, 235, 0.26);
+    }
+    .chart-card h3 {
+      margin: 0;
+      padding-right: 92px;
+    }
+    .chart-card .hint {
+      margin-top: 10px;
+    }
+    .zoom-button {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      appearance: none;
+      border: 1px solid rgba(70,112,168,0.16);
+      background: rgba(255,255,255,0.88);
+      color: var(--muted-strong);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: 160ms ease;
+      box-shadow: 0 8px 20px rgba(19, 54, 99, 0.08);
+    }
+    .zoom-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(37, 99, 235, 0.26);
+      color: var(--ink);
+    }
+    .hypothesis-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+    .hypothesis-title {
+      font-size: 18px;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+      font-family: var(--serif);
+    }
+    .confidence {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .bar {
+      position: relative;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(70,112,168,0.12);
+      overflow: hidden;
+      margin: 14px 0 12px;
+    }
+    .bar > span {
+      position: absolute;
+      inset: 0 auto 0 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 48%, #0f5d91 100%);
+    }
+    .meta-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .meta-pill {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(70,112,168,0.12);
+      color: var(--muted-strong);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .chart-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .chart-row {
+      display: grid;
+      gap: 6px;
+    }
+    .chart-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: start;
+      font-size: 13px;
+    }
+    .chart-label strong {
+      font-weight: 640;
+      flex: 1;
+    }
+    .chart-value {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .line-chart {
+      width: 100%;
+      height: 230px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(237,244,253,0.96));
+      border: 1px solid rgba(70,112,168,0.12);
+      padding: 10px;
+    }
+    .command-shell {
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(70,112,168,0.16);
+      background: linear-gradient(180deg, rgba(17,34,56,0.98), rgba(20,44,72,0.98));
+      color: #e9f2ff;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .command-band {
+      padding: 20px 24px;
+      border-radius: 22px;
+      border: 1px solid rgba(70,112,168,0.16);
+      background: linear-gradient(180deg, rgba(250,253,255,0.98), rgba(242,248,255,0.96));
+      box-shadow: var(--shadow);
+    }
+    .command-caption {
+      margin-bottom: 8px;
+      color: rgba(210,227,255,0.72);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .command-band .command-caption {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+    .command-primary {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(37,99,235,0.12);
+      background: linear-gradient(180deg, rgba(14,35,60,0.96), rgba(20,44,72,0.98));
+      color: #edf4ff;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .command-line {
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .command-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .command-meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(70,112,168,0.12);
+      background: rgba(255,255,255,0.8);
+      color: var(--muted-strong);
+      font-size: 12px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+    .command-notes {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .command-note {
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(70,112,168,0.12);
+      background: rgba(255,255,255,0.72);
+      color: var(--muted-strong);
+      line-height: 1.7;
+    }
+    .evidence-columns {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1.05fr 0.95fr;
+    }
+    .analysis-note {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(70,112,168,0.14);
+      background: rgba(255,255,255,0.76);
+      color: var(--muted-strong);
+      line-height: 1.75;
+    }
+    .hotspot-share {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .chart-card[data-chart-view='line'] .line-chart,
+    .chart-card[data-chart-view='distribution'] .chart-list {
+      margin-top: 14px;
+    }
+    .chart-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: rgba(9, 23, 41, 0.56);
+      backdrop-filter: blur(10px);
+    }
+    .chart-modal.is-open {
+      display: flex;
+    }
+    .chart-modal-panel {
+      position: relative;
+      width: min(1100px, 100%);
+      max-height: min(88vh, 980px);
+      overflow: auto;
+      padding: 28px 28px 24px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background:
+        linear-gradient(180deg, rgba(252, 254, 255, 0.98) 0%, rgba(245, 250, 255, 0.97) 100%);
+      box-shadow: 0 30px 80px rgba(9, 23, 41, 0.28);
+    }
+    .chart-modal-panel h3 {
+      margin: 0;
+      font-size: clamp(24px, 2.4vw, 34px);
+      letter-spacing: -0.04em;
+    }
+    .chart-modal-sub {
+      margin-top: 10px;
+      color: var(--muted-strong);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .chart-modal-body {
+      margin-top: 22px;
+    }
+    .chart-modal-body .line-chart {
+      height: min(60vh, 520px);
+      padding: 14px;
+    }
+    .chart-modal-body .chart-list {
+      gap: 16px;
+    }
+    .chart-modal-body .chart-label {
+      font-size: 14px;
+    }
+    .chart-modal-body .chart-value {
+      font-size: 13px;
+    }
+    .chart-modal-close {
+      position: sticky;
+      top: 0;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(70,112,168,0.16);
+      background: rgba(255,255,255,0.92);
+      color: var(--muted-strong);
+      border-radius: 999px;
+      font: inherit;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .chart-modal-close:hover {
+      border-color: rgba(37, 99, 235, 0.28);
+      color: var(--ink);
+    }
+    body.has-modal {
+      overflow: hidden;
+    }
+    .obs-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .obs-metric {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .obs-value {
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: 720;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+    .obs-source {
+      margin-top: 10px;
+      color: var(--muted-strong);
+      font-size: 13px;
+    }
+    .obs-tags {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .callout {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(37,99,235,0.16);
+      background: linear-gradient(180deg, rgba(37,99,235,0.08), rgba(255,255,255,0.78));
+      color: var(--muted-strong);
+      line-height: 1.7;
+    }
+    .expandable {
+      display: grid;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .expandable details {
+      border-radius: 12px;
+      border: 1px solid rgba(70,112,168,0.12);
+      background: rgba(255,255,255,0.74);
+      overflow: hidden;
+    }
+    .expandable summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted-strong);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .expandable summary::-webkit-details-marker {
+      display: none;
+    }
+    .expandable details[open] summary {
+      border-bottom: 1px solid rgba(70,112,168,0.12);
+      background: rgba(255,255,255,0.88);
+    }
+    .expandable-body {
+      padding: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.75;
+      color: var(--ink);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .source-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .code-block {
+      display: grid;
+      gap: 0;
+      border-radius: 16px;
+      border: 1px solid rgba(70,112,168,0.12);
+      overflow: hidden;
+      background: #112238;
+      color: #eaf2ff;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+    .code-row {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .code-row:nth-child(odd) {
+      background: rgba(255,255,255,0.02);
+    }
+    .code-line-no {
+      padding: 8px 10px;
+      color: rgba(214,228,255,0.52);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      user-select: none;
+      text-align: right;
+    }
+    .code-line {
+      padding: 8px 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .raw-shell {
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.7);
+    }
+    .raw-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .raw-table th, .raw-table td {
+      padding: 11px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(70,112,168,0.1);
+      vertical-align: top;
+    }
+    .raw-table thead th {
+      position: sticky;
+      top: 0;
+      background: rgba(248,242,234,0.96);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .raw-table code {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted-strong);
+    }
+    .empty {
+      padding: 24px;
+      border-radius: 18px;
+      border: 1px dashed rgba(70,112,168,0.24);
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255,255,255,0.45);
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .artifact-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .artifact-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(70,112,168,0.08);
+      font-family: var(--mono);
+      font-size: 12px;
+      word-break: break-word;
+    }
+    .mono {
+      font-family: var(--mono);
+    }
+    [data-filterable][hidden] {
+      display: none !important;
+    }
+    @media (max-width: 1120px) {
+      .hero-grid, .layout, .evidence-columns {
+        grid-template-columns: 1fr;
+      }
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 760px) {
+      .page {
+        padding: 18px 14px 40px;
+      }
+      .hero {
+        padding: 24px 20px 20px;
+      }
+      .metric-value {
+        font-size: 24px;
+      }
+      .grid--2, .grid--3 {
+        grid-template-columns: 1fr;
+      }
+      .search-shell {
+        min-width: 100%;
+      }
+      .code-row {
+        grid-template-columns: 48px 1fr;
+      }
+      .chart-modal {
+        padding: 12px;
+      }
+      .chart-modal-panel {
+        padding: 18px 16px 16px;
+        max-height: 92vh;
+      }
+      .chart-card h3 {
+        padding-right: 0;
+      }
+      .zoom-button {
+        position: static;
+        margin-top: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="eyebrow">Performance Investigation Report</div>
+      <h1><span title='当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。'>当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。</span></h1>
+      <div class="chip-row">
+        <span class='chip chip--accent'>Top hypothesis <span title='CPU 瓶颈'>CPU 瓶颈</span> </span><span class='chip chip--teal'>置信度 0.95</span><span class='chip'>Observation 144</span><span class='chip'>源码定位 0</span><span class='chip'>动作 14</span>
+      </div>
+      <div class="hero-meta" style="margin-top:22px">
+        <div class='metric-card'><div class='metric-label'>目标命令</div><div class='metric-value'>/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo</div><div class='metric-footnote'><span title='/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo'>/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo</span></div></div>
+        <div class='metric-card'><div class='metric-label'>源码规模</div><div class='metric-value'>0</div><div class='metric-footnote'><span title='/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo'>/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo</span></div></div>
+        <div class='metric-card'><div class='metric-label'>实验轮次</div><div class='metric-value'>2</div><div class='metric-footnote'><span class='mono'>14</span> 个动作</div></div>
+        <div class='metric-card'><div class='metric-label'>总体置信度</div><div class='metric-value'>0.95</div><div class='metric-footnote'>2 个候选瓶颈</div></div>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div class="filter-row">
+        <button class='filter-chip is-active' data-filter-chip='all'>全部</button><button class='filter-chip' data-filter-chip='cpu_bound'><span title='CPU 瓶颈'>CPU 瓶颈</span></button><button class='filter-chip' data-filter-chip='branch_mispredict'><span title='分支预测失误'>分支预测失误</span></button>
+      </div>
+      <div class="filter-row">
+        <div class="search-shell">
+          <span class="mono">/</span>
+          <input type="search" placeholder="搜索函数名、文件路径、指标名..." data-search-input>
+        </div>
+      </div>
+    </section>
+
+    <section class="report-section">
+      <div class="section-kicker">01 / 环境</div>
+      <div class="section-head">
+        <div>
+          <h2>运行环境</h2>
+        </div>
+      </div>
+      <div class="grid grid--2">
+        <div class="panel">
+          <ul class="panel-list">
+            <li><span title='架构: x86_64'>架构: x86_64</span></li><li><span title='内核: 6.2.0-37-generic'>内核: 6.2.0-37-generic</span></li><li><span title='CPU: 13th Gen Intel(R) Core(TM) i5-13600K'>CPU: 13th Gen Intel(R) Core(TM) i5-13600K</span></li><li><span title='CPU 配置: 物理核 14 / 逻辑核 20'>CPU 配置: 物理核 14 / 逻辑核 20</span></li><li><span title='内存: 31 GB'>内存: 31 GB</span></li><li><span title='CPU 频率: 800 MHz - 5.10 GHz，当前缩放 88%'>CPU 频率: 800 MHz - 5.10 GHz，当前缩放 88%</span></li><li><span title='Cache: L1d 544 KiB (14 instances) / L1i 704 KiB (14 instances) / L2 20 MiB (8 instances) / L3 24 MiB (1 instance)'>Cache: L1d 544 KiB (14 instances) / L1i 704 KiB (14 instances) / L2 20 MiB (8 instances) / L3 24 MiB (1 instance)</span></li><li><span title='NUMA: 1 节点'>NUMA: 1 节点</span></li><li><span title='perf: 可用 perf version 6.2.16'>perf: 可用 perf version 6.2.16</span></li><li><span title='调用栈模式: fp, dwarf'>调用栈模式: fp, dwarf</span></li><li><span title='可用工具: perf, pidstat, mpstat, iostat, addr2line'>可用工具: perf, pidstat, mpstat, iostat, addr2line</span></li><li><span title='采样后端: host_perf'>采样后端: host_perf</span></li><li><span title='后端选择: 当前目标被识别为宿主机程序，使用本机 perf 工具链采样。'>后端选择: 当前目标被识别为宿主机程序，使用本机 perf 工具链采样。</span></li><li><span title='ADB: 可用，已发现 1 台设备'>ADB: 可用，已发现 1 台设备</span></li><li><span title='目标设备: 10.87.51.151:5555'>目标设备: 10.87.51.151:5555</span></li><li><span title='设备选择: 已自动选择 ADB 设备 10.87.51.151:5555（XT2503_3，android，后端 simpleperf），因为它是当前唯一在线的可分析设备。'>设备选择: 已自动选择 ADB 设备 10.87.51.151:5555（XT2503_3，android，后端 simpleperf），因为它是当前唯一在线的可分析设备。</span></li><li><span title='PMU: cpu_atom, cpu_core'>PMU: cpu_atom, cpu_core</span></li><li><span title='源码映射: addr2line 可用'>源码映射: addr2line 可用</span></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <ul class="panel-list">
+            <li><span title='操作系统: Linux'>操作系统: Linux</span></li><li><span title='频率范围: 800 MHz - 5.10 GHz，当前缩放 88%'>频率范围: 800 MHz - 5.10 GHz，当前缩放 88%</span></li><li><span title='缓存配置: L1d 544 KiB (14 instances) / L1i 704 KiB (14 instances) / L2 20 MiB (8 instances) / L3 24 MiB (1 instance)'>缓存配置: L1d 544 KiB (14 instances) / L1i 704 KiB (14 instances) / L2 20 MiB (8 instances) / L3 24 MiB (1 instance)</span></li><li><span title='NUMA: 1 节点'>NUMA: 1 节点</span></li><li><span title='符号状态: 保留符号'>符号状态: 保留符号</span></li><li><span title='隔离运行: none'>隔离运行: none</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="report-section">
+      <div class="section-kicker">02 / 运行</div>
+      <div class="section-head">
+        <div>
+          <h2>程序运行命令</h2>
+        </div>
+      </div>
+      <div class="command-band">
+        <div class="command-caption">Launch Command</div>
+        <div class="command-primary">
+          <div class="command-line">/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo</div>
+        </div>
+        <div class="command-meta-row">
+          <div class="command-meta-pill">可执行文件: /home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo</div>
+          <div class="command-meta-pill">参数个数: 0</div>
+          <div class="command-meta-pill">源码目录: /home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo</div>
+        </div>
+      </div>
+      <div class="grid grid--2">
+        <div class="panel">
+          <div class="command-notes">
+            <div class='command-note'><span title='源码目录: /home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo，当前索引源码文件 0 个。'>源码目录: /home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo，当前索引源码文件 0 个。</span></div>
+          </div>
+        </div>
+        <div class="panel">
+          <ul class="panel-list">
+            <li><span title='第 1 轮 [baseline] /usr/bin/time / 运行时基线: 用 /usr/bin/time -v 建立程序运行基线。'>第 1 轮 [baseline] /usr/bin/time / 运行时基线: 用 /usr/bin/time -v 建立程序运行基线。</span></li><li><span title='第 1 轮 [baseline] perf stat / 指令效率: 判断 cycles、instructions 和 IPC 的健康度。当前使用首选事件组合。 事件为 cycles, Instructions, task-clock, cpu-clock, SLOTS。'>第 1 轮 [baseline] perf stat / 指令效率: 判断 cycles、instructions 和 IPC 的健康度。当前使用首选事件组合。 事件为 cycles, Instructions, task-clock, cpu-clock, SLOTS。</span></li><li><span title='第 1 轮 [baseline] perf stat / 缓存与内存压力 [1/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 cache-references, cache-misses, mem_load_retired.l1_hit, mem_load_retired.l1_miss, l2_rqsts.references, L2_RQSTS.MISS, longest_lat_cache.reference, longest_lat_cache.miss, topdown-be-bound。 第 1/2 批。，已退化到当前机器可用方案'>第 1 轮 [baseline] perf stat / 缓存与内存压力 [1/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 cache-references, cache-misses, mem_l..., longest_lat_cache.reference, longest_lat_cache.miss, topdown-be-bound。 第 1/2 批。，已退化到当前机器可用方案</span></li><li><span title='第 1 轮 [baseline] perf stat / 缓存与内存压力 [2/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 cache-references, cache-misses, mem_load_retired.l1_hit, mem_load_retired.l1_miss, l2_rqsts.references, L2_RQSTS.MISS, longest_lat_cache.reference, longest_lat_cache.miss, topdown-be-bound。 第 2/2 批。，已退化到当前机器可用方案'>第 1 轮 [baseline] perf stat / 缓存与内存压力 [2/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 cache-references, cache-misses, mem_l..., longest_lat_cache.reference, longest_lat_cache.miss, topdown-be-bound。 第 2/2 批。，已退化到当前机器可用方案</span></li><li><span title='第 1 轮 [baseline] perf stat / 前后端停顿 [1/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 SLOTS, topdown-retiring, topdown-bad-spec, topdown-fe-bound, topdown-be-bound, cycles, Instructions。 第 1/2 批。，已退化到当前机器可用方案'>第 1 轮 [baseline] perf stat / 前后端停顿 [1/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 SLOTS, topdown-retiring, topdown-bad-spec, topdown-fe-bound, topdown-be-bound, cycles, Instructions。 第 1/2 批。，已退化到当前机器可用方案</span></li><li><span title='第 1 轮 [baseline] perf stat / 前后端停顿 [2/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 SLOTS, topdown-retiring, topdown-bad-spec, topdown-fe-bound, topdown-be-bound, cycles, Instructions。 第 2/2 批。，已退化到当前机器可用方案'>第 1 轮 [baseline] perf stat / 前后端停顿 [2/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 SLOTS, topdown-retiring, topdown-bad-spec, topdown-fe-bound, topdown-be-bound, cycles, Instructions。 第 2/2 批。，已退化到当前机器可用方案</span></li><li><span title='第 1 轮 [baseline] perf stat / 调度上下文: 判断调度切换、迁移与系统级 CPU 上下文。当前使用首选事件组合。 事件为 context-switches, cpu-migrations, page-faults, mem_inst_retired.lock_loads。'>第 1 轮 [baseline] perf stat / 调度上下文: 判断调度切换、迁移与系统级 CPU 上下文。当前使用首选事件组合。 事件为 context-switches, cpu-migrations, page-faults, mem_inst_retired.lock_loads。</span></li><li><span title='第 1 轮 [baseline] pidstat / 调度上下文: 补充进程级 CPU 与等待拆分。'>第 1 轮 [baseline] pidstat / 调度上下文: 补充进程级 CPU 与等待拆分。</span></li><li><span title='第 1 轮 [baseline] mpstat / 调度上下文: 补充系统级 CPU 与调度上下文。'>第 1 轮 [baseline] mpstat / 调度上下文: 补充系统级 CPU 与调度上下文。</span></li><li><span title='第 2 轮 [verification] perf record / 热点函数调用链: 使用 perf record 采样热点函数和调用链，调用栈模式为 fp。 采样事件为 cycles。'>第 2 轮 [verification] perf record / 热点函数调用链: 使用 perf record 采样热点函数和调用链，调用栈模式为 fp。 采样事件为 cycles。</span></li><li><span title='第 2 轮 [verification] perf stat / 时间序列行为 [1/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 1/4 批。，已退化到当前机器可用方案'>第 2 轮 [verification] perf stat / 时间序列行为 [1/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 1/4 批。，已退化到当前机器可用方案</span></li><li><span title='第 2 轮 [verification] perf stat / 时间序列行为 [2/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 2/4 批。，已退化到当前机器可用方案'>第 2 轮 [verification] perf stat / 时间序列行为 [2/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 2/4 批。，已退化到当前机器可用方案</span></li><li><span title='第 2 轮 [verification] perf stat / 时间序列行为 [3/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 3/4 批。，已退化到当前机器可用方案'>第 2 轮 [verification] perf stat / 时间序列行为 [3/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 3/4 批。，已退化到当前机器可用方案</span></li><li><span title='第 2 轮 [verification] perf stat / 时间序列行为 [4/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 4/4 批。，已退化到当前机器可用方案'>第 2 轮 [verification] perf stat / 时间序列行为 [4/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 4/4 批。，已退化到当前机器可用方案</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="report-section">
+      <div class="section-kicker">03 / 结论</div>
+      <div class="section-head">
+        <div>
+          <h2>整合结论和证据</h2>
+        </div>
+      </div>
+      <div class="evidence-columns">
+        <div class="stack">
+          <div class="panel">
+            <div class="callout"><span title='当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。'>当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。</span></div>
+            <div class="hypothesis-grid" style="margin-top:16px">
+              <article class='hypothesis-card' data-filterable data-kind='cpu_bound' data-search='cpu_bound CPU 瓶颈 活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。 obs_4e8bce7e, obs_c9149c07, obs_08894ec1, obs_97254049, obs_9286dcf5, obs_4d8a0b55, obs_7f7694c5 依据观测指标: cpu_utilization_pct, process_sample_pct, thread_sample_pct, ipc, ipc, ipc, ipc'><div class='hypothesis-top'><div class='hypothesis-title'><span title='CPU 瓶颈'>CPU 瓶颈</span></div><div class='confidence'>confidence=0.95</div></div><div class='bar'><span style='width:95%'></span></div><p class='hint'><span title='活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。'>活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。</span></p><div class='meta-line'><span class='meta-pill'>证据基本充分</span><span class='meta-pill'>7 条支持证据</span><span class='meta-pill'>0 条反证</span></div><div class='expandable' style='margin-top:12px'><div class='expandable'><details><summary>支持证据 ID: obs_4e8bce7e, obs_c9149c07, obs...4d8a0b55, obs_7f7694c5<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>obs_4e8bce7e, obs_c9149c07, obs_08894ec1, obs_97254049, obs_9286dcf5, obs_4d8a0b55, obs_7f7694c5</div></details></div><div class='expandable'><details><summary>推理依据: 依据观测指标: cpu_utilization_pct, process_sam...ample_pct, ipc, ipc, ipc, ipc<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>依据观测指标: cpu_utilization_pct, process_sample_pct, thread_sample_pct, ipc, ipc, ipc, ipc</div></details></div></div></article><article class='hypothesis-card' data-filterable data-kind='branch_mispredict' data-search='branch_mispredict 分支预测失误 branch miss 较高，疑似存在分支预测失误开销。 obs_4148a2d6, obs_68773652, obs_3a6ceb55, obs_395ef179 依据观测指标: branch_misses, branch_misses, branch_misses, branch_misses'><div class='hypothesis-top'><div class='hypothesis-title'><span title='分支预测失误'>分支预测失误</span></div><div class='confidence'>confidence=0.77</div></div><div class='bar'><span style='width:77%'></span></div><p class='hint'><span title='branch miss 较高，疑似存在分支预测失误开销。'>branch miss 较高，疑似存在分支预测失误开销。</span></p><div class='meta-line'><span class='meta-pill'>需要继续验证</span><span class='meta-pill'>4 条支持证据</span><span class='meta-pill'>0 条反证</span></div><div class='expandable' style='margin-top:12px'><span class='mono'>支持证据 ID: obs_4148a2d6, obs_68773652, obs_3a6ceb55, obs_395ef179</span><span class='mono'>推理依据: 依据观测指标: branch_misses, branch_misses, branch_misses, branch_misses</span></div></article>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h3>关键 observation</h3>
+              </div>
+            </div>
+            <div class="obs-grid">
+              <article class='observation-card'><div class='obs-metric'><span title='CPU 利用率'>CPU 利用率</span></div><div class='obs-value'><span title='100 percent'>100 percent</span></div><div class='obs-source'><span title='time · process'>time · process</span></div><div class='obs-tags'><span title='action_id=act_28f48556'>action_id=act_28f48556</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Cache Misses'>Cache Misses</span></div><div class='obs-value'><span title='21323 count'>21323 count</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_792e1a5d, event_name=cache-misses, raw_event_name=cpu_core/cache-misses'>action_id=act_792e1a5d, event_name=cache-misses, raw_event_name=cpu_core/cache-misses</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Cache Miss Rate'>Cache Miss Rate</span></div><div class='obs-value'><span title='36.23 percent'>36.23 percent</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_792e1a5d, derived_from=cache_misses/cache_references'>action_id=act_792e1a5d, derived_from=cache_misses/cache_references</span></div></article><article class='observation-card'><div class='obs-metric'><span title='L2 Miss Rate'>L2 Miss Rate</span></div><div class='obs-value'><span title='1.84 percent'>1.84 percent</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_792e1a5d, derived_from=l2_miss/l2_access'>action_id=act_792e1a5d, derived_from=l2_miss/l2_access</span></div></article><article class='observation-card'><div class='obs-metric'><span title='LLC Miss Rate'>LLC Miss Rate</span></div><div class='obs-value'><span title='29.93 percent'>29.93 percent</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_9bcc1ad2, derived_from=llc_miss/llc_access'>action_id=act_9bcc1ad2, derived_from=llc_miss/llc_access</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Context Switches'>Context Switches</span></div><div class='obs-value'><span title='3 count'>3 count</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_9dc451e0, event_name=context-switches, raw_event_name=context-switches'>action_id=act_9dc451e0, event_name=context-switches, raw_event_name=context-switches</span></div></article><article class='observation-card'><div class='obs-metric'><span title='进程样本占比'>进程样本占比</span></div><div class='obs-value'><span title='100.00 percent'>100.00 percent</span></div><div class='obs-source'><span title='perf_record · process'>perf_record · process</span></div><div class='obs-tags'><span title='action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, rank=1, relation=primary'>action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, rank=1, relation=primary</span></div></article><article class='observation-card'><div class='obs-metric'><span title='线程样本占比'>线程样本占比</span></div><div class='obs-value'><span title='100.00 percent'>100.00 percent</span></div><div class='obs-source'><span title='perf_record · thread'>perf_record · thread</span></div><div class='obs-tags'><span title='action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=1, thread_role=main_thread'>action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=1, thread_role=main_thread</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Cycles'>Cycles</span></div><div class='obs-value'><span title='510247063 count'>510247063 count</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_4aa164ae, event_name=cycles, series_type=timeline, time_bucket_sec=0.100'>action_id=act_4aa164ae, event_name=cycles, series_type=timeline, time_bucket_sec=0.100</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Instructions'>Instructions</span></div><div class='obs-value'><span title='1975340965 count'>1975340965 count</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_4aa164ae, event_name=instructions, series_type=timeline, time_bucket_sec=0.100'>action_id=act_4aa164ae, event_name=instructions, series_type=timeline, time_bucket_sec=0.100</span></div></article>
+            </div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h3>证据摘要</h3>
+              </div>
+            </div>
+            <ul class="panel-list">
+              <li><span title='第 2 轮后，当前最强规则候选为 cpu_bound。 重点 observation 数量 10，热点符号 7 个，时间序列指标 28 个，进程拆账 1 条，线程拆账 1 条。'>第 2 轮后，当前最强规则候选为 cpu_bound。 重点 observation 数量 10，热点符号 7 个，时间序列指标 28 个，进程拆账 1 条，线程拆账 1 条。</span></li><li><span title='重点指标: cache_misses, context_switches, voluntary_context_switches'>重点指标: cache_misses, context_switches, voluntary_context_switches</span></li><li><span title='热点符号: main'>热点符号: main</span></li><li><span title='时间序列指标: 013, 017, 564, 658, 703, 879'>时间序列指标: 013, 017, 564, 658, 703, 879</span></li><li><span title='进程级样本拆账: cpu_bound_demo pid=3901685 100.00%'>进程级样本拆账: cpu_bound_demo pid=3901685 100.00%</span></li><li><span title='线程级样本拆账: cpu_bound_demo pid/tid=3901685/3901685 100.00%'>线程级样本拆账: cpu_bound_demo pid/tid=3901685/3901685 100.00%</span></li><li><span title='是否需要进一步区分 cpu_bound 与其他候选瓶颈。'>是否需要进一步区分 cpu_bound 与其他候选瓶颈。</span></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h3>支持与反证</h3>
+              </div>
+            </div>
+            <ul class="panel-list">
+              <li><span title='CPU 瓶颈: time.cpu_utilization_pct=100'>CPU 瓶颈: time.cpu_utilization_pct=100</span></li><li><span title='CPU 瓶颈: perf_record.process_sample_pct=100.0'>CPU 瓶颈: perf_record.process_sample_pct=100.0</span></li><li><span title='CPU 瓶颈: perf_record.thread_sample_pct=100.0'>CPU 瓶颈: perf_record.thread_sample_pct=100.0</span></li><li><span title='CPU 瓶颈: perf_stat.ipc=3.8713'>CPU 瓶颈: perf_stat.ipc=3.8713</span></li><li><span title='CPU 瓶颈: perf_stat.ipc=3.8823'>CPU 瓶颈: perf_stat.ipc=3.8823</span></li><li><span title='CPU 瓶颈: perf_stat.ipc=3.8845'>CPU 瓶颈: perf_stat.ipc=3.8845</span></li><li><span title='分支预测失误 的证据强度低于首要候选。'>分支预测失误 的证据强度低于首要候选。</span></li><li><span title='建议追加 perf record -g，定位最热函数和调用栈。'>建议追加 perf record -g，定位最热函数和调用栈。</span></li><li><span title='建议检查高频分支代码并结合调用栈定位热点分支。'>建议检查高频分支代码并结合调用栈定位热点分支。</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="report-section">
+      <div class="section-kicker">04 / 图表</div>
+      <div class="section-head">
+        <div>
+          <h2>关键图表</h2>
+        </div>
+      </div>
+      <div class="chart-strip">
+        <article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='distribution' data-modal-title='候选瓶颈置信度对比' data-modal-description='所有报告都应先展示当前最主要的瓶颈候选及其相对置信度。'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3><span title='候选瓶颈置信度对比'>候选瓶颈置信度对比</span></h3><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>CPU 瓶颈</span></strong><span class='chart-value'>95.00%</span></div><div class='bar'><span style='width:95%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>分支预测失误</span></strong><span class='chart-value'>77.00%</span></div><div class='bar'><span style='width:77%'></span></div></div></div></article><article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='distribution' data-modal-title='进程级样本拆账' data-modal-description='并发程序需要先看每个进程或子进程贡献了多少热点样本。'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3><span title='进程级样本拆账'>进程级样本拆账</span></h3><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>cpu_bound_demo / pid 3901685</span></strong><span class='chart-value'>100.00%</span></div><div class='bar'><span style='width:100%'></span></div></div></div></article><article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='distribution' data-modal-title='线程级样本拆账' data-modal-description='多线程程序需要拆出主线程与工作线程的样本占比。'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3><span title='线程级样本拆账'>线程级样本拆账</span></h3><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>cpu_bound_demo / 3901685:3901685</span></strong><span class='chart-value'>100.00%</span></div><div class='bar'><span style='width:100%'></span></div></div></div></article><article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='distribution' data-modal-title='热点函数占比' data-modal-description='已经拿到热点函数样本后，应展示最热函数分布，帮助验证热点是否集中。'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3><span title='热点函数占比'>热点函数占比</span></h3><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>main</span></strong><span class='chart-value'>93.88%</span></div><div class='bar'><span style='width:93%'></span></div></div></div></article>
+        <article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='distribution' data-modal-title='热点函数分布' data-modal-description='分布图支持放大查看，便于阅读较长的函数名、线程名和进程名。' data-filterable data-kind='all' data-search='热点函数分布 main'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3>热点函数分布</h3><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>main</span></strong><span class='chart-value'>93.88%</span></div><div class='bar'><span style='width:93%'></span></div></div></div></article><article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='distribution' data-modal-title='进程级样本拆账' data-modal-description='分布图支持放大查看，便于阅读较长的函数名、线程名和进程名。' data-filterable data-kind='all' data-search='进程级样本拆账 cpu_bound_demo / pid 3901685'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3>进程级样本拆账</h3><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>cpu_bound_demo / pid 3901685</span></strong><span class='chart-value'>100.00%</span></div><div class='bar'><span style='width:100%'></span></div></div></div></article><article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='distribution' data-modal-title='线程级样本拆账' data-modal-description='分布图支持放大查看，便于阅读较长的函数名、线程名和进程名。' data-filterable data-kind='all' data-search='线程级样本拆账 cpu_bound_demo / 3901685:3901685'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3>线程级样本拆账</h3><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>cpu_bound_demo / 3901685:3901685</span></strong><span class='chart-value'>100.00%</span></div><div class='bar'><span style='width:100%'></span></div></div></div></article>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="section-head">
+          <div>
+            <h3>图表解读</h3>
+          </div>
+        </div>
+        <div class="grid">
+          <div class='analysis-note'><span title='当前主要结论是 活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。'>当前主要结论是 活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。</span></div><div class='analysis-note'><span title='候选瓶颈置信度对比: 所有报告都应先展示当前最主要的瓶颈候选及其相对置信度。'>候选瓶颈置信度对比: 所有报告都应先展示当前最主要的瓶颈候选及其相对置信度。</span></div><div class='analysis-note'><span title='进程级样本拆账: 并发程序需要先看每个进程或子进程贡献了多少热点样本。'>进程级样本拆账: 并发程序需要先看每个进程或子进程贡献了多少热点样本。</span></div><div class='analysis-note'><span title='线程级样本拆账: 多线程程序需要拆出主线程与工作线程的样本占比。'>线程级样本拆账: 多线程程序需要拆出主线程与工作线程的样本占比。</span></div><div class='analysis-note'><span title='热点函数占比: 已经拿到热点函数样本后，应展示最热函数分布，帮助验证热点是否集中。'>热点函数占比: 已经拿到热点函数样本后，应展示最热函数分布，帮助验证热点是否集中。</span></div><div class='analysis-note'><span title='perf record 显示最热符号是 main，样本占比约 93.88%。'>perf record 显示最热符号是 main，样本占比约 93.88%。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="report-section">
+      <div class="section-kicker">05 / 动态</div>
+      <div class="section-head">
+        <div>
+          <h2>动态行为</h2>
+        </div>
+      </div>
+      <div class="chart-strip">
+        <article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='line' data-modal-title='Cache Miss Rate 时间序列' data-modal-description='优先展示各级 cache miss-rate 的时间变化，便于识别哪一级缓存开始成为瓶颈。'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3><span title='Cache Miss Rate 时间序列'>Cache Miss Rate 时间序列</span></h3><svg class='line-chart' viewBox='0 0 620 240' role='img' aria-label='cache_miss_rate_pct,l1_miss_rate_pct,l2_miss_rate_pct,llc_miss_rate_pct'><line x1='54' y1='178.00' x2='594' y2='178.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='182.00' font-size='12' fill='#5f7390'>0.0%</text><line x1='54' y1='140.00' x2='594' y2='140.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='144.00' font-size='12' fill='#5f7390'>25.0%</text><line x1='54' y1='102.00' x2='594' y2='102.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='106.00' font-size='12' fill='#5f7390'>50.0%</text><line x1='54' y1='64.00' x2='594' y2='64.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='68.00' font-size='12' fill='#5f7390'>75.0%</text><line x1='54' y1='26.00' x2='594' y2='26.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='30.00' font-size='12' fill='#5f7390'>100.0%</text><line x1='54' y1='178' x2='594' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><line x1='54' y1='26' x2='54' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><path d='M 54.00,113.23 L 279.00,115.10 L 506.25,154.82 L 594.00,117.55' fill='none' stroke='#2563eb' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' /><circle cx='54.00' cy='113.23' r='2.8' fill='#2563eb'><title>Cache Miss Rate: 42.61% @ 0.10s</title></circle><circle cx='279.00' cy='115.10' r='2.8' fill='#2563eb'><title>Cache Miss Rate: 41.38% @ 0.20s</title></circle><circle cx='506.25' cy='154.82' r='2.8' fill='#2563eb'><title>Cache Miss Rate: 15.25% @ 0.30s</title></circle><circle cx='594.00' cy='117.55' r='2.8' fill='#2563eb'><title>Cache Miss Rate: 39.77% @ 0.34s</title></circle><path d='M 54.00,177.99 L 279.00,178.00 L 504.00,178.00 L 594.00,178.00' fill='none' stroke='#0f766e' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' /><circle cx='54.00' cy='177.99' r='2.8' fill='#0f766e'><title>L1 Miss Rate: 0.00% @ 0.10s</title></circle><circle cx='279.00' cy='178.00' r='2.8' fill='#0f766e'><title>L1 Miss Rate: 0.00% @ 0.20s</title></circle><circle cx='504.00' cy='178.00' r='2.8' fill='#0f766e'><title>L1 Miss Rate: 0.00% @ 0.30s</title></circle><circle cx='594.00' cy='178.00' r='2.8' fill='#0f766e'><title>L1 Miss Rate: 0.00% @ 0.34s</title></circle><path d='M 54.00,171.44 L 279.00,177.54 L 504.00,177.41 L 594.00,173.90' fill='none' stroke='#d97706' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' /><circle cx='54.00' cy='171.44' r='2.8' fill='#d97706'><title>L2 Miss Rate: 4.32% @ 0.10s</title></circle><circle cx='279.00' cy='177.54' r='2.8' fill='#d97706'><title>L2 Miss Rate: 0.30% @ 0.20s</title></circle><circle cx='504.00' cy='177.41' r='2.8' fill='#d97706'><title>L2 Miss Rate: 0.39% @ 0.30s</title></circle><circle cx='594.00' cy='173.90' r='2.8' fill='#d97706'><title>L2 Miss Rate: 2.70% @ 0.34s</title></circle><path d='M 54.00,123.69 L 279.00,158.82 L 504.00,153.58 L 594.00,95.04' fill='none' stroke='#7c3aed' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' /><circle cx='54.00' cy='123.69' r='2.8' fill='#7c3aed'><title>LLC Miss Rate: 35.73% @ 0.10s</title></circle><circle cx='279.00' cy='158.82' r='2.8' fill='#7c3aed'><title>LLC Miss Rate: 12.62% @ 0.20s</title></circle><circle cx='504.00' cy='153.58' r='2.8' fill='#7c3aed'><title>LLC Miss Rate: 16.07% @ 0.30s</title></circle><circle cx='594.00' cy='95.04' r='2.8' fill='#7c3aed'><title>LLC Miss Rate: 54.58% @ 0.34s</title></circle><text x='54' y='200' font-size='12' fill='#5f7390'>0.10s</text><text x='566' y='200' font-size='12' fill='#5f7390'>0.34s</text><g><line x1='54' y1='216' x2='72' y2='216' stroke='#2563eb' stroke-width='4' stroke-linecap='round' /><text x='78' y='220' font-size='12' fill='#28405e'>Cache Miss Rate</text></g><g><line x1='186' y1='216' x2='204' y2='216' stroke='#0f766e' stroke-width='4' stroke-linecap='round' /><text x='210' y='220' font-size='12' fill='#28405e'>L1 Miss Rate</text></g><g><line x1='318' y1='216' x2='336' y2='216' stroke='#d97706' stroke-width='4' stroke-linecap='round' /><text x='342' y='220' font-size='12' fill='#28405e'>L2 Miss Rate</text></g><g><line x1='450' y1='216' x2='468' y2='216' stroke='#7c3aed' stroke-width='4' stroke-linecap='round' /><text x='474' y='220' font-size='12' fill='#28405e'>LLC Miss Rate</text></g></svg></article><article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='line' data-modal-title='MPKI 时间序列' data-modal-description='MPKI 可以把 miss 开销按千条指令归一化，便于跨阶段比较真实压力强度。'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3><span title='MPKI 时间序列'>MPKI 时间序列</span></h3><svg class='line-chart' viewBox='0 0 620 240' role='img' aria-label='cache_mpki'><line x1='54' y1='178.00' x2='594' y2='178.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='182.00' font-size='12' fill='#5f7390'>0.0</text><line x1='54' y1='140.00' x2='594' y2='140.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='144.00' font-size='12' fill='#5f7390'>0.0</text><line x1='54' y1='102.00' x2='594' y2='102.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='106.00' font-size='12' fill='#5f7390'>0.0</text><line x1='54' y1='64.00' x2='594' y2='64.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='68.00' font-size='12' fill='#5f7390'>0.0</text><line x1='54' y1='26.00' x2='594' y2='26.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='30.00' font-size='12' fill='#5f7390'>0.0</text><line x1='54' y1='178' x2='594' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><line x1='54' y1='26' x2='54' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><path d='M 54.00,26.00 L 279.00,166.95 L 506.25,178.00 L 594.00,53.64' fill='none' stroke='#2563eb' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' /><circle cx='54.00' cy='26.00' r='2.8' fill='#2563eb'><title>Cache MPKI: 0.01 @ 0.10s</title></circle><circle cx='279.00' cy='166.95' r='2.8' fill='#2563eb'><title>Cache MPKI: 0.00 @ 0.20s</title></circle><circle cx='506.25' cy='178.00' r='2.8' fill='#2563eb'><title>Cache MPKI: 0.00 @ 0.30s</title></circle><circle cx='594.00' cy='53.64' r='2.8' fill='#2563eb'><title>Cache MPKI: 0.01 @ 0.34s</title></circle><text x='54' y='200' font-size='12' fill='#5f7390'>0.10s</text><text x='566' y='200' font-size='12' fill='#5f7390'>0.34s</text><g><line x1='54' y1='216' x2='72' y2='216' stroke='#2563eb' stroke-width='4' stroke-linecap='round' /><text x='78' y='220' font-size='12' fill='#28405e'>Cache MPKI</text></g></svg></article><article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='line' data-modal-title='IPC 时间序列' data-modal-description='IPC 趋势可以帮助识别阶段性效率下降。'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3><span title='IPC 时间序列'>IPC 时间序列</span></h3><svg class='line-chart' viewBox='0 0 620 240' role='img' aria-label='ipc'><line x1='54' y1='178.00' x2='594' y2='178.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='182.00' font-size='12' fill='#5f7390'>3.9</text><line x1='54' y1='140.00' x2='594' y2='140.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='144.00' font-size='12' fill='#5f7390'>3.9</text><line x1='54' y1='102.00' x2='594' y2='102.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='106.00' font-size='12' fill='#5f7390'>3.9</text><line x1='54' y1='64.00' x2='594' y2='64.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='68.00' font-size='12' fill='#5f7390'>3.9</text><line x1='54' y1='26.00' x2='594' y2='26.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='30.00' font-size='12' fill='#5f7390'>3.9</text><line x1='54' y1='178' x2='594' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><line x1='54' y1='26' x2='54' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><path d='M 54.00,178.00 L 279.00,51.33 L 506.25,26.00 L 594.00,137.70' fill='none' stroke='#2563eb' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' /><circle cx='54.00' cy='178.00' r='2.8' fill='#2563eb'><title>IPC: 3.87 @ 0.10s</title></circle><circle cx='279.00' cy='51.33' r='2.8' fill='#2563eb'><title>IPC: 3.88 @ 0.20s</title></circle><circle cx='506.25' cy='26.00' r='2.8' fill='#2563eb'><title>IPC: 3.88 @ 0.30s</title></circle><circle cx='594.00' cy='137.70' r='2.8' fill='#2563eb'><title>IPC: 3.87 @ 0.34s</title></circle><text x='54' y='200' font-size='12' fill='#5f7390'>0.10s</text><text x='566' y='200' font-size='12' fill='#5f7390'>0.34s</text><g><line x1='54' y1='216' x2='72' y2='216' stroke='#2563eb' stroke-width='4' stroke-linecap='round' /><text x='78' y='220' font-size='12' fill='#28405e'>IPC</text></g></svg></article><article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='line' data-modal-title='CPI 时间序列' data-modal-description='CPI 与 IPC 互补，能更直观看出每条指令平均消耗的周期数。'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3><span title='CPI 时间序列'>CPI 时间序列</span></h3><svg class='line-chart' viewBox='0 0 620 240' role='img' aria-label='cpi'><line x1='54' y1='178.00' x2='594' y2='178.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='182.00' font-size='12' fill='#5f7390'>0.3</text><line x1='54' y1='140.00' x2='594' y2='140.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='144.00' font-size='12' fill='#5f7390'>0.3</text><line x1='54' y1='102.00' x2='594' y2='102.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='106.00' font-size='12' fill='#5f7390'>0.3</text><line x1='54' y1='64.00' x2='594' y2='64.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='68.00' font-size='12' fill='#5f7390'>0.3</text><line x1='54' y1='26.00' x2='594' y2='26.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='30.00' font-size='12' fill='#5f7390'>0.3</text><line x1='54' y1='178' x2='594' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><line x1='54' y1='26' x2='54' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><path d='M 54.00,26.00 L 279.00,144.22 L 506.25,178.00 L 594.00,59.78' fill='none' stroke='#2563eb' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' /><circle cx='54.00' cy='26.00' r='2.8' fill='#2563eb'><title>CPI: 0.26 @ 0.10s</title></circle><circle cx='279.00' cy='144.22' r='2.8' fill='#2563eb'><title>CPI: 0.26 @ 0.20s</title></circle><circle cx='506.25' cy='178.00' r='2.8' fill='#2563eb'><title>CPI: 0.26 @ 0.30s</title></circle><circle cx='594.00' cy='59.78' r='2.8' fill='#2563eb'><title>CPI: 0.26 @ 0.34s</title></circle><text x='54' y='200' font-size='12' fill='#5f7390'>0.10s</text><text x='566' y='200' font-size='12' fill='#5f7390'>0.34s</text><g><line x1='54' y1='216' x2='72' y2='216' stroke='#2563eb' stroke-width='4' stroke-linecap='round' /><text x='78' y='220' font-size='12' fill='#28405e'>CPI</text></g></svg></article><article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='line' data-modal-title='Branch Miss Rate 时间序列' data-modal-description='分支 miss-rate 的突增通常意味着控制流或数据相关性变化。'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3><span title='Branch Miss Rate 时间序列'>Branch Miss Rate 时间序列</span></h3><svg class='line-chart' viewBox='0 0 620 240' role='img' aria-label='branch_miss_rate_pct'><line x1='54' y1='178.00' x2='594' y2='178.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='182.00' font-size='12' fill='#5f7390'>0.0%</text><line x1='54' y1='140.00' x2='594' y2='140.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='144.00' font-size='12' fill='#5f7390'>25.0%</text><line x1='54' y1='102.00' x2='594' y2='102.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='106.00' font-size='12' fill='#5f7390'>50.0%</text><line x1='54' y1='64.00' x2='594' y2='64.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='68.00' font-size='12' fill='#5f7390'>75.0%</text><line x1='54' y1='26.00' x2='594' y2='26.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='30.00' font-size='12' fill='#5f7390'>100.0%</text><line x1='54' y1='178' x2='594' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><line x1='54' y1='26' x2='54' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><path d='M 54.00,177.71 L 279.00,177.72 L 504.00,177.72 L 594.00,177.71' fill='none' stroke='#2563eb' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' /><circle cx='54.00' cy='177.71' r='2.8' fill='#2563eb'><title>Branch Miss Rate: 0.19% @ 0.10s</title></circle><circle cx='279.00' cy='177.72' r='2.8' fill='#2563eb'><title>Branch Miss Rate: 0.18% @ 0.20s</title></circle><circle cx='504.00' cy='177.72' r='2.8' fill='#2563eb'><title>Branch Miss Rate: 0.19% @ 0.30s</title></circle><circle cx='594.00' cy='177.71' r='2.8' fill='#2563eb'><title>Branch Miss Rate: 0.19% @ 0.34s</title></circle><text x='54' y='200' font-size='12' fill='#5f7390'>0.10s</text><text x='566' y='200' font-size='12' fill='#5f7390'>0.34s</text><g><line x1='54' y1='216' x2='72' y2='216' stroke='#2563eb' stroke-width='4' stroke-linecap='round' /><text x='78' y='220' font-size='12' fill='#28405e'>Branch Miss Rate</text></g></svg></article><article class='chart-card' tabindex='0' role='button' data-chart-card data-chart-view='line' data-modal-title='上下文切换时间序列' data-modal-description='上下文切换抖动适合用来识别并发调度干扰。'><button class='zoom-button' type='button' data-chart-zoom-button>放大</button><h3><span title='上下文切换时间序列'>上下文切换时间序列</span></h3><svg class='line-chart' viewBox='0 0 620 240' role='img' aria-label='context_switches'><line x1='54' y1='178.00' x2='594' y2='178.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='182.00' font-size='12' fill='#5f7390'>0.0</text><line x1='54' y1='140.00' x2='594' y2='140.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='144.00' font-size='12' fill='#5f7390'>1.0</text><line x1='54' y1='102.00' x2='594' y2='102.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='106.00' font-size='12' fill='#5f7390'>2.0</text><line x1='54' y1='64.00' x2='594' y2='64.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='68.00' font-size='12' fill='#5f7390'>3.0</text><line x1='54' y1='26.00' x2='594' y2='26.00' stroke='rgba(70,112,168,0.18)' stroke-width='1' /><text x='8' y='30.00' font-size='12' fill='#5f7390'>4.0</text><line x1='54' y1='178' x2='594' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><line x1='54' y1='26' x2='54' y2='178' stroke='rgba(70,112,168,0.26)' stroke-width='1.2' /><path d='M 54.00,26.00 L 279.00,178.00 L 504.00,140.00 L 594.00,178.00' fill='none' stroke='#2563eb' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round' /><circle cx='54.00' cy='26.00' r='2.8' fill='#2563eb'><title>Context Switches: 4.00 @ 0.10s</title></circle><circle cx='279.00' cy='178.00' r='2.8' fill='#2563eb'><title>Context Switches: 0.00 @ 0.20s</title></circle><circle cx='504.00' cy='140.00' r='2.8' fill='#2563eb'><title>Context Switches: 1.00 @ 0.30s</title></circle><circle cx='594.00' cy='178.00' r='2.8' fill='#2563eb'><title>Context Switches: 0.00 @ 0.34s</title></circle><text x='54' y='200' font-size='12' fill='#5f7390'>0.10s</text><text x='566' y='200' font-size='12' fill='#5f7390'>0.34s</text><g><line x1='54' y1='216' x2='72' y2='216' stroke='#2563eb' stroke-width='4' stroke-linecap='round' /><text x='78' y='220' font-size='12' fill='#28405e'>Context Switches</text></g></svg></article>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="section-head">
+          <div>
+            <h3>动态行为分析</h3>
+          </div>
+        </div>
+        <div class="grid">
+          <div class='analysis-note'><span title='Cache Miss Rate 时间序列: 优先展示各级 cache miss-rate 的时间变化，便于识别哪一级缓存开始成为瓶颈。'>Cache Miss Rate 时间序列: 优先展示各级 cache miss-rate 的时间变化，便于识别哪一级缓存开始成为瓶颈。</span></div><div class='analysis-note'><span title='MPKI 时间序列: MPKI 可以把 miss 开销按千条指令归一化，便于跨阶段比较真实压力强度。'>MPKI 时间序列: MPKI 可以把 miss 开销按千条指令归一化，便于跨阶段比较真实压力强度。</span></div><div class='analysis-note'><span title='IPC 时间序列: IPC 趋势可以帮助识别阶段性效率下降。'>IPC 时间序列: IPC 趋势可以帮助识别阶段性效率下降。</span></div><div class='analysis-note'><span title='CPI 时间序列: CPI 与 IPC 互补，能更直观看出每条指令平均消耗的周期数。'>CPI 时间序列: CPI 与 IPC 互补，能更直观看出每条指令平均消耗的周期数。</span></div><div class='analysis-note'><span title='当前已形成的动态指标包括 Cache Miss Rate, Cache MPKI, L1 Miss Rate, L2 Miss Rate, LLC Miss Rate, IPC。'>当前已形成的动态指标包括 Cache Miss Rate, Cache MPKI, L1 Miss Rate, L2 Miss Rate, LLC Miss Rate, IPC。</span></div><div class='analysis-note'><span title='Cache Miss Rate 在 0.30s 到 0.10s 之间出现明显波动，区间范围约为 15.25% 到 42.61%。'>Cache Miss Rate 在 0.30s 到 0.10s 之间出现明显波动，区间范围约为 15.25% 到 42.61%。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="report-section">
+      <div class="section-kicker">06 / 热点</div>
+      <div class="section-head">
+        <div>
+          <h2>热点函数与源码片段</h2>
+        </div>
+      </div>
+      <div class="source-grid">
+        <article class='source-card' data-filterable data-kind='all' data-search='main'><div class='hypothesis-top'><div class='hypothesis-title'><span title='main'>main</span></div><div class='hotspot-share'>93.88% samples</div></div><div class='source-meta'><span class='meta-pill'><span title='热点路径'>热点路径</span></span><span class='meta-pill'>perf record 热点</span><span class='meta-pill'>暂未映射源码</span></div><span class='mono'>函数: main</span><p class='hint' style='margin-top:12px'>当前已经识别到热点符号，但还没有对应的源码片段可展示。</p></article>
+      </div>
+      <div class="panel" style="margin-top:18px">
+        <div class="section-head">
+          <div>
+            <h3>更多源码线索</h3>
+          </div>
+        </div>
+        <div class="source-grid">
+          <div class='empty'>当前没有可展示的源码定位结果。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="report-section">
+      <div class="section-kicker">07 / 附录</div>
+      <div class="stack">
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>证据明细</h2>
+            </div>
+          </div>
+          <div class="obs-grid">
+            <article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_c9149c07 perf_record process_sample_pct 100.0 act_c59a1778 cpu_bound_demo 3901685 1 primary'><div class='obs-metric'><span title='obs_c9149c07 · 进程样本占比'>obs_c9149c07 · 进程样本占比</span></div><div class='obs-value'><span title='100.00 percent'>100.00 percent</span></div><div class='obs-source'><span title='perf_record · process · callgraph'>perf_record · process · callgraph</span></div><div class='obs-tags'><span title='action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, rank=1, relation=primary'>action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, rank=1, relation=primary</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_08894ec1 perf_record thread_sample_pct 100.0 act_c59a1778 cpu_bound_demo 3901685 3901685 1 main_thread'><div class='obs-metric'><span title='obs_08894ec1 · 线程样本占比'>obs_08894ec1 · 线程样本占比</span></div><div class='obs-value'><span title='100.00 percent'>100.00 percent</span></div><div class='obs-source'><span title='perf_record · thread · callgraph'>perf_record · thread · callgraph</span></div><div class='obs-tags'><span title='action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=1, thread_role=main_thread'>action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=1, thread_role=main_thread</span></div></article><article class='observation-card' data-filterable data-kind='branch_mispredict' data-search='obs_4148a2d6 perf_stat branch_misses 496293 act_c86e141c branch-misses timeline 0.100'><div class='obs-metric'><span title='obs_4148a2d6 · Branch Misses'>obs_4148a2d6 · Branch Misses</span></div><div class='obs-value'><span title='496293 count'>496293 count</span></div><div class='obs-source'><span title='perf_stat · process · branch'>perf_stat · process · branch</span></div><div class='obs-tags'><span title='action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.100'>action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.100</span></div></article><article class='observation-card' data-filterable data-kind='branch_mispredict' data-search='obs_68773652 perf_stat branch_misses 487358 act_c86e141c branch-misses timeline 0.200'><div class='obs-metric'><span title='obs_68773652 · Branch Misses'>obs_68773652 · Branch Misses</span></div><div class='obs-value'><span title='487358 count'>487358 count</span></div><div class='obs-source'><span title='perf_stat · process · branch'>perf_stat · process · branch</span></div><div class='obs-tags'><span title='action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.200'>action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.200</span></div></article><article class='observation-card' data-filterable data-kind='branch_mispredict' data-search='obs_3a6ceb55 perf_stat branch_misses 491686 act_c86e141c branch-misses timeline 0.300'><div class='obs-metric'><span title='obs_3a6ceb55 · Branch Misses'>obs_3a6ceb55 · Branch Misses</span></div><div class='obs-value'><span title='491686 count'>491686 count</span></div><div class='obs-source'><span title='perf_stat · process · branch'>perf_stat · process · branch</span></div><div class='obs-tags'><span title='action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.300'>action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.300</span></div></article><article class='observation-card' data-filterable data-kind='branch_mispredict' data-search='obs_395ef179 perf_stat branch_misses 194372 act_c86e141c branch-misses timeline 0.340'><div class='obs-metric'><span title='obs_395ef179 · Branch Misses'>obs_395ef179 · Branch Misses</span></div><div class='obs-value'><span title='194372 count'>194372 count</span></div><div class='obs-source'><span title='perf_stat · process · branch'>perf_stat · process · branch</span></div><div class='obs-tags'><span title='action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.340'>action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.340</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_97254049 perf_stat ipc 3.8713 act_4aa164ae timeline 0.100 instructions,cycles'><div class='obs-metric'><span title='obs_97254049 · IPC'>obs_97254049 · IPC</span></div><div class='obs-value'><span title='3.87'>3.87</span></div><div class='obs-source'><span title='perf_stat · process · cpu'>perf_stat · process · cpu</span></div><div class='obs-tags'><span title='action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.100, derived_from=instructions,cycles'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.100, derived_from=instructions,cycles</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_9286dcf5 perf_stat ipc 3.8823 act_4aa164ae timeline 0.200 instructions,cycles'><div class='obs-metric'><span title='obs_9286dcf5 · IPC'>obs_9286dcf5 · IPC</span></div><div class='obs-value'><span title='3.88'>3.88</span></div><div class='obs-source'><span title='perf_stat · process · cpu'>perf_stat · process · cpu</span></div><div class='obs-tags'><span title='action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.200, derived_from=instructions,cycles'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.200, derived_from=instructions,cycles</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_4d8a0b55 perf_stat ipc 3.8845 act_4aa164ae timeline 0.301 instructions,cycles'><div class='obs-metric'><span title='obs_4d8a0b55 · IPC'>obs_4d8a0b55 · IPC</span></div><div class='obs-value'><span title='3.88'>3.88</span></div><div class='obs-source'><span title='perf_stat · process · cpu'>perf_stat · process · cpu</span></div><div class='obs-tags'><span title='action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.301, derived_from=instructions,cycles'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.301, derived_from=instructions,cycles</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_7f7694c5 perf_stat ipc 3.8748 act_4aa164ae timeline 0.340 instructions,cycles'><div class='obs-metric'><span title='obs_7f7694c5 · IPC'>obs_7f7694c5 · IPC</span></div><div class='obs-value'><span title='3.87'>3.87</span></div><div class='obs-source'><span title='perf_stat · process · cpu'>perf_stat · process · cpu</span></div><div class='obs-tags'><span title='action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.340, derived_from=instructions,cycles'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.340, derived_from=instructions,cycles</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_4e8bce7e time cpu_utilization_pct 100 act_28f48556'><div class='obs-metric'><span title='obs_4e8bce7e · CPU 利用率'>obs_4e8bce7e · CPU 利用率</span></div><div class='obs-value'><span title='100 percent'>100 percent</span></div><div class='obs-source'><span title='time · process · cpu'>time · process · cpu</span></div><div class='obs-tags'><span title='action_id=act_28f48556'>action_id=act_28f48556</span></div></article>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>原始 observation 视图</h2>
+            </div>
+          </div>
+          <details class="expandable">
+            <summary><span class="mono">展开原始 observation 表</span></summary>
+            <div class="raw-shell">
+              <table class="raw-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>来源</th>
+                    <th>指标</th>
+                    <th>值</th>
+                    <th>范围</th>
+                    <th>标签</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-filterable data-kind='all' data-search='obs_f1a8af37 mpstat average all 0.10 0.00 0.05 0.05 0.00 0.00 0.00 0.00 0.00 99.80 action_id=act_e9ab044b, source=mpstat'><td><code>obs_f1a8af37</code></td><td><span title='mpstat'>mpstat</span></td><td><span class='mono'>average</span></td><td><span title='all 0.10 0.00 0.05 0.05 0.00 0.00 0.00 0.00 0.00 99.80'>all 0.10 0.00 0.05 0.05... 0.00 0.00 99.80</span></td><td><span title='system'>system</span></td><td><span class='mono'>action_id=act_e9ab044b, source=mpstat</span></td></tr><tr data-filterable data-kind='all' data-search='obs_063cc811 perf_record callgraph_samples 1358 action_id=act_c59a1778'><td><code>obs_063cc811</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>callgraph_samples</span></td><td><span title='1358 count'>1358 count</span></td><td><span title='callchain'>callchain</span></td><td><span class='mono'>action_id=act_c59a1778</span></td></tr><tr data-filterable data-kind='all' data-search='obs_8abd18ba perf_record hot_frame_sample_pct 3.9794 action_id=act_c59a1778, symbol=main, dso=/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo, ip=149b, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=1'><td><code>obs_8abd18ba</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='3.98 percent'>3.98 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, symbol=mai...1685, tid=3901685, rank=1<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, symbol=main, dso=/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo, ip=149b, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=1</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_73ba3de8 perf_record hot_frame_sample_pct 2.874 action_id=act_c59a1778, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bfcd, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=2'><td><code>obs_73ba3de8</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='2.87 percent'>2.87 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, symbol=__c...1685, tid=3901685, rank=2<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bfcd, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=2</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_ad25d8e8 perf_record hot_frame_sample_pct 2.8003 action_id=act_c59a1778, symbol=main, dso=/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo, ip=14ab, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=3'><td><code>obs_ad25d8e8</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='2.80 percent'>2.80 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, symbol=mai...1685, tid=3901685, rank=3<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, symbol=main, dso=/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo, ip=14ab, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=3</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_6bcf5f4f perf_record hot_frame_sample_pct 2.3581 action_id=act_c59a1778, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bfc7, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=4'><td><code>obs_6bcf5f4f</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='2.36 percent'>2.36 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, symbol=__c...1685, tid=3901685, rank=4<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bfc7, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=4</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_213aa39c perf_record hot_frame_sample_pct 2.2108 action_id=act_c59a1778, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b49c, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=5'><td><code>obs_213aa39c</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='2.21 percent'>2.21 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, symbol=__s...1685, tid=3901685, rank=5<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b49c, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=5</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_244c8691 perf_record hot_frame_sample_pct 2.2108 action_id=act_c59a1778, symbol=main, dso=/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo, ip=1489, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=6'><td><code>obs_244c8691</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='2.21 percent'>2.21 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, symbol=mai...1685, tid=3901685, rank=6<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, symbol=main, dso=/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo, ip=1489, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=6</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_d4138e51 perf_record hot_frame_sample_pct 2.2108 action_id=act_c59a1778, symbol=main, dso=/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo, ip=1485, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=7'><td><code>obs_d4138e51</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='2.21 percent'>2.21 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, symbol=mai...1685, tid=3901685, rank=7<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, symbol=main, dso=/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo, ip=1485, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=7</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_b82f9966 perf_record hot_frame_sample_pct 2.2108 action_id=act_c59a1778, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bfd1, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=8'><td><code>obs_b82f9966</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='2.21 percent'>2.21 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, symbol=__c...1685, tid=3901685, rank=8<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bfd1, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=8</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_3094eb73 perf_record hot_frame_sample_pct 2.1371 action_id=act_c59a1778, symbol=[unknown], dso=/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo, ip=1350, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=9'><td><code>obs_3094eb73</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='2.14 percent'>2.14 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, symbol=[un...1685, tid=3901685, rank=9<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, symbol=[unknown], dso=/home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo, ip=1350, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=9</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_5a5e8a1d perf_record hot_frame_sample_pct 2.0634 action_id=act_c59a1778, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b482, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=10'><td><code>obs_5a5e8a1d</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='2.06 percent'>2.06 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, symbol=__s...685, tid=3901685, rank=10<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b482, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=10</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_fdcbbd86 perf_record hot_symbol_pct 93.88 action_id=act_c59a1778, symbol=main, rank=4'><td><code>obs_fdcbbd86</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_symbol_pct</span></td><td><span title='93.88 percent'>93.88 percent</span></td><td><span title='function'>function</span></td><td><span class='mono'>action_id=act_c59a1778, symbol=main, rank=4</span></td></tr><tr data-filterable data-kind='all' data-search='obs_102eeaf1 perf_record process_sample_count 1357 action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, rank=1, relation=primary'><td><code>obs_102eeaf1</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>process_sample_count</span></td><td><span title='1357 count'>1357 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, comm=cpu_b... rank=1, relation=primary<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, rank=1, relation=primary</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_c9149c07 perf_record process_sample_pct 100.0 action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, rank=1, relation=primary'><td><code>obs_c9149c07</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>process_sample_pct</span></td><td><span title='100.00 percent'>100.00 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, comm=cpu_b... rank=1, relation=primary<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, rank=1, relation=primary</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_feccf9d8 perf_record thread_sample_count 1357 action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=1, thread_role=main_thread'><td><code>obs_feccf9d8</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>thread_sample_count</span></td><td><span title='1357 count'>1357 count</span></td><td><span title='thread'>thread</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, comm=cpu_b..., thread_role=main_thread<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=1, thread_role=main_thread</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_08894ec1 perf_record thread_sample_pct 100.0 action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=1, thread_role=main_thread'><td><code>obs_08894ec1</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>thread_sample_pct</span></td><td><span title='100.00 percent'>100.00 percent</span></td><td><span title='thread'>thread</span></td><td><div class='expandable'><details><summary>action_id=act_c59a1778, comm=cpu_b..., thread_role=main_thread<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c59a1778, comm=cpu_bound_demo, pid=3901685, tid=3901685, rank=1, thread_role=main_thread</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_a96f828c perf_stat 013 13.0 action_id=act_28504bcd, event_name=013, series_type=timeline, time_bucket_sec=6.000'><td><code>obs_a96f828c</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>013</span></td><td><span title='13.00 percent'>13.00 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_28504bcd, event_name...ne, time_bucket_sec=6.000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_28504bcd, event_name=013, series_type=timeline, time_bucket_sec=6.000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_743d64ea perf_stat 017 17.0 action_id=act_f61a2a4a, event_name=017, series_type=timeline, time_bucket_sec=6.000'><td><code>obs_743d64ea</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>017</span></td><td><span title='17.00 percent'>17.00 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_f61a2a4a, event_name...ne, time_bucket_sec=6.000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_f61a2a4a, event_name=017, series_type=timeline, time_bucket_sec=6.000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_ab677617 perf_stat 564 382 action_id=act_28504bcd, event_name=564, series_type=timeline, time_bucket_sec=10.000'><td><code>obs_ab677617</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>564</span></td><td><span title='382 count'>382 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_28504bcd, event_name...e, time_bucket_sec=10.000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_28504bcd, event_name=564, series_type=timeline, time_bucket_sec=10.000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_b6bd1f94 perf_stat 658 731 action_id=act_f61a2a4a, event_name=658, series_type=timeline, time_bucket_sec=1.000'><td><code>obs_b6bd1f94</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>658</span></td><td><span title='731 count'>731 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_f61a2a4a, event_name...ne, time_bucket_sec=1.000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_f61a2a4a, event_name=658, series_type=timeline, time_bucket_sec=1.000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_30dd0445 perf_stat 703 733 action_id=act_28504bcd, event_name=703, series_type=timeline, time_bucket_sec=1.000'><td><code>obs_30dd0445</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>703</span></td><td><span title='733 count'>733 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_28504bcd, event_name...ne, time_bucket_sec=1.000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_28504bcd, event_name=703, series_type=timeline, time_bucket_sec=1.000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_6a40b51d perf_stat 879 383 action_id=act_a4b9c048, event_name=879, series_type=timeline, time_bucket_sec=10.000'><td><code>obs_6a40b51d</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>879</span></td><td><span title='383 count'>383 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_a4b9c048, event_name...e, time_bucket_sec=10.000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_a4b9c048, event_name=879, series_type=timeline, time_bucket_sec=10.000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_917cb3b8 perf_stat 901 734 action_id=act_792e1a5d, event_name=901, series_type=timeline, time_bucket_sec=1.000'><td><code>obs_917cb3b8</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>901</span></td><td><span title='734 count'>734 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_792e1a5d, event_name...ne, time_bucket_sec=1.000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_792e1a5d, event_name=901, series_type=timeline, time_bucket_sec=1.000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_a228b158 perf_stat branch_miss_rate_pct 0.1892 action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.100, derived_from=branch_misses/branches'><td><code>obs_a228b158</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branch_miss_rate_pct</span></td><td><span title='0.19 percent'>0.19 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, series_typ...om=branch_misses/branches<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.100, derived_from=branch_misses/branches</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_56321b69 perf_stat branch_miss_rate_pct 0.1846 action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.200, derived_from=branch_misses/branches'><td><code>obs_56321b69</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branch_miss_rate_pct</span></td><td><span title='0.18 percent'>0.18 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, series_typ...om=branch_misses/branches<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.200, derived_from=branch_misses/branches</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_1d25335a perf_stat branch_miss_rate_pct 0.1864 action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.300, derived_from=branch_misses/branches'><td><code>obs_1d25335a</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branch_miss_rate_pct</span></td><td><span title='0.19 percent'>0.19 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, series_typ...om=branch_misses/branches<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.300, derived_from=branch_misses/branches</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_f281d5c8 perf_stat branch_miss_rate_pct 0.1876 action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.340, derived_from=branch_misses/branches'><td><code>obs_f281d5c8</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branch_miss_rate_pct</span></td><td><span title='0.19 percent'>0.19 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, series_typ...om=branch_misses/branches<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.340, derived_from=branch_misses/branches</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4148a2d6 perf_stat branch_misses 496293 action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_4148a2d6</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branch_misses</span></td><td><span title='496293 count'>496293 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_68773652 perf_stat branch_misses 487358 action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_68773652</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branch_misses</span></td><td><span title='487358 count'>487358 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_3a6ceb55 perf_stat branch_misses 491686 action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.300'><td><code>obs_3a6ceb55</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branch_misses</span></td><td><span title='491686 count'>491686 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.300<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.300</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_395ef179 perf_stat branch_misses 194372 action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_395ef179</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branch_misses</span></td><td><span title='194372 count'>194372 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=branch-misses, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_46c29f8e perf_stat branches 262356387 action_id=act_c86e141c, event_name=branches, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_46c29f8e</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branches</span></td><td><span title='262356387 count'>262356387 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=branches, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4f77083c perf_stat branches 264024619 action_id=act_c86e141c, event_name=branches, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_4f77083c</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branches</span></td><td><span title='264024619 count'>264024619 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=branches, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_2e97d585 perf_stat branches 263718810 action_id=act_c86e141c, event_name=branches, series_type=timeline, time_bucket_sec=0.300'><td><code>obs_2e97d585</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branches</span></td><td><span title='263718810 count'>263718810 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.300<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=branches, series_type=timeline, time_bucket_sec=0.300</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_26d2d0b3 perf_stat branches 103595503 action_id=act_c86e141c, event_name=branches, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_26d2d0b3</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>branches</span></td><td><span title='103595503 count'>103595503 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=branches, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_43154149 perf_stat cache_miss_rate_pct 36.226 action_id=act_792e1a5d, derived_from=cache_misses/cache_references'><td><code>obs_43154149</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_miss_rate_pct</span></td><td><span title='36.23 percent'>36.23 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_792e1a5d, derived_fr...e_misses/cache_references<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_792e1a5d, derived_from=cache_misses/cache_references</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_befe5326 perf_stat cache_miss_rate_pct 42.6131 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.100, derived_from=cache_misses/cache_references'><td><code>obs_befe5326</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_miss_rate_pct</span></td><td><span title='42.61 percent'>42.61 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ...e_misses/cache_references<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.100, derived_from=cache_misses/cache_references</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_d74d4f45 perf_stat cache_miss_rate_pct 41.3814 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.200, derived_from=cache_misses/cache_references'><td><code>obs_d74d4f45</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_miss_rate_pct</span></td><td><span title='41.38 percent'>41.38 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ...e_misses/cache_references<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.200, derived_from=cache_misses/cache_references</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_a622df67 perf_stat cache_miss_rate_pct 15.253 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.301, derived_from=cache_misses/cache_references'><td><code>obs_a622df67</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_miss_rate_pct</span></td><td><span title='15.25 percent'>15.25 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ...e_misses/cache_references<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.301, derived_from=cache_misses/cache_references</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_ed073163 perf_stat cache_miss_rate_pct 39.7687 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.340, derived_from=cache_misses/cache_references'><td><code>obs_ed073163</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_miss_rate_pct</span></td><td><span title='39.77 percent'>39.77 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ...e_misses/cache_references<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.340, derived_from=cache_misses/cache_references</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_682d9dfb perf_stat cache_misses 21323 action_id=act_792e1a5d, event_name=cache-misses, raw_event_name=cpu_core/cache-misses'><td><code>obs_682d9dfb</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_misses</span></td><td><span title='21323 count'>21323 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_792e1a5d, event_name...ame=cpu_core/cache-misses<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_792e1a5d, event_name=cache-misses, raw_event_name=cpu_core/cache-misses</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_d458e096 perf_stat cache_misses 22129 action_id=act_4aa164ae, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_d458e096</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_misses</span></td><td><span title='22129 count'>22129 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_fda4432b perf_stat cache_misses 2055 action_id=act_4aa164ae, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_fda4432b</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_misses</span></td><td><span title='2055 count'>2055 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_9fbc9903 perf_stat cache_misses 410 action_id=act_4aa164ae, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.301'><td><code>obs_9fbc9903</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_misses</span></td><td><span title='410 count'>410 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.301<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.301</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_31b6a148 perf_stat cache_misses 7152 action_id=act_4aa164ae, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_31b6a148</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_misses</span></td><td><span title='7152 count'>7152 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_338a438c perf_stat cache_mpki 0.0112 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.100, derived_from=cache_misses/instructions*1000'><td><code>obs_338a438c</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_mpki</span></td><td><span title='0.01 mpki'>0.01 mpki</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._misses/instructions*1000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.100, derived_from=cache_misses/instructions*1000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_91bb693b perf_stat cache_mpki 0.001 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.200, derived_from=cache_misses/instructions*1000'><td><code>obs_91bb693b</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_mpki</span></td><td><span title='0.00 mpki'>0.00 mpki</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._misses/instructions*1000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.200, derived_from=cache_misses/instructions*1000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_194d0d04 perf_stat cache_mpki 0.0002 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.301, derived_from=cache_misses/instructions*1000'><td><code>obs_194d0d04</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_mpki</span></td><td><span title='0.00 mpki'>0.00 mpki</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._misses/instructions*1000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.301, derived_from=cache_misses/instructions*1000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_7119a791 perf_stat cache_mpki 0.0092 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.340, derived_from=cache_misses/instructions*1000'><td><code>obs_7119a791</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_mpki</span></td><td><span title='0.01 mpki'>0.01 mpki</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._misses/instructions*1000<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.340, derived_from=cache_misses/instructions*1000</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_3159456b perf_stat cache_references 58861 action_id=act_792e1a5d, event_name=cache-references, raw_event_name=cpu_core/cache-references'><td><code>obs_3159456b</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_references</span></td><td><span title='58861 count'>58861 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_792e1a5d, event_name...cpu_core/cache-references<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_792e1a5d, event_name=cache-references, raw_event_name=cpu_core/cache-references</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_596b1927 perf_stat cache_references 51930 action_id=act_4aa164ae, event_name=cache-references, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_596b1927</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_references</span></td><td><span title='51930 count'>51930 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cache-references, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_300a864f perf_stat cache_references 4966 action_id=act_4aa164ae, event_name=cache-references, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_300a864f</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_references</span></td><td><span title='4966 count'>4966 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cache-references, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_5ae3b982 perf_stat cache_references 2688 action_id=act_4aa164ae, event_name=cache-references, series_type=timeline, time_bucket_sec=0.301'><td><code>obs_5ae3b982</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_references</span></td><td><span title='2688 count'>2688 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.301<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cache-references, series_type=timeline, time_bucket_sec=0.301</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_3664b640 perf_stat cache_references 17984 action_id=act_4aa164ae, event_name=cache-references, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_3664b640</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_references</span></td><td><span title='17984 count'>17984 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cache-references, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_e127cc20 perf_stat context_switches 3 action_id=act_9dc451e0, event_name=context-switches, raw_event_name=context-switches'><td><code>obs_e127cc20</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>context_switches</span></td><td><span title='3 count'>3 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_9dc451e0, event_name...ent_name=context-switches<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_9dc451e0, event_name=context-switches, raw_event_name=context-switches</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_5cb7e067 perf_stat context_switches 4 action_id=act_2c5272c7, event_name=context-switches, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_5cb7e067</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>context_switches</span></td><td><span title='4 count'>4 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_2c5272c7, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_2c5272c7, event_name=context-switches, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_59006d17 perf_stat context_switches 0 action_id=act_2c5272c7, event_name=context-switches, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_59006d17</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>context_switches</span></td><td><span title='0 count'>0 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_2c5272c7, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_2c5272c7, event_name=context-switches, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_6a9a3cc3 perf_stat context_switches 1 action_id=act_2c5272c7, event_name=context-switches, series_type=timeline, time_bucket_sec=0.300'><td><code>obs_6a9a3cc3</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>context_switches</span></td><td><span title='1 count'>1 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_2c5272c7, event_name...ne, time_bucket_sec=0.300<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_2c5272c7, event_name=context-switches, series_type=timeline, time_bucket_sec=0.300</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_950ad85d perf_stat context_switches 0 action_id=act_2c5272c7, event_name=context-switches, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_950ad85d</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>context_switches</span></td><td><span title='0 count'>0 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_2c5272c7, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_2c5272c7, event_name=context-switches, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_25a134a0 perf_stat cpi 0.2583 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.100, derived_from=cycles,instructions'><td><code>obs_25a134a0</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cpi</span></td><td><span title='0.26'>0.26</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._from=cycles,instructions<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.100, derived_from=cycles,instructions</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_7153055c perf_stat cpi 0.2576 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.200, derived_from=cycles,instructions'><td><code>obs_7153055c</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cpi</span></td><td><span title='0.26'>0.26</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._from=cycles,instructions<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.200, derived_from=cycles,instructions</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_49a64d7f perf_stat cpi 0.2574 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.301, derived_from=cycles,instructions'><td><code>obs_49a64d7f</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cpi</span></td><td><span title='0.26'>0.26</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._from=cycles,instructions<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.301, derived_from=cycles,instructions</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_fc8fa5f0 perf_stat cpi 0.2581 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.340, derived_from=cycles,instructions'><td><code>obs_fc8fa5f0</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cpi</span></td><td><span title='0.26'>0.26</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._from=cycles,instructions<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.340, derived_from=cycles,instructions</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_cd009832 perf_stat cpu_migrations 0 action_id=act_9dc451e0, event_name=cpu-migrations, raw_event_name=cpu-migrations'><td><code>obs_cd009832</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cpu_migrations</span></td><td><span title='0 count'>0 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_9dc451e0, event_name...event_name=cpu-migrations<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_9dc451e0, event_name=cpu-migrations, raw_event_name=cpu-migrations</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_3ae66432 perf_stat cycles 510247063 action_id=act_4aa164ae, event_name=cycles, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_3ae66432</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cycles</span></td><td><span title='510247063 count'>510247063 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cycles, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_9a369358 perf_stat cycles 511028340 action_id=act_4aa164ae, event_name=cycles, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_9a369358</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cycles</span></td><td><span title='511028340 count'>511028340 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cycles, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_56f3f217 perf_stat cycles 510950361 action_id=act_4aa164ae, event_name=cycles, series_type=timeline, time_bucket_sec=0.301'><td><code>obs_56f3f217</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cycles</span></td><td><span title='510950361 count'>510950361 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.301<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cycles, series_type=timeline, time_bucket_sec=0.301</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_55772f7d perf_stat cycles 199748494 action_id=act_4aa164ae, event_name=cycles, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_55772f7d</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cycles</span></td><td><span title='199748494 count'>199748494 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=cycles, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_2cf08583 perf_stat instructions 1975340965 action_id=act_4aa164ae, event_name=instructions, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_2cf08583</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>instructions</span></td><td><span title='1975340965 count'>1975340965 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=instructions, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_e84f3434 perf_stat instructions 1983952596 action_id=act_4aa164ae, event_name=instructions, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_e84f3434</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>instructions</span></td><td><span title='1983952596 count'>1983952596 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=instructions, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4377611a perf_stat instructions 1984766428 action_id=act_4aa164ae, event_name=instructions, series_type=timeline, time_bucket_sec=0.301'><td><code>obs_4377611a</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>instructions</span></td><td><span title='1984766428 count'>1984766428 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.301<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=instructions, series_type=timeline, time_bucket_sec=0.301</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_66bcfe38 perf_stat instructions 773976902 action_id=act_4aa164ae, event_name=instructions, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_66bcfe38</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>instructions</span></td><td><span title='773976902 count'>773976902 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, event_name=instructions, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_97254049 perf_stat ipc 3.8713 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.100, derived_from=instructions,cycles'><td><code>obs_97254049</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>ipc</span></td><td><span title='3.87'>3.87</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._from=instructions,cycles<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.100, derived_from=instructions,cycles</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_9286dcf5 perf_stat ipc 3.8823 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.200, derived_from=instructions,cycles'><td><code>obs_9286dcf5</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>ipc</span></td><td><span title='3.88'>3.88</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._from=instructions,cycles<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.200, derived_from=instructions,cycles</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4d8a0b55 perf_stat ipc 3.8845 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.301, derived_from=instructions,cycles'><td><code>obs_4d8a0b55</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>ipc</span></td><td><span title='3.88'>3.88</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._from=instructions,cycles<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.301, derived_from=instructions,cycles</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_7f7694c5 perf_stat ipc 3.8748 action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.340, derived_from=instructions,cycles'><td><code>obs_7f7694c5</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>ipc</span></td><td><span title='3.87'>3.87</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_4aa164ae, series_typ..._from=instructions,cycles<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_4aa164ae, series_type=timeline, time_bucket_sec=0.340, derived_from=instructions,cycles</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_157ae905 perf_stat l1_hit_count 510797185 action_id=act_18f2b2ee, event_name=mem_load_retired.l1_hit, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_157ae905</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_hit_count</span></td><td><span title='510797185 count'>510797185 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=mem_load_retired.l1_hit, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_7dc7a296 perf_stat l1_hit_count 512624716 action_id=act_18f2b2ee, event_name=mem_load_retired.l1_hit, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_7dc7a296</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_hit_count</span></td><td><span title='512624716 count'>512624716 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=mem_load_retired.l1_hit, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_b492a4dc perf_stat l1_hit_count 512399085 action_id=act_18f2b2ee, event_name=mem_load_retired.l1_hit, series_type=timeline, time_bucket_sec=0.300'><td><code>obs_b492a4dc</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_hit_count</span></td><td><span title='512399085 count'>512399085 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.300<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=mem_load_retired.l1_hit, series_type=timeline, time_bucket_sec=0.300</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_69b6eaba perf_stat l1_hit_count 199075079 action_id=act_18f2b2ee, event_name=mem_load_retired.l1_hit, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_69b6eaba</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_hit_count</span></td><td><span title='199075079 count'>199075079 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=mem_load_retired.l1_hit, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_e07d96b4 perf_stat l1_miss_count 32399 action_id=act_792e1a5d, event_name=mem_load_retired.l1_miss, raw_event_name=cpu_core/mem_load_retired.l1_miss'><td><code>obs_e07d96b4</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_miss_count</span></td><td><span title='32399 count'>32399 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_792e1a5d, event_name.../mem_load_retired.l1_miss<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_792e1a5d, event_name=mem_load_retired.l1_miss, raw_event_name=cpu_core/mem_load_retired.l1_miss</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4398e8d7 perf_stat l1_miss_count 17713 action_id=act_18f2b2ee, event_name=mem_load_retired.l1_miss, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_4398e8d7</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_miss_count</span></td><td><span title='17713 count'>17713 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=mem_load_retired.l1_miss, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_db294121 perf_stat l1_miss_count 4099 action_id=act_18f2b2ee, event_name=mem_load_retired.l1_miss, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_db294121</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_miss_count</span></td><td><span title='4099 count'>4099 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=mem_load_retired.l1_miss, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_a6d1eb59 perf_stat l1_miss_count 3775 action_id=act_18f2b2ee, event_name=mem_load_retired.l1_miss, series_type=timeline, time_bucket_sec=0.300'><td><code>obs_a6d1eb59</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_miss_count</span></td><td><span title='3775 count'>3775 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.300<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=mem_load_retired.l1_miss, series_type=timeline, time_bucket_sec=0.300</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_5fc129d0 perf_stat l1_miss_count 5857 action_id=act_18f2b2ee, event_name=mem_load_retired.l1_miss, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_5fc129d0</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_miss_count</span></td><td><span title='5857 count'>5857 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=mem_load_retired.l1_miss, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_cff8d42e perf_stat l1_miss_rate_pct 0.0035 action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.100, derived_from=l1_miss/l1_access'><td><code>obs_cff8d42e</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_miss_rate_pct</span></td><td><span title='0.00 percent'>0.00 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, series_typ...ed_from=l1_miss/l1_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.100, derived_from=l1_miss/l1_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_070dd11f perf_stat l1_miss_rate_pct 0.0008 action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.200, derived_from=l1_miss/l1_access'><td><code>obs_070dd11f</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_miss_rate_pct</span></td><td><span title='0.00 percent'>0.00 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, series_typ...ed_from=l1_miss/l1_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.200, derived_from=l1_miss/l1_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_6d1a6d7f perf_stat l1_miss_rate_pct 0.0007 action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.300, derived_from=l1_miss/l1_access'><td><code>obs_6d1a6d7f</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_miss_rate_pct</span></td><td><span title='0.00 percent'>0.00 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, series_typ...ed_from=l1_miss/l1_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.300, derived_from=l1_miss/l1_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_9820982c perf_stat l1_miss_rate_pct 0.0029 action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.340, derived_from=l1_miss/l1_access'><td><code>obs_9820982c</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_miss_rate_pct</span></td><td><span title='0.00 percent'>0.00 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, series_typ...ed_from=l1_miss/l1_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.340, derived_from=l1_miss/l1_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_9c28c73e perf_stat l2_access_count 3766497 action_id=act_792e1a5d, event_name=l2_rqsts.references, raw_event_name=cpu_core/l2_rqsts.references'><td><code>obs_9c28c73e</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_access_count</span></td><td><span title='3766497 count'>3766497 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_792e1a5d, event_name..._core/l2_rqsts.references<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_792e1a5d, event_name=l2_rqsts.references, raw_event_name=cpu_core/l2_rqsts.references</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_1032f1cf perf_stat l2_access_count 1201617 action_id=act_18f2b2ee, event_name=l2_rqsts.references, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_1032f1cf</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_access_count</span></td><td><span title='1201617 count'>1201617 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=l2_rqsts.references, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_c246f479 perf_stat l2_access_count 1049267 action_id=act_18f2b2ee, event_name=l2_rqsts.references, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_c246f479</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_access_count</span></td><td><span title='1049267 count'>1049267 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=l2_rqsts.references, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_1bcbe8fc perf_stat l2_access_count 1054824 action_id=act_18f2b2ee, event_name=l2_rqsts.references, series_type=timeline, time_bucket_sec=0.300'><td><code>obs_1bcbe8fc</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_access_count</span></td><td><span title='1054824 count'>1054824 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.300<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=l2_rqsts.references, series_type=timeline, time_bucket_sec=0.300</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4d3dcfbc perf_stat l2_access_count 428735 action_id=act_18f2b2ee, event_name=l2_rqsts.references, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_4d3dcfbc</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_access_count</span></td><td><span title='428735 count'>428735 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=l2_rqsts.references, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_3d5c522d perf_stat l2_miss_count 69237 action_id=act_792e1a5d, event_name=l2_rqsts.miss, raw_event_name=cpu_core/L2_RQSTS.MISS'><td><code>obs_3d5c522d</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_count</span></td><td><span title='69237 count'>69237 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_792e1a5d, event_name...me=cpu_core/L2_RQSTS.MISS<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_792e1a5d, event_name=l2_rqsts.miss, raw_event_name=cpu_core/L2_RQSTS.MISS</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_e98aeb2e perf_stat l2_miss_count 51861 action_id=act_18f2b2ee, event_name=l2_rqsts.miss, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_e98aeb2e</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_count</span></td><td><span title='51861 count'>51861 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=l2_rqsts.miss, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_7f39eb84 perf_stat l2_miss_count 3141 action_id=act_18f2b2ee, event_name=l2_rqsts.miss, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_7f39eb84</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_count</span></td><td><span title='3141 count'>3141 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=l2_rqsts.miss, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_f3d4193e perf_stat l2_miss_count 4088 action_id=act_18f2b2ee, event_name=l2_rqsts.miss, series_type=timeline, time_bucket_sec=0.300'><td><code>obs_f3d4193e</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_count</span></td><td><span title='4088 count'>4088 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.300<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=l2_rqsts.miss, series_type=timeline, time_bucket_sec=0.300</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_17ec15f9 perf_stat l2_miss_count 11559 action_id=act_18f2b2ee, event_name=l2_rqsts.miss, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_17ec15f9</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_count</span></td><td><span title='11559 count'>11559 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, event_name=l2_rqsts.miss, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_1a8c1b90 perf_stat l2_miss_rate_pct 1.8382 action_id=act_792e1a5d, derived_from=l2_miss/l2_access'><td><code>obs_1a8c1b90</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_rate_pct</span></td><td><span title='1.84 percent'>1.84 percent</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_792e1a5d, derived_from=l2_miss/l2_access</span></td></tr><tr data-filterable data-kind='all' data-search='obs_ca669d90 perf_stat l2_miss_rate_pct 4.3159 action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.100, derived_from=l2_miss/l2_access'><td><code>obs_ca669d90</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_rate_pct</span></td><td><span title='4.32 percent'>4.32 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, series_typ...ed_from=l2_miss/l2_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.100, derived_from=l2_miss/l2_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_8eb6dc63 perf_stat l2_miss_rate_pct 0.2994 action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.200, derived_from=l2_miss/l2_access'><td><code>obs_8eb6dc63</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_rate_pct</span></td><td><span title='0.30 percent'>0.30 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, series_typ...ed_from=l2_miss/l2_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.200, derived_from=l2_miss/l2_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_733f5529 perf_stat l2_miss_rate_pct 0.3876 action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.300, derived_from=l2_miss/l2_access'><td><code>obs_733f5529</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_rate_pct</span></td><td><span title='0.39 percent'>0.39 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, series_typ...ed_from=l2_miss/l2_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.300, derived_from=l2_miss/l2_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_9d091f66 perf_stat l2_miss_rate_pct 2.6961 action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.340, derived_from=l2_miss/l2_access'><td><code>obs_9d091f66</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_rate_pct</span></td><td><span title='2.70 percent'>2.70 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_18f2b2ee, series_typ...ed_from=l2_miss/l2_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_18f2b2ee, series_type=timeline, time_bucket_sec=0.340, derived_from=l2_miss/l2_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_2c4db72c perf_stat llc_access_count 61176 action_id=act_9bcc1ad2, event_name=longest_lat_cache.reference, raw_event_name=cpu_core/longest_lat_cache.reference'><td><code>obs_2c4db72c</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_access_count</span></td><td><span title='61176 count'>61176 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_9bcc1ad2, event_name...ngest_lat_cache.reference<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_9bcc1ad2, event_name=longest_lat_cache.reference, raw_event_name=cpu_core/longest_lat_cache.reference</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_57615fd5 perf_stat llc_access_count 44756 action_id=act_c86e141c, event_name=longest_lat_cache.reference, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_57615fd5</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_access_count</span></td><td><span title='44756 count'>44756 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=longest_lat_cache.reference, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_83691be7 perf_stat llc_access_count 2140 action_id=act_c86e141c, event_name=longest_lat_cache.reference, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_83691be7</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_access_count</span></td><td><span title='2140 count'>2140 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=longest_lat_cache.reference, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_695a25e3 perf_stat llc_access_count 3467 action_id=act_c86e141c, event_name=longest_lat_cache.reference, series_type=timeline, time_bucket_sec=0.300'><td><code>obs_695a25e3</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_access_count</span></td><td><span title='3467 count'>3467 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.300<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=longest_lat_cache.reference, series_type=timeline, time_bucket_sec=0.300</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_680fb19d perf_stat llc_access_count 16078 action_id=act_c86e141c, event_name=longest_lat_cache.reference, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_680fb19d</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_access_count</span></td><td><span title='16078 count'>16078 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=longest_lat_cache.reference, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_ca5d322b perf_stat llc_miss_count 18309 action_id=act_9bcc1ad2, event_name=longest_lat_cache.miss, raw_event_name=cpu_core/longest_lat_cache.miss'><td><code>obs_ca5d322b</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_count</span></td><td><span title='18309 count'>18309 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_9bcc1ad2, event_name...re/longest_lat_cache.miss<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_9bcc1ad2, event_name=longest_lat_cache.miss, raw_event_name=cpu_core/longest_lat_cache.miss</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_8359e6ce perf_stat llc_miss_count 15990 action_id=act_c86e141c, event_name=longest_lat_cache.miss, series_type=timeline, time_bucket_sec=0.100'><td><code>obs_8359e6ce</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_count</span></td><td><span title='15990 count'>15990 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.100<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=longest_lat_cache.miss, series_type=timeline, time_bucket_sec=0.100</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_5d49908e perf_stat llc_miss_count 270 action_id=act_c86e141c, event_name=longest_lat_cache.miss, series_type=timeline, time_bucket_sec=0.200'><td><code>obs_5d49908e</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_count</span></td><td><span title='270 count'>270 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.200<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=longest_lat_cache.miss, series_type=timeline, time_bucket_sec=0.200</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_3513d55b perf_stat llc_miss_count 557 action_id=act_c86e141c, event_name=longest_lat_cache.miss, series_type=timeline, time_bucket_sec=0.300'><td><code>obs_3513d55b</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_count</span></td><td><span title='557 count'>557 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.300<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=longest_lat_cache.miss, series_type=timeline, time_bucket_sec=0.300</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_a11a1258 perf_stat llc_miss_count 8775 action_id=act_c86e141c, event_name=longest_lat_cache.miss, series_type=timeline, time_bucket_sec=0.340'><td><code>obs_a11a1258</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_count</span></td><td><span title='8775 count'>8775 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, event_name...ne, time_bucket_sec=0.340<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, event_name=longest_lat_cache.miss, series_type=timeline, time_bucket_sec=0.340</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_aed208e0 perf_stat llc_miss_rate_pct 29.9284 action_id=act_9bcc1ad2, derived_from=llc_miss/llc_access'><td><code>obs_aed208e0</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_rate_pct</span></td><td><span title='29.93 percent'>29.93 percent</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_9bcc1ad2, derived_from=llc_miss/llc_access</span></td></tr><tr data-filterable data-kind='all' data-search='obs_242fa92a perf_stat llc_miss_rate_pct 35.7271 action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.100, derived_from=llc_miss/llc_access'><td><code>obs_242fa92a</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_rate_pct</span></td><td><span title='35.73 percent'>35.73 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, series_typ..._from=llc_miss/llc_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.100, derived_from=llc_miss/llc_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_c9d9b80f perf_stat llc_miss_rate_pct 12.6168 action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.200, derived_from=llc_miss/llc_access'><td><code>obs_c9d9b80f</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_rate_pct</span></td><td><span title='12.62 percent'>12.62 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, series_typ..._from=llc_miss/llc_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.200, derived_from=llc_miss/llc_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_22807a91 perf_stat llc_miss_rate_pct 16.0658 action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.300, derived_from=llc_miss/llc_access'><td><code>obs_22807a91</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_rate_pct</span></td><td><span title='16.07 percent'>16.07 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, series_typ..._from=llc_miss/llc_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.300, derived_from=llc_miss/llc_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_d1ced3ea perf_stat llc_miss_rate_pct 54.5777 action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.340, derived_from=llc_miss/llc_access'><td><code>obs_d1ced3ea</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_rate_pct</span></td><td><span title='54.58 percent'>54.58 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_c86e141c, series_typ..._from=llc_miss/llc_access<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_c86e141c, series_type=timeline, time_bucket_sec=0.340, derived_from=llc_miss/llc_access</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_793e3f96 perf_stat lock_loads 10168 action_id=act_9dc451e0, event_name=mem_inst_retired.lock_loads, raw_event_name=cpu_core/mem_inst_retired.lock_loads'><td><code>obs_793e3f96</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>lock_loads</span></td><td><span title='10168 count'>10168 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_9dc451e0, event_name...m_inst_retired.lock_loads<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_9dc451e0, event_name=mem_inst_retired.lock_loads, raw_event_name=cpu_core/mem_inst_retired.lock_loads</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_5d558096 perf_stat msec 342.04 action_id=act_28504bcd, event_name=msec, raw_event_name=msec'><td><code>obs_5d558096</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>msec</span></td><td><span title='342.04 count'>342.04 count</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_28504bcd, event_name=msec, raw_event_name=msec</span></td></tr><tr data-filterable data-kind='all' data-search='obs_219d5bca perf_stat page_faults 178 action_id=act_9dc451e0, event_name=page-faults, raw_event_name=page-faults'><td><code>obs_219d5bca</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>page_faults</span></td><td><span title='178 count'>178 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_9dc451e0, event_name...aw_event_name=page-faults<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_9dc451e0, event_name=page-faults, raw_event_name=page-faults</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_a7a5b845 perf_stat seconds 0.34217471 action_id=act_28504bcd, event_name=seconds, raw_event_name=seconds'><td><code>obs_a7a5b845</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>seconds</span></td><td><span title='0.34 count'>0.34 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_28504bcd, event_name...s, raw_event_name=seconds<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_28504bcd, event_name=seconds, raw_event_name=seconds</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_c06e8439 perf_stat seconds 0.339684986 action_id=act_792e1a5d, event_name=seconds, raw_event_name=seconds'><td><code>obs_c06e8439</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>seconds</span></td><td><span title='0.34 count'>0.34 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_792e1a5d, event_name...s, raw_event_name=seconds<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_792e1a5d, event_name=seconds, raw_event_name=seconds</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_87a22657 perf_stat seconds 0.339657337 action_id=act_9bcc1ad2, event_name=seconds, raw_event_name=seconds'><td><code>obs_87a22657</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>seconds</span></td><td><span title='0.34 count'>0.34 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_9bcc1ad2, event_name...s, raw_event_name=seconds<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_9bcc1ad2, event_name=seconds, raw_event_name=seconds</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_2a932a72 perf_stat seconds 0.339454167 action_id=act_a4b9c048, event_name=seconds, raw_event_name=seconds'><td><code>obs_2a932a72</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>seconds</span></td><td><span title='0.34 count'>0.34 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_a4b9c048, event_name...s, raw_event_name=seconds<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_a4b9c048, event_name=seconds, raw_event_name=seconds</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4a0aa235 perf_stat seconds 0.339610036 action_id=act_f61a2a4a, event_name=seconds, raw_event_name=seconds'><td><code>obs_4a0aa235</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>seconds</span></td><td><span title='0.34 count'>0.34 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_f61a2a4a, event_name...s, raw_event_name=seconds<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_f61a2a4a, event_name=seconds, raw_event_name=seconds</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_ce794289 perf_stat seconds 0.339504232 action_id=act_9dc451e0, event_name=seconds, raw_event_name=seconds'><td><code>obs_ce794289</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>seconds</span></td><td><span title='0.34 count'>0.34 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_9dc451e0, event_name...s, raw_event_name=seconds<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_9dc451e0, event_name=seconds, raw_event_name=seconds</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4e8bce7e time cpu_utilization_pct 100 action_id=act_28f48556'><td><code>obs_4e8bce7e</code></td><td><span title='time'>time</span></td><td><span class='mono'>cpu_utilization_pct</span></td><td><span title='100 percent'>100 percent</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_28f48556</span></td></tr><tr data-filterable data-kind='all' data-search='obs_9fb23252 time elapsed_time_sec 0.34 action_id=act_28f48556'><td><code>obs_9fb23252</code></td><td><span title='time'>time</span></td><td><span class='mono'>elapsed_time_sec</span></td><td><span title='0.34 seconds'>0.34 seconds</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_28f48556</span></td></tr><tr data-filterable data-kind='all' data-search='obs_b0bf4773 time involuntary_context_switches 3 action_id=act_28f48556'><td><code>obs_b0bf4773</code></td><td><span title='time'>time</span></td><td><span class='mono'>involuntary_context_switches</span></td><td><span title='3 count'>3 count</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_28f48556</span></td></tr><tr data-filterable data-kind='all' data-search='obs_242252a9 time major_faults 0 action_id=act_28f48556'><td><code>obs_242252a9</code></td><td><span title='time'>time</span></td><td><span class='mono'>major_faults</span></td><td><span title='0 count'>0 count</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_28f48556</span></td></tr><tr data-filterable data-kind='all' data-search='obs_62b42c23 time max_rss_kb 4320 action_id=act_28f48556'><td><code>obs_62b42c23</code></td><td><span title='time'>time</span></td><td><span class='mono'>max_rss_kb</span></td><td><span title='4320 kb'>4320 kb</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_28f48556</span></td></tr><tr data-filterable data-kind='all' data-search='obs_8890b2e2 time system_time_sec 0.0 action_id=act_28f48556'><td><code>obs_8890b2e2</code></td><td><span title='time'>time</span></td><td><span class='mono'>system_time_sec</span></td><td><span title='0.00 seconds'>0.00 seconds</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_28f48556</span></td></tr><tr data-filterable data-kind='all' data-search='obs_14a33ea2 time user_time_sec 0.34 action_id=act_28f48556'><td><code>obs_14a33ea2</code></td><td><span title='time'>time</span></td><td><span class='mono'>user_time_sec</span></td><td><span title='0.34 seconds'>0.34 seconds</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_28f48556</span></td></tr><tr data-filterable data-kind='all' data-search='obs_330c0722 time voluntary_context_switches 1 action_id=act_28f48556'><td><code>obs_330c0722</code></td><td><span title='time'>time</span></td><td><span class='mono'>voluntary_context_switches</span></td><td><span title='1 count'>1 count</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_28f48556</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="chart-modal" data-chart-modal aria-hidden="true">
+    <div class="chart-modal-panel" role="dialog" aria-modal="true" aria-labelledby="chart-modal-title">
+      <button class="chart-modal-close" type="button" aria-label="关闭放大视图" data-chart-modal-close>×</button>
+      <h3 id="chart-modal-title">图表预览</h3>
+      <p class="chart-modal-sub" data-chart-modal-sub>点击空白区域或按 Esc 也可以关闭。</p>
+      <div class="chart-modal-body" data-chart-modal-body></div>
+    </div>
+  </div>
+
+  <script id="report-data" type="application/json">{"hypothesisKinds": ["cpu_bound", "branch_mispredict"], "observationCount": 144, "sourceFindingCount": 0, "labels": {"cpu_bound": "CPU 瓶颈", "branch_mispredict": "分支预测失误"}}</script>
+  <script>
+    (() => {
+      const root = document;
+      const data = JSON.parse(document.getElementById("report-data").textContent);
+      let activeTab = "overview";
+      let activeKind = "all";
+      let query = "";
+
+      const tabButtons = Array.from(root.querySelectorAll("[data-tab-button]"));
+      const panes = Array.from(root.querySelectorAll("[data-tab-pane]"));
+      const searchInput = root.querySelector("[data-search-input]");
+      const modal = root.querySelector("[data-chart-modal]");
+      const modalTitle = root.querySelector("#chart-modal-title");
+      const modalSub = root.querySelector("[data-chart-modal-sub]");
+      const modalBody = root.querySelector("[data-chart-modal-body]");
+      const modalClose = root.querySelector("[data-chart-modal-close]");
+
+      function normalize(text) {
+        return String(text || "").toLowerCase();
+      }
+
+      function applyState() {
+        tabButtons.forEach((button) => {
+          const isActive = button.dataset.tabButton === activeTab;
+          button.classList.toggle("is-active", isActive);
+        });
+        panes.forEach((pane) => {
+          pane.classList.toggle("is-active", pane.dataset.tabPane === activeTab);
+        });
+
+        root.querySelectorAll("[data-filter-chip]").forEach((chip) => {
+          chip.classList.toggle("is-active", chip.dataset.filterChip === activeKind);
+        });
+
+        root.querySelectorAll("[data-filterable]").forEach((node) => {
+          const kind = node.dataset.kind || "all";
+          const hay = normalize(node.dataset.search || "");
+          const kindMatched = activeKind === "all" || kind === activeKind || kind.split("|").includes(activeKind);
+          const queryMatched = !query || hay.includes(query);
+          node.hidden = !(kindMatched && queryMatched);
+        });
+      }
+
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          activeTab = button.dataset.tabButton;
+          applyState();
+        });
+      });
+
+      root.querySelectorAll("[data-filter-chip]").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          activeKind = chip.dataset.filterChip || "all";
+          applyState();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener("input", (event) => {
+          query = normalize(event.target.value);
+          applyState();
+        });
+      }
+
+      function closeModal() {
+        if (!modal) {
+          return;
+        }
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("has-modal");
+        if (modalBody) {
+          modalBody.innerHTML = "";
+        }
+      }
+
+      function openChartCard(card) {
+        if (!modal || !modalBody || !modalTitle) {
+          return;
+        }
+        const title = card.dataset.modalTitle || card.querySelector("h3")?.textContent || "图表预览";
+        const description = card.dataset.modalDescription || card.querySelector(".hint")?.textContent || "点击空白区域或按 Esc 关闭。";
+        const clone = card.cloneNode(true);
+        clone.classList.remove("is-zoomable");
+        clone.querySelectorAll("[data-chart-zoom-button]").forEach((button) => button.remove());
+        modalTitle.textContent = title;
+        if (modalSub) {
+          modalSub.textContent = description;
+        }
+        modalBody.innerHTML = "";
+        modalBody.appendChild(clone);
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("has-modal");
+      }
+
+      root.querySelectorAll("[data-chart-card]").forEach((card) => {
+        card.classList.add("is-zoomable");
+        card.addEventListener("click", (event) => {
+          if (event.target.closest("[data-chart-zoom-button]")) {
+            return;
+          }
+          openChartCard(card);
+        });
+        card.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openChartCard(card);
+          }
+        });
+      });
+
+      root.querySelectorAll("[data-chart-zoom-button]").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const card = button.closest("[data-chart-card]");
+          if (card) {
+            openChartCard(card);
+          }
+        });
+      });
+
+      if (modalClose) {
+        modalClose.addEventListener("click", closeModal);
+      }
+      if (modal) {
+        modal.addEventListener("click", (event) => {
+          if (event.target === modal) {
+            closeModal();
+          }
+        });
+      }
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeModal();
+        }
+      });
+
+      applyState();
+      window.__PERF_REPORT_DATA__ = data;
+    })();
+  </script>
+</body>
+</html>

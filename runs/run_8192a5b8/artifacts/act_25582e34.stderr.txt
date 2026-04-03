@@ -1,3 +1,0 @@
-/usr/bin/python: can't open file 'app.py': [Errno 2] No such file or directory
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.000 MB (null) ]

@@ -1,0 +1,18 @@
+
+ Performance counter stats for 'examples/bin/cpu_bound_demo 10 100':
+
+          14158230      cpu_core/SLOTS/                                                       
+   <not supported>      cpu_core/topdown-retiring/                                              (0.00%)
+   <not supported>      cpu_core/topdown-bad-spec/                                              (0.00%)
+   <not supported>      cpu_core/topdown-fe-bound/                                              (0.00%)
+   <not supported>      cpu_core/topdown-be-bound/                                              (0.00%)
+           2359705      cpu_core/cycles/                                                      
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+           4363930      cpu_core/Instructions/                                                  (50.00%)
+
+       0.000550988 seconds time elapsed
+
+       0.000569000 seconds user
+       0.000000000 seconds sys
+
+

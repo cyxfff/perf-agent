@@ -1,1 +1,0 @@
-demo_lock;pthread_mutex_lock\ndemo_lock;worker_spin\n

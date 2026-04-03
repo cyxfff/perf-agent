@@ -1,0 +1,116 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 1K of event 'cpu_core/cycles/'
+# Event count (approx.): 1720006470
+#
+# Children      Self  Symbol                              IPC   [IPC Coverage]
+# ........  ........  ..................................  ....................
+#
+   100.00%     0.00%  [.] _start                          -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               |          
+               |--93.88%--main
+               |          |          
+               |          |--48.41%--__cos_fma
+               |          |          
+               |           --28.83%--__sin_fma
+               |          
+               |--2.11%--0x56130605a350
+               |          
+               |--2.05%--0x56130605a1f0
+               |          
+               |--1.14%--__cos_fma
+               |          
+                --0.81%--__sin_fma
+
+   100.00%     0.00%  [.] __libc_start_main@@GLIBC_2.34   -      -            
+            |
+            ---__libc_start_call_main
+               |          
+               |--93.88%--main
+               |          |          
+               |          |--48.41%--__cos_fma
+               |          |          
+               |           --28.83%--__sin_fma
+               |          
+               |--2.11%--0x56130605a350
+               |          
+               |--2.05%--0x56130605a1f0
+               |          
+               |--1.14%--__cos_fma
+               |          
+                --0.81%--__sin_fma
+
+   100.00%     0.00%  [.] __libc_start_call_main          -      -            
+            |          
+            |--93.88%--main
+            |          |          
+            |          |--48.41%--__cos_fma
+            |          |          
+            |           --28.83%--__sin_fma
+            |          
+            |--2.11%--0x56130605a350
+            |          
+            |--2.05%--0x56130605a1f0
+            |          
+            |--1.14%--__cos_fma
+            |          
+             --0.81%--__sin_fma
+
+    93.88%    16.64%  [.] main                            -      -            
+            |          
+            |--77.24%--main
+            |          |          
+            |          |--48.41%--__cos_fma
+            |          |          
+            |           --28.83%--__sin_fma
+            |          
+             --16.64%--_start
+                       __libc_start_main@@GLIBC_2.34
+                       __libc_start_call_main
+                       main
+
+    49.55%    49.55%  [.] __cos_fma                       -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               |          
+               |--48.41%--main
+               |          __cos_fma
+               |          
+                --1.14%--__cos_fma
+
+    29.65%    29.65%  [.] __sin_fma                       -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               |          
+               |--28.83%--main
+               |          __sin_fma
+               |          
+                --0.81%--__sin_fma
+
+     2.11%     2.11%  [.] 0x0000000000001350              -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               0x56130605a350
+
+     2.11%     0.00%  [.] 0x000056130605a350              -      -            
+     2.05%     2.05%  [.] 0x00000000000011f0              -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               0x56130605a1f0
+
+     2.05%     0.00%  [.] 0x000056130605a1f0              -      -            
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

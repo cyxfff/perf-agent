@@ -1,0 +1,19 @@
+{
+  "action_id": "act_dc1266c4",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "context-switches,cpu-migrations,page-faults,mem_inst_retired.lock_loads",
+    "--",
+    "/home/tchen/agent/perf_agent/examples/bin/phased_cache_wave_demo",
+    "8",
+    "140",
+    "128"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 3.2328,
+  "error_message": null
+}

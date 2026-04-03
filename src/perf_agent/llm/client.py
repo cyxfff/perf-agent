@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from perf_agent.config import PromptTemplates, load_prompt_templates
+from perf_agent.interaction.models import InteractiveIntentResult
 from perf_agent.llm.schemas import (
     AnalyzerOutput,
     HypothesisDraft,
@@ -28,11 +29,12 @@ from perf_agent.utils.ids import new_id
 class LLMClient:
     def __init__(self, prompt_config_path: str | None = None) -> None:
         self._load_env()
+        disabled = os.getenv("PERF_AGENT_DISABLE_LLM", "").lower() in {"1", "true", "yes", "on"}
         self.api_key = os.getenv("OPENAI_API_KEY") or os.getenv("LLM_API_KEY")
         self.model = os.getenv("PERF_AGENT_MODEL") or os.getenv("LLM_MODEL_ID") or "gpt-4.1-mini"
         self.base_url = os.getenv("OPENAI_BASE_URL") or os.getenv("LLM_BASE_URL")
         self.timeout_sec = float(os.getenv("PERF_AGENT_TIMEOUT_SEC", "20"))
-        self.enabled = bool(self.api_key)
+        self.enabled = bool(self.api_key) and not disabled
         self.client = (
             OpenAI(
                 api_key=self.api_key,
@@ -177,6 +179,31 @@ class LLMClient:
             recommended_next_steps=draft_report.recommended_next_steps,
         )
 
+    def interpret_interactive_input(
+        self,
+        normalized_input: dict[str, Any],
+        session_context: dict[str, Any],
+        query_view: dict[str, Any],
+    ) -> InteractiveIntentResult | None:
+        if not self.enabled:
+            return None
+        payload = {
+            "session_context": session_context,
+            "normalized_input": normalized_input,
+            "query_view": query_view,
+        }
+        try:
+            parsed = self._parse_structured_output(
+                schema=InteractiveIntentResult,
+                system_prompt=self.prompts.interactive_intake_prompt,
+                user_payload=payload,
+                max_output_tokens=900,
+            )
+        except Exception as exc:
+            self.last_error = f"Interactive intake LLM call failed: {exc}"
+            return None
+        return parsed if isinstance(parsed, InteractiveIntentResult) else None
+
     def _build_analyzer_payload(
         self,
         observations: list[Observation],
@@ -264,11 +291,11 @@ class LLMClient:
 
     def _parse_structured_output(
         self,
-        schema: type[AnalyzerOutput | VerifierOutput | ReporterOutput],
+        schema: type[AnalyzerOutput | VerifierOutput | ReporterOutput | InteractiveIntentResult],
         system_prompt: str,
         user_payload: dict[str, Any],
         max_output_tokens: int,
-    ) -> AnalyzerOutput | VerifierOutput | ReporterOutput:
+    ) -> AnalyzerOutput | VerifierOutput | ReporterOutput | InteractiveIntentResult:
         if self.client is None:
             raise RuntimeError("LLM client is not configured.")
 

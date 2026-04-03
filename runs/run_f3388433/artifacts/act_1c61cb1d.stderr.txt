@@ -1,3 +1,0 @@
-lock_contention_demo counter=2159982
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.000 MB (null) ]

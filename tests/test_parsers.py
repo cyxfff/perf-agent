@@ -66,3 +66,65 @@ def test_perf_record_parser_extracts_hot_symbols() -> None:
     observations = parse_perf_record(sample, source="perf_record", action_id="artifact_5")
     hot_symbols = [item.labels.get("symbol") for item in observations if item.metric == "hot_symbol_pct"]
     assert "hot_loop" in hot_symbols
+
+
+def test_perf_stat_parser_extracts_simpleperf_interval_metrics() -> None:
+    sample = "\n".join(
+        [
+            "Performance counter statistics,",
+            "245385664,raw-cpu-cycles:u,2.454,G/sec,",
+            "753542440,raw-inst-retired:u,7.534,G/sec,",
+            "Total test time,0.100951,seconds,",
+            "Performance counter statistics,",
+            "259295132,raw-cpu-cycles:u,2.590,G/sec,",
+            "802565875,raw-inst-retired:u,8.016,G/sec,",
+            "Total test time,0.213901,seconds,",
+        ]
+    )
+
+    observations = parse_perf_stat(sample, source="perf_stat", action_id="artifact_6")
+
+    timeline_cycles = [item for item in observations if item.metric == "cycles" and item.labels.get("series_type") == "timeline"]
+    timeline_ipc = [item for item in observations if item.metric == "ipc" and item.labels.get("series_type") == "timeline"]
+    assert len(timeline_cycles) == 2
+    assert len(timeline_ipc) == 2
+
+
+def test_perf_record_parser_extracts_simpleperf_samples() -> None:
+    sample = "\n".join(
+        [
+            "=== report ===",
+            "Overhead  Symbol",
+            "18.64%    scudo::HybridMutex::tryLock()",
+            "16.26%    scudo::HybridMutex::unlock()",
+            "",
+            "=== script ===",
+            "sample:",
+            "  event_type: raw-cpu-cycles:u",
+            "  time: 123216683338189",
+            "  event_count: 69",
+            "  thread_id: 28287",
+            "  thread_name: sh",
+            "  vaddr_in_file: 1644a0",
+            "  file: /apex/com.android.runtime/bin/linker64",
+            "  symbol: [linker]__linker_init",
+            "sample:",
+            "  event_type: raw-cpu-cycles:u",
+            "  time: 123216683342497",
+            "  event_count: 570",
+            "  thread_id: 28287",
+            "  thread_name: sh",
+            "  vaddr_in_file: c6cae",
+            "  file: /apex/com.android.runtime/bin/linker64",
+            "  symbol: *linker64[+c6cae]",
+        ]
+    )
+
+    observations = parse_perf_record(sample, source="perf_record", action_id="artifact_7")
+
+    metrics = [item.metric for item in observations]
+    hot_symbols = [item.labels.get("symbol") for item in observations if item.metric == "hot_symbol_pct"]
+    assert "callgraph_samples" in metrics
+    assert "thread_sample_pct" in metrics
+    assert "hot_frame_sample_pct" in metrics
+    assert "scudo::HybridMutex::tryLock()" in hot_symbols

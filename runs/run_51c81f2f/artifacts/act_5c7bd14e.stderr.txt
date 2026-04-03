@@ -1,7 +1,0 @@
-0.072225817,1096399591,,cpu_core/cycles/,214964711,100.00,,
-0.072225817,<not counted>,,cpu_atom/cycles/,0,0.00,,
-0.072225817,4401119609,,cpu_core/instructions/,214964711,100.00,,
-0.072225817,<not counted>,,cpu_atom/instructions/,0,0.00,,
-0.072225817,36279,,cpu_core/cache-misses/,214964711,100.00,,
-0.072225817,<not counted>,,cpu_atom/cache-misses/,0,0.00,,
-0.072225817,11,,context-switches,214964711,100.00,,

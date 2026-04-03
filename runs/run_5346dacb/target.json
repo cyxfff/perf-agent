@@ -1,0 +1,19 @@
+{
+  "executable_path": "/home/tchen/agent/perf_agent/examples/bin/phased_cache_wave_demo",
+  "target_args": [
+    "8",
+    "140",
+    "128"
+  ],
+  "target_cmd": [
+    "/home/tchen/agent/perf_agent/examples/bin/phased_cache_wave_demo",
+    "8",
+    "140",
+    "128"
+  ],
+  "target_pid": null,
+  "workload_label": null,
+  "source_dir": "/home/tchen/agent/perf_agent/examples/cpp",
+  "build_cmd": [],
+  "cwd": null
+}

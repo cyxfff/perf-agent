@@ -1,0 +1,473 @@
+  branch-misses                                      [Hardware event]
+  bus-cycles                                         [Hardware event]
+  cache-misses                                       [Hardware event]
+  cache-references                                   [Hardware event]
+  cpu-cycles OR cycles                               [Hardware event]
+  instructions                                       [Hardware event]
+  stalled-cycles-backend OR idle-cycles-backend      [Hardware event]
+  stalled-cycles-frontend OR idle-cycles-frontend    [Hardware event]
+  alignment-faults                                   [Software event]
+  bpf-output                                         [Software event]
+  context-switches OR cs                             [Software event]
+  cpu-clock                                          [Software event]
+  cpu-migrations OR migrations                       [Software event]
+  dummy                                              [Software event]
+  emulation-faults                                   [Software event]
+  major-faults                                       [Software event]
+  minor-faults                                       [Software event]
+  page-faults OR faults                              [Software event]
+  task-clock                                         [Software event]
+  duration_time                                      [Tool event]
+  L1-dcache-load-misses                              [Hardware cache event]
+  L1-dcache-loads                                    [Hardware cache event]
+  L1-icache-load-misses                              [Hardware cache event]
+  L1-icache-loads                                    [Hardware cache event]
+  LLC-load-misses                                    [Hardware cache event]
+  LLC-loads                                          [Hardware cache event]
+  branch-load-misses                                 [Hardware cache event]
+  branch-loads                                       [Hardware cache event]
+  dTLB-load-misses                                   [Hardware cache event]
+  dTLB-loads                                         [Hardware cache event]
+  iTLB-load-misses                                   [Hardware cache event]
+  iTLB-loads                                         [Hardware cache event]
+  br_mis_pred OR armv8_pmuv3_0/br_mis_pred/          [Kernel PMU event]
+  br_mis_pred_retired OR armv8_pmuv3_0/br_mis_pred_retired/ [Kernel PMU event]
+  br_pred OR armv8_pmuv3_0/br_pred/                  [Kernel PMU event]
+  br_retired OR armv8_pmuv3_0/br_retired/            [Kernel PMU event]
+  br_return_retired OR armv8_pmuv3_0/br_return_retired/ [Kernel PMU event]
+  bus_access OR armv8_pmuv3_0/bus_access/            [Kernel PMU event]
+  bus_cycles OR armv8_pmuv3_0/bus_cycles/            [Kernel PMU event]
+  cid_write_retired OR armv8_pmuv3_0/cid_write_retired/ [Kernel PMU event]
+  cpu_cycles OR armv8_pmuv3_0/cpu_cycles/            [Kernel PMU event]
+  dtlb_walk OR armv8_pmuv3_0/dtlb_walk/              [Kernel PMU event]
+  exc_return OR armv8_pmuv3_0/exc_return/            [Kernel PMU event]
+  exc_taken OR armv8_pmuv3_0/exc_taken/              [Kernel PMU event]
+  inst_retired OR armv8_pmuv3_0/inst_retired/        [Kernel PMU event]
+  inst_spec OR armv8_pmuv3_0/inst_spec/              [Kernel PMU event]
+  itlb_walk OR armv8_pmuv3_0/itlb_walk/              [Kernel PMU event]
+  l1d_cache OR armv8_pmuv3_0/l1d_cache/              [Kernel PMU event]
+  l1d_cache_refill OR armv8_pmuv3_0/l1d_cache_refill/ [Kernel PMU event]
+  l1d_cache_wb OR armv8_pmuv3_0/l1d_cache_wb/        [Kernel PMU event]
+  l1d_tlb OR armv8_pmuv3_0/l1d_tlb/                  [Kernel PMU event]
+  l1d_tlb_refill OR armv8_pmuv3_0/l1d_tlb_refill/    [Kernel PMU event]
+  l1i_cache OR armv8_pmuv3_0/l1i_cache/              [Kernel PMU event]
+  l1i_cache_refill OR armv8_pmuv3_0/l1i_cache_refill/ [Kernel PMU event]
+  l1i_tlb OR armv8_pmuv3_0/l1i_tlb/                  [Kernel PMU event]
+  l1i_tlb_refill OR armv8_pmuv3_0/l1i_tlb_refill/    [Kernel PMU event]
+  l2d_cache OR armv8_pmuv3_0/l2d_cache/              [Kernel PMU event]
+  l2d_cache_refill OR armv8_pmuv3_0/l2d_cache_refill/ [Kernel PMU event]
+  l2d_cache_wb OR armv8_pmuv3_0/l2d_cache_wb/        [Kernel PMU event]
+  l2d_tlb OR armv8_pmuv3_0/l2d_tlb/                  [Kernel PMU event]
+  l2d_tlb_refill OR armv8_pmuv3_0/l2d_tlb_refill/    [Kernel PMU event]
+  l2i_cache OR armv8_pmuv3_0/l2i_cache/              [Kernel PMU event]
+  l2i_cache_refill OR armv8_pmuv3_0/l2i_cache_refill/ [Kernel PMU event]
+  l2i_tlb OR armv8_pmuv3_0/l2i_tlb/                  [Kernel PMU event]
+  l2i_tlb_refill OR armv8_pmuv3_0/l2i_tlb_refill/    [Kernel PMU event]
+  ll_cache OR armv8_pmuv3_0/ll_cache/                [Kernel PMU event]
+  ll_cache_miss OR armv8_pmuv3_0/ll_cache_miss/      [Kernel PMU event]
+  ll_cache_miss_rd OR armv8_pmuv3_0/ll_cache_miss_rd/ [Kernel PMU event]
+  ll_cache_rd OR armv8_pmuv3_0/ll_cache_rd/          [Kernel PMU event]
+  mem_access OR armv8_pmuv3_0/mem_access/            [Kernel PMU event]
+  memory_error OR armv8_pmuv3_0/memory_error/        [Kernel PMU event]
+  remote_access OR armv8_pmuv3_0/remote_access/      [Kernel PMU event]
+  remote_access_rd OR armv8_pmuv3_0/remote_access_rd/ [Kernel PMU event]
+  sample_collision OR armv8_pmuv3_0/sample_collision/ [Kernel PMU event]
+  sample_feed OR armv8_pmuv3_0/sample_feed/          [Kernel PMU event]
+  sample_filtrate OR armv8_pmuv3_0/sample_filtrate/  [Kernel PMU event]
+  sample_pop OR armv8_pmuv3_0/sample_pop/            [Kernel PMU event]
+  stall_backend OR armv8_pmuv3_0/stall_backend/      [Kernel PMU event]
+  stall_frontend OR armv8_pmuv3_0/stall_frontend/    [Kernel PMU event]
+  sw_incr OR armv8_pmuv3_0/sw_incr/                  [Kernel PMU event]
+  ttbr_write_retired OR armv8_pmuv3_0/ttbr_write_retired/ [Kernel PMU event]
+
+core imp def:
+  exe_stall_cycle                                   
+       [Cycles of that the number of issue ups are less than 4]
+  fetch_bubble                                      
+       [Instructions can receive, but not send]
+  hit_on_prf                                        
+       [Hit on prefetched data]
+  if_is_stall                                       
+       [Instruction fetch stall cycles]
+  iq_is_empty                                       
+       [Instruction queue is empty]
+  l1d_cache_inval                                   
+       [L1D cache invalidate]
+  l1d_cache_rd                                      
+       [L1D cache access, read]
+  l1d_cache_refill_rd                               
+       [L1D cache refill, read]
+  l1d_cache_refill_wr                               
+       [L1D cache refill, write]
+  l1d_cache_wb_clean                                
+       [L1D cache Write-Back, cleaning and coherency]
+  l1d_cache_wb_victim                               
+       [L1D cache Write-Back, victim]
+  l1d_cache_wr                                      
+       [L1D cache access, write]
+  l1d_tlb_rd                                        
+       [L1D tlb access, read]
+  l1d_tlb_refill_rd                                 
+       [L1D tlb refill, read]
+  l1d_tlb_refill_wr                                 
+       [L1D tlb refill, write]
+  l1d_tlb_wr                                        
+       [L1D tlb access, write]
+  l1i_cache_prf                                     
+       [L1I cache prefetch access count]
+  l1i_cache_prf_refill                              
+       [L1I cache miss due to prefetch access count]
+  l2d_cache_inval                                   
+       [L2D cache invalidate]
+  l2d_cache_rd                                      
+       [L2D cache access, read]
+  l2d_cache_refill_rd                               
+       [L2D cache refill, read]
+  l2d_cache_refill_wr                               
+       [L2D cache refill, write]
+  l2d_cache_wb_clean                                
+       [L2D cache Write-Back, cleaning and coherency]
+  l2d_cache_wb_victim                               
+       [L2D cache Write-Back, victim]
+  l2d_cache_wr                                      
+       [L2D cache access, write]
+  mem_stall_anyload                                 
+       [No any micro operation is issued and meanwhile any load operation is
+        not resolved]
+  mem_stall_l1miss                                  
+       [No any micro operation is issued and meanwhile there is any load
+        operation missing L1 cache and pending data refill]
+  mem_stall_l2miss                                  
+       [No any micro operation is issued and meanwhile there is any load
+        operation missing both L1 and L2 cache and pending data refill from L3
+        cache]
+  prf_req                                           
+       [Prefetch request from LSU]
+
+uncore ddrc:
+  act_cmd                                           
+       [DDRC active commands. Unit: hisi_sccl,ddrc]
+  flux_rcmd                                         
+       [DDRC read commands. Unit: hisi_sccl,ddrc]
+  flux_rd                                           
+       [DDRC total read operations. Unit: hisi_sccl,ddrc]
+  flux_wcmd                                         
+       [DDRC write commands. Unit: hisi_sccl,ddrc]
+  flux_wr                                           
+       [DDRC total write operations. Unit: hisi_sccl,ddrc]
+  pre_cmd                                           
+       [DDRC precharge commands. Unit: hisi_sccl,ddrc]
+  rnk_chg                                           
+       [DDRC rank commands. Unit: hisi_sccl,ddrc]
+  rw_chg                                            
+       [DDRC read and write changes. Unit: hisi_sccl,ddrc]
+
+uncore hha:
+  bi_num                                            
+       [Unit: hisi_sccl,hha]
+  edir-hit                                          
+       [Unit: hisi_sccl,hha]
+  edir-home-migrate                                 
+       [Unit: hisi_sccl,hha]
+  edir-lookup                                       
+       [Unit: hisi_sccl,hha]
+  mediated_num                                      
+       [Unit: hisi_sccl,hha]
+  rd_ddr_128b                                       
+       [The number of read operations sent by HHA to DDRC which size is 128
+        bytes. Unit: hisi_sccl,hha]
+  rd_ddr_64b                                        
+       [The number of read operations sent by HHA to DDRC which size is 64
+        bytes. Unit: hisi_sccl,hha]
+  rx_ccix                                           
+       [Count of the number of operations that HHA has received from CCIX.
+        Unit: hisi_sccl,hha]
+  rx_ops_num                                        
+       [The number of all operations received by the HHA. Unit: hisi_sccl,hha]
+  rx_outer                                          
+       [The number of all operations received by the HHA from another socket.
+        Unit: hisi_sccl,hha]
+  rx_sccl                                           
+       [The number of all operations received by the HHA from another SCCL in
+        this socket. Unit: hisi_sccl,hha]
+  rx_snprsp_outer                                   
+       [Unit: hisi_sccl,hha]
+  rx_snprspdata                                     
+       [Unit: hisi_sccl,hha]
+  rx_wbi                                            
+       [Unit: hisi_sccl,hha]
+  rx_wbip                                           
+       [Unit: hisi_sccl,hha]
+  rx_wtistash                                       
+       [Unit: hisi_sccl,hha]
+  sdir-hit                                          
+       [Unit: hisi_sccl,hha]
+  sdir-home-migrate                                 
+       [Unit: hisi_sccl,hha]
+  sdir-lookup                                       
+       [Unit: hisi_sccl,hha]
+  spill_num                                         
+       [Count of the number of spill operations that the HHA has sent. Unit:
+        hisi_sccl,hha]
+  spill_success                                     
+       [Count of the number of successful spill operations that the HHA has
+        sent. Unit: hisi_sccl,hha]
+  tx_snp_ccix                                       
+       [Unit: hisi_sccl,hha]
+  tx_snp_num                                        
+       [Unit: hisi_sccl,hha]
+  tx_snp_outer                                      
+       [Unit: hisi_sccl,hha]
+  wr_ddr_128b                                       
+       [The number of write operations sent by HHA to DDRC which size is 128
+        bytes. Unit: hisi_sccl,hha]
+  wr_ddr_64b                                        
+       [The number of write operations sent by HHA to DDRC which size is 64
+        bytes. Unit: hisi_sccl,hha]
+
+uncore l3c:
+  back_invalid                                      
+       [Count of the number of L3C back invalid operations. Unit:
+        hisi_sccl,l3c]
+  prefetch_drop                                     
+       [Count of the number of prefetch drops from this L3C. Unit:
+        hisi_sccl,l3c]
+  rd_cpipe                                          
+       [Total read accesses. Unit: hisi_sccl,l3c]
+  rd_hit_cpipe                                      
+       [Total read hits. Unit: hisi_sccl,l3c]
+  rd_hit_spipe                                      
+       [Count of the number of read lines that hits in spipe of this L3C.
+        Unit: hisi_sccl,l3c]
+  rd_spipe                                          
+       [Count of the number of read lines that come from this cluster of CPU
+        core in spipe. Unit: hisi_sccl,l3c]
+  retry_cpu                                         
+       [Count of the number of retry that L3C suppresses the CPU operations.
+        Unit: hisi_sccl,l3c]
+  retry_ring                                        
+       [Count of the number of retry that L3C suppresses the ring operations.
+        Unit: hisi_sccl,l3c]
+  victim_num                                        
+       [l3c precharge commands. Unit: hisi_sccl,l3c]
+  wr_cpipe                                          
+       [Total write accesses. Unit: hisi_sccl,l3c]
+  wr_hit_cpipe                                      
+       [Total write hits. Unit: hisi_sccl,l3c]
+  wr_hit_spipe                                      
+       [Count of the number of write lines that hits in spipe of this L3C.
+        Unit: hisi_sccl,l3c]
+  wr_spipe                                          
+       [Count of the number of write lines that come from this cluster of CPU
+        core in spipe. Unit: hisi_sccl,l3c]
+  rNNN                                               [Raw hardware event descriptor]
+  cpu/t1=v1[,t2=v2,t3 ...]/modifier                  [Raw hardware event descriptor]
+  mem:<addr>[/len][:access]                          [Hardware breakpoint]
+  sdt_gio:task__after_run_in_thread                  [SDT event]
+  sdt_gio:task__before_return                        [SDT event]
+  sdt_gio:task__before_run_in_thread                 [SDT event]
+  sdt_gio:task__new                                  [SDT event]
+  sdt_gio:task__propagate                            [SDT event]
+  sdt_gio:task__set_priority                         [SDT event]
+  sdt_gio:task__set_source_tag                       [SDT event]
+  sdt_gio:task__set_task_data                        [SDT event]
+  sdt_glib:idle__add                                 [SDT event]
+  sdt_glib:idle__dispatch                            [SDT event]
+  sdt_glib:main__after_check                         [SDT event]
+  sdt_glib:main__after_dispatch                      [SDT event]
+  sdt_glib:main__after_prepare                       [SDT event]
+  sdt_glib:main__before_dispatch                     [SDT event]
+  sdt_glib:main__context_acquire                     [SDT event]
+  sdt_glib:main__context_after_check                 [SDT event]
+  sdt_glib:main__context_after_dispatch              [SDT event]
+  sdt_glib:main__context_after_prepare               [SDT event]
+  sdt_glib:main__context_after_query                 [SDT event]
+  sdt_glib:main__context_before_check                [SDT event]
+  sdt_glib:main__context_before_dispatch             [SDT event]
+  sdt_glib:main__context_before_prepare              [SDT event]
+  sdt_glib:main__context_before_query                [SDT event]
+  sdt_glib:main__context_default                     [SDT event]
+  sdt_glib:main__context_free                        [SDT event]
+  sdt_glib:main__context_new                         [SDT event]
+  sdt_glib:main__context_pop_thread_default          [SDT event]
+  sdt_glib:main__context_push_thread_default         [SDT event]
+  sdt_glib:main__context_release                     [SDT event]
+  sdt_glib:main__context_wakeup                      [SDT event]
+  sdt_glib:main__context_wakeup_acknowledge          [SDT event]
+  sdt_glib:main__loop_new                            [SDT event]
+  sdt_glib:main__loop_quit                           [SDT event]
+  sdt_glib:main__source_attach                       [SDT event]
+  sdt_glib:main__source_destroy                      [SDT event]
+  sdt_glib:mem__alloc                                [SDT event]
+  sdt_glib:mem__free                                 [SDT event]
+  sdt_glib:mem__realloc                              [SDT event]
+  sdt_glib:quark__new                                [SDT event]
+  sdt_glib:rcbox__acquire                            [SDT event]
+  sdt_glib:rcbox__alloc                              [SDT event]
+  sdt_glib:rcbox__free                               [SDT event]
+  sdt_glib:rcbox__release                            [SDT event]
+  sdt_glib:slice__alloc                              [SDT event]
+  sdt_glib:slice__free                               [SDT event]
+  sdt_glib:source__add_child_source                  [SDT event]
+  sdt_glib:source__before_free                       [SDT event]
+  sdt_glib:source__new                               [SDT event]
+  sdt_glib:source__set_callback                      [SDT event]
+  sdt_glib:source__set_callback_indirect             [SDT event]
+  sdt_glib:source__set_name                          [SDT event]
+  sdt_glib:source__set_priority                      [SDT event]
+  sdt_glib:source__set_ready_time                    [SDT event]
+  sdt_glib:thread__spawned                           [SDT event]
+  sdt_glib:timeout__add                              [SDT event]
+  sdt_glib:timeout__dispatch                         [SDT event]
+  sdt_libc:cond_broadcast                            [SDT event]
+  sdt_libc:cond_destroy                              [SDT event]
+  sdt_libc:cond_init                                 [SDT event]
+  sdt_libc:cond_signal                               [SDT event]
+  sdt_libc:cond_wait                                 [SDT event]
+  sdt_libc:lll_lock_wait                             [SDT event]
+  sdt_libc:lll_lock_wait_private                     [SDT event]
+  sdt_libc:longjmp                                   [SDT event]
+  sdt_libc:longjmp_target                            [SDT event]
+  sdt_libc:memory_arena_new                          [SDT event]
+  sdt_libc:memory_arena_retry                        [SDT event]
+  sdt_libc:memory_arena_reuse                        [SDT event]
+  sdt_libc:memory_arena_reuse_free_list              [SDT event]
+  sdt_libc:memory_arena_reuse_wait                   [SDT event]
+  sdt_libc:memory_calloc_retry                       [SDT event]
+  sdt_libc:memory_heap_free                          [SDT event]
+  sdt_libc:memory_heap_less                          [SDT event]
+  sdt_libc:memory_heap_more                          [SDT event]
+  sdt_libc:memory_heap_new                           [SDT event]
+  sdt_libc:memory_malloc_retry                       [SDT event]
+  sdt_libc:memory_mallopt                            [SDT event]
+  sdt_libc:memory_mallopt_arena_max                  [SDT event]
+  sdt_libc:memory_mallopt_arena_test                 [SDT event]
+  sdt_libc:memory_mallopt_free_dyn_thresholds        [SDT event]
+  sdt_libc:memory_mallopt_mmap_max                   [SDT event]
+  sdt_libc:memory_mallopt_mmap_threshold             [SDT event]
+  sdt_libc:memory_mallopt_mxfast                     [SDT event]
+  sdt_libc:memory_mallopt_perturb                    [SDT event]
+  sdt_libc:memory_mallopt_top_pad                    [SDT event]
+  sdt_libc:memory_mallopt_trim_threshold             [SDT event]
+  sdt_libc:memory_memalign_retry                     [SDT event]
+  sdt_libc:memory_realloc_retry                      [SDT event]
+  sdt_libc:memory_sbrk_less                          [SDT event]
+  sdt_libc:memory_sbrk_more                          [SDT event]
+  sdt_libc:memory_tcache_double_free                 [SDT event]
+  sdt_libc:memory_tunable_tcache_count               [SDT event]
+  sdt_libc:memory_tunable_tcache_max_bytes           [SDT event]
+  sdt_libc:memory_tunable_tcache_unsorted_limit      [SDT event]
+  sdt_libc:mutex_acquired                            [SDT event]
+  sdt_libc:mutex_clocklock_entry                     [SDT event]
+  sdt_libc:mutex_destroy                             [SDT event]
+  sdt_libc:mutex_entry                               [SDT event]
+  sdt_libc:mutex_init                                [SDT event]
+  sdt_libc:mutex_release                             [SDT event]
+  sdt_libc:mutex_timedlock_acquired                  [SDT event]
+  sdt_libc:mutex_timedlock_entry                     [SDT event]
+  sdt_libc:pthread_create                            [SDT event]
+  sdt_libc:pthread_join                              [SDT event]
+  sdt_libc:pthread_join_ret                          [SDT event]
+  sdt_libc:pthread_start                             [SDT event]
+  sdt_libc:rdlock_acquire_read                       [SDT event]
+  sdt_libc:rdlock_entry                              [SDT event]
+  sdt_libc:rwlock_destroy                            [SDT event]
+  sdt_libc:rwlock_unlock                             [SDT event]
+  sdt_libc:setjmp                                    [SDT event]
+  sdt_libc:wrlock_acquire_write                      [SDT event]
+  sdt_libc:wrlock_entry                              [SDT event]
+  sdt_perf:test_target                               [SDT event]
+  sdt_python:audit                                   [SDT event]
+  sdt_python:function__entry                         [SDT event]
+  sdt_python:function__return                        [SDT event]
+  sdt_python:gc__done                                [SDT event]
+  sdt_python:gc__start                               [SDT event]
+  sdt_python:import__find__load__done                [SDT event]
+  sdt_python:import__find__load__start               [SDT event]
+  sdt_python:line                                    [SDT event]
+  sdt_rtld:init_complete                             [SDT event]
+  sdt_rtld:init_start                                [SDT event]
+  sdt_rtld:lll_lock_wait                             [SDT event]
+  sdt_rtld:lll_lock_wait_private                     [SDT event]
+  sdt_rtld:longjmp                                   [SDT event]
+  sdt_rtld:longjmp_target                            [SDT event]
+  sdt_rtld:map_complete                              [SDT event]
+  sdt_rtld:map_failed                                [SDT event]
+  sdt_rtld:map_start                                 [SDT event]
+  sdt_rtld:reloc_complete                            [SDT event]
+  sdt_rtld:reloc_start                               [SDT event]
+  sdt_rtld:setjmp                                    [SDT event]
+  sdt_rtld:unmap_complete                            [SDT event]
+  sdt_rtld:unmap_start                               [SDT event]
+
+Metric Groups:
+
+TopDownL1:
+  backend_bound
+       [Backend Bound L1 topdown metric]
+  bad_speculation
+       [Bad Speculation L1 topdown metric]
+  frontend_bound
+       [Frontend bound L1 topdown metric]
+  retiring
+       [Retiring L1 topdown metric]
+TopDownL2:
+  branch_mispredicts
+       [Branch mispredicts L2 topdown metric]
+  core_bound
+       [Core bound L2 topdown metric]
+  fetch_bandwidth_bound
+       [Fetch bandwidth bound L2 topdown metric]
+  fetch_latency_bound
+       [Fetch latency bound L2 topdown metric]
+  machine_clears
+       [Machine clears L2 topdown metric]
+  memory_bound
+       [Memory bound L2 topdown metric]
+TopDownL3:
+  bp_misp_flush
+       [BP misp flush L3 topdown metric]
+  divider
+       [Divider L3 topdown metric]
+  exe_ports_util
+       [EXE ports util L3 topdown metric]
+  fsu_stall
+       [FSU stall L3 topdown metric]
+  idle_by_icache_miss
+       [Idle by icache miss L3 topdown metric]
+  idle_by_itlb_miss
+       [Idle by itlb miss L3 topdown metric]
+  indirect_branch
+       [Indirect branch L3 topdown metric]
+  l1_bound
+       [L1 bound L3 topdown metric]
+  l2_bound
+       [L2 bound L3 topdown metric]
+  mem_bound
+       [Mem bound L3 topdown metric]
+  nuke_flush
+       [Nuke flush L3 topdown metric]
+  ooo_flush
+       [OOO flush L3 topdown metric]
+  other_branch
+       [Other branch L3 topdown metric]
+  other_flush
+       [Other flush L3 topdown metric]
+  pc_buffer_stall
+       [PC buffer stall L3 topdown metric]
+  pop_branch
+       [Pop branch L3 topdown metric]
+  ptag_stall
+       [Ptag stall L3 topdown metric]
+  push_branch
+       [Push branch L3 topdown metric]
+  rob_stall
+       [Rob stall L3 topdown metric]
+  saveopq_stall
+       [SaveOpQ stall L3 topdown metric]
+  sp_flush
+       [Static predictor flush L3 topdown metric]
+  store_bound
+       [Store bound L3 topdown metric]
+  sync_stall
+       [Sync stall L3 topdown metric]

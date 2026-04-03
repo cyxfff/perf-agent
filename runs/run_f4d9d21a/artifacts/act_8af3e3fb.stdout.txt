@@ -1,0 +1,504 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 12K of event 'cpu_core/cycles/'
+# Event count (approx.): 16384509842
+#
+# Children      Self  Symbol                                     IPC   [IPC Coverage]
+# ........  ........  .........................................  ....................
+#
+    99.97%     0.00%  [.] _start                                 -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               |          
+               |--97.40%--main
+               |          |          
+               |          |--14.67%--__cos_fma
+               |          |          
+               |          |--13.42%--__sin_fma
+               |          |          
+               |          |--4.81%--asm_exc_page_fault
+               |          |          |          
+               |          |           --3.75%--exc_page_fault
+               |          |                     |          
+               |          |                      --3.66%--do_user_addr_fault
+               |          |                                |          
+               |          |                                 --3.38%--handle_mm_fault
+               |          |                                           |          
+               |          |                                            --3.21%--__handle_mm_fault
+               |          |                                                      |          
+               |          |                                                       --3.12%--handle_pte_fault
+               |          |                                                                 |          
+               |          |                                                                 |--2.32%--do_anonymous_page
+               |          |                                                                 |          |          
+               |          |                                                                 |           --0.89%--__mem_cgroup_charge
+               |          |                                                                 |                     |          
+               |          |                                                                 |                      --0.74%--charge_memcg
+               |          |                                                                 |          
+               |          |                                                                  --0.53%--_raw_spin_lock
+               |          |          
+               |           --0.58%--__munmap
+               |                     entry_SYSCALL_64_after_hwframe
+               |                     do_syscall_64
+               |                     __x64_sys_munmap
+               |                     __vm_munmap
+               |                     do_mas_munmap
+               |                     do_mas_align_munmap
+               |                     |          
+               |                      --0.57%--unmap_region
+               |                                |          
+               |                                 --0.54%--unmap_vmas
+               |                                           unmap_single_vma
+               |                                           unmap_page_range
+               |                                           zap_pmd_range.isra.0
+               |          
+               |--1.09%--__sin_fma
+               |          
+               |--0.50%--0x55eeae0a71f0
+               |          
+                --0.50%--__cos_fma
+
+    99.97%     0.00%  [.] __libc_start_main@@GLIBC_2.34          -      -            
+            |
+            ---__libc_start_call_main
+               |          
+               |--97.40%--main
+               |          |          
+               |          |--14.67%--__cos_fma
+               |          |          
+               |          |--13.42%--__sin_fma
+               |          |          
+               |          |--4.81%--asm_exc_page_fault
+               |          |          |          
+               |          |           --3.75%--exc_page_fault
+               |          |                     |          
+               |          |                      --3.66%--do_user_addr_fault
+               |          |                                |          
+               |          |                                 --3.38%--handle_mm_fault
+               |          |                                           |          
+               |          |                                            --3.21%--__handle_mm_fault
+               |          |                                                      |          
+               |          |                                                       --3.12%--handle_pte_fault
+               |          |                                                                 |          
+               |          |                                                                 |--2.32%--do_anonymous_page
+               |          |                                                                 |          |          
+               |          |                                                                 |           --0.89%--__mem_cgroup_charge
+               |          |                                                                 |                     |          
+               |          |                                                                 |                      --0.74%--charge_memcg
+               |          |                                                                 |          
+               |          |                                                                  --0.53%--_raw_spin_lock
+               |          |          
+               |           --0.58%--__munmap
+               |                     entry_SYSCALL_64_after_hwframe
+               |                     do_syscall_64
+               |                     __x64_sys_munmap
+               |                     __vm_munmap
+               |                     do_mas_munmap
+               |                     do_mas_align_munmap
+               |                     |          
+               |                      --0.57%--unmap_region
+               |                                |          
+               |                                 --0.54%--unmap_vmas
+               |                                           unmap_single_vma
+               |                                           unmap_page_range
+               |                                           zap_pmd_range.isra.0
+               |          
+               |--1.09%--__sin_fma
+               |          
+               |--0.50%--0x55eeae0a71f0
+               |          
+                --0.50%--__cos_fma
+
+    99.97%     0.00%  [.] __libc_start_call_main                 -      -            
+            |          
+            |--97.40%--main
+            |          |          
+            |          |--14.67%--__cos_fma
+            |          |          
+            |          |--13.42%--__sin_fma
+            |          |          
+            |          |--4.81%--asm_exc_page_fault
+            |          |          |          
+            |          |           --3.75%--exc_page_fault
+            |          |                     |          
+            |          |                      --3.66%--do_user_addr_fault
+            |          |                                |          
+            |          |                                 --3.38%--handle_mm_fault
+            |          |                                           |          
+            |          |                                            --3.21%--__handle_mm_fault
+            |          |                                                      |          
+            |          |                                                       --3.12%--handle_pte_fault
+            |          |                                                                 |          
+            |          |                                                                 |--2.32%--do_anonymous_page
+            |          |                                                                 |          |          
+            |          |                                                                 |           --0.89%--__mem_cgroup_charge
+            |          |                                                                 |                     |          
+            |          |                                                                 |                      --0.74%--charge_memcg
+            |          |                                                                 |          
+            |          |                                                                  --0.53%--_raw_spin_lock
+            |          |          
+            |           --0.58%--__munmap
+            |                     entry_SYSCALL_64_after_hwframe
+            |                     do_syscall_64
+            |                     __x64_sys_munmap
+            |                     __vm_munmap
+            |                     do_mas_munmap
+            |                     do_mas_align_munmap
+            |                     |          
+            |                      --0.57%--unmap_region
+            |                                |          
+            |                                 --0.54%--unmap_vmas
+            |                                           unmap_single_vma
+            |                                           unmap_page_range
+            |                                           zap_pmd_range.isra.0
+            |          
+            |--1.09%--__sin_fma
+            |          
+            |--0.50%--0x55eeae0a71f0
+            |          
+             --0.50%--__cos_fma
+
+    98.38%    64.08%  [.] main                                   -      -            
+            |          
+            |--64.08%--_start
+            |          __libc_start_main@@GLIBC_2.34
+            |          __libc_start_call_main
+            |          |          
+            |          |--63.11%--main
+            |          |          |          
+            |          |           --1.00%--asm_exc_page_fault
+            |          |          
+            |           --0.50%--0x55eeae0a71f0
+            |          
+             --34.29%--main
+                       |          
+                       |--14.67%--__cos_fma
+                       |          
+                       |--13.42%--__sin_fma
+                       |          
+                       |--3.82%--asm_exc_page_fault
+                       |          |          
+                       |           --3.75%--exc_page_fault
+                       |                     |          
+                       |                      --3.66%--do_user_addr_fault
+                       |                                |          
+                       |                                 --3.38%--handle_mm_fault
+                       |                                           |          
+                       |                                            --3.21%--__handle_mm_fault
+                       |                                                      |          
+                       |                                                       --3.12%--handle_pte_fault
+                       |                                                                 |          
+                       |                                                                 |--2.32%--do_anonymous_page
+                       |                                                                 |          |          
+                       |                                                                 |           --0.89%--__mem_cgroup_charge
+                       |                                                                 |                     |          
+                       |                                                                 |                      --0.74%--charge_memcg
+                       |                                                                 |          
+                       |                                                                  --0.53%--_raw_spin_lock
+                       |          
+                        --0.58%--__munmap
+                                  entry_SYSCALL_64_after_hwframe
+                                  do_syscall_64
+                                  __x64_sys_munmap
+                                  __vm_munmap
+                                  do_mas_munmap
+                                  do_mas_align_munmap
+                                  |          
+                                   --0.57%--unmap_region
+                                             |          
+                                              --0.54%--unmap_vmas
+                                                        unmap_single_vma
+                                                        unmap_page_range
+                                                        zap_pmd_range.isra.0
+
+    15.64%    15.14%  [.] __cos_fma                              -      -            
+            |          
+            |--15.14%--_start
+            |          __libc_start_main@@GLIBC_2.34
+            |          __libc_start_call_main
+            |          main
+            |          |          
+            |           --14.67%--__cos_fma
+            |          
+             --0.50%--__cos_fma
+
+    15.02%    14.41%  [.] __sin_fma                              -      -            
+            |          
+            |--14.41%--_start
+            |          __libc_start_main@@GLIBC_2.34
+            |          __libc_start_call_main
+            |          |          
+            |           --13.93%--main
+            |                     |          
+            |                      --13.42%--__sin_fma
+            |          
+             --0.61%--__sin_fma
+
+     4.85%     0.05%  [k] asm_exc_page_fault                     -      -            
+            |          
+             --4.80%--asm_exc_page_fault
+                       |          
+                        --3.77%--exc_page_fault
+                                  |          
+                                   --3.68%--do_user_addr_fault
+                                             |          
+                                              --3.40%--handle_mm_fault
+                                                        |          
+                                                         --3.23%--__handle_mm_fault
+                                                                   |          
+                                                                    --3.14%--handle_pte_fault
+                                                                              |          
+                                                                              |--2.32%--do_anonymous_page
+                                                                              |          |          
+                                                                              |           --0.89%--__mem_cgroup_charge
+                                                                              |                     |          
+                                                                              |                      --0.74%--charge_memcg
+                                                                              |          
+                                                                               --0.53%--_raw_spin_lock
+
+     3.78%     0.02%  [k] exc_page_fault                         -      -            
+            |          
+             --3.76%--exc_page_fault
+                       |          
+                        --3.68%--do_user_addr_fault
+                                  |          
+                                   --3.40%--handle_mm_fault
+                                             |          
+                                              --3.23%--__handle_mm_fault
+                                                        |          
+                                                         --3.14%--handle_pte_fault
+                                                                   |          
+                                                                   |--2.32%--do_anonymous_page
+                                                                   |          |          
+                                                                   |           --0.89%--__mem_cgroup_charge
+                                                                   |                     |          
+                                                                   |                      --0.74%--charge_memcg
+                                                                   |          
+                                                                    --0.53%--_raw_spin_lock
+
+     3.70%     0.10%  [k] do_user_addr_fault                     -      -            
+            |          
+             --3.60%--do_user_addr_fault
+                       |          
+                        --3.40%--handle_mm_fault
+                                  |          
+                                   --3.23%--__handle_mm_fault
+                                             |          
+                                              --3.14%--handle_pte_fault
+                                                        |          
+                                                        |--2.32%--do_anonymous_page
+                                                        |          |          
+                                                        |           --0.89%--__mem_cgroup_charge
+                                                        |                     |          
+                                                        |                      --0.74%--charge_memcg
+                                                        |          
+                                                         --0.53%--_raw_spin_lock
+
+     3.40%     0.06%  [k] handle_mm_fault                        -      -            
+            |          
+             --3.34%--handle_mm_fault
+                       |          
+                        --3.23%--__handle_mm_fault
+                                  |          
+                                   --3.14%--handle_pte_fault
+                                             |          
+                                             |--2.32%--do_anonymous_page
+                                             |          |          
+                                             |           --0.89%--__mem_cgroup_charge
+                                             |                     |          
+                                             |                      --0.74%--charge_memcg
+                                             |          
+                                              --0.53%--_raw_spin_lock
+
+     3.27%     0.09%  [k] __handle_mm_fault                      -      -            
+            |          
+             --3.17%--__handle_mm_fault
+                       |          
+                        --3.14%--handle_pte_fault
+                                  |          
+                                  |--2.32%--do_anonymous_page
+                                  |          |          
+                                  |           --0.89%--__mem_cgroup_charge
+                                  |                     |          
+                                  |                      --0.74%--charge_memcg
+                                  |          
+                                   --0.53%--_raw_spin_lock
+
+     3.17%     0.05%  [k] handle_pte_fault                       -      -            
+            |          
+             --3.12%--handle_pte_fault
+                       |          
+                       |--2.32%--do_anonymous_page
+                       |          |          
+                       |           --0.89%--__mem_cgroup_charge
+                       |                     |          
+                       |                      --0.74%--charge_memcg
+                       |          
+                        --0.53%--_raw_spin_lock
+
+     2.49%     0.26%  [k] do_anonymous_page                      -      -            
+            |          
+             --2.23%--do_anonymous_page
+                       |          
+                        --0.89%--__mem_cgroup_charge
+                                  |          
+                                   --0.74%--charge_memcg
+
+     0.91%     0.05%  [k] __mem_cgroup_charge                    -      -            
+            |          
+             --0.86%--__mem_cgroup_charge
+                       |          
+                        --0.74%--charge_memcg
+
+     0.77%     0.22%  [k] charge_memcg                           -      -            
+            |          
+             --0.55%--charge_memcg
+
+     0.61%     0.61%  [.] 0x00000000000021f4                     -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               __sin_fma
+
+     0.61%     0.00%  [k] entry_SYSCALL_64_after_hwframe         -      -            
+            |
+            ---do_syscall_64
+               |          
+                --0.58%--__x64_sys_munmap
+                          __vm_munmap
+                          do_mas_munmap
+                          do_mas_align_munmap
+                          |          
+                           --0.57%--unmap_region
+                                     |          
+                                      --0.54%--unmap_vmas
+                                                unmap_single_vma
+                                                unmap_page_range
+                                                zap_pmd_range.isra.0
+
+     0.61%     0.00%  [k] do_syscall_64                          -      -            
+            |          
+             --0.58%--__x64_sys_munmap
+                       __vm_munmap
+                       do_mas_munmap
+                       do_mas_align_munmap
+                       |          
+                        --0.57%--unmap_region
+                                  |          
+                                   --0.54%--unmap_vmas
+                                             unmap_single_vma
+                                             unmap_page_range
+                                             zap_pmd_range.isra.0
+
+     0.58%     0.00%  [.] __munmap                               -      -            
+            |
+            ---entry_SYSCALL_64_after_hwframe
+               do_syscall_64
+               __x64_sys_munmap
+               __vm_munmap
+               do_mas_munmap
+               do_mas_align_munmap
+               |          
+                --0.57%--unmap_region
+                          |          
+                           --0.54%--unmap_vmas
+                                     unmap_single_vma
+                                     unmap_page_range
+                                     zap_pmd_range.isra.0
+
+     0.58%     0.00%  [k] __x64_sys_munmap                       -      -            
+            |
+            ---__vm_munmap
+               do_mas_munmap
+               do_mas_align_munmap
+               |          
+                --0.57%--unmap_region
+                          |          
+                           --0.54%--unmap_vmas
+                                     unmap_single_vma
+                                     unmap_page_range
+                                     zap_pmd_range.isra.0
+
+     0.58%     0.00%  [k] __vm_munmap                            -      -            
+            |
+            ---do_mas_munmap
+               do_mas_align_munmap
+               |          
+                --0.57%--unmap_region
+                          |          
+                           --0.54%--unmap_vmas
+                                     unmap_single_vma
+                                     unmap_page_range
+                                     zap_pmd_range.isra.0
+
+     0.58%     0.00%  [k] do_mas_munmap                          -      -            
+            |
+            ---do_mas_align_munmap
+               |          
+                --0.57%--unmap_region
+                          |          
+                           --0.54%--unmap_vmas
+                                     unmap_single_vma
+                                     unmap_page_range
+                                     zap_pmd_range.isra.0
+
+     0.58%     0.00%  [k] do_mas_align_munmap                    -      -            
+            |          
+             --0.57%--unmap_region
+                       |          
+                        --0.54%--unmap_vmas
+                                  unmap_single_vma
+                                  unmap_page_range
+                                  zap_pmd_range.isra.0
+
+     0.57%     0.00%  [k] unmap_region                           -      -            
+            |          
+             --0.54%--unmap_vmas
+                       unmap_single_vma
+                       unmap_page_range
+                       zap_pmd_range.isra.0
+
+     0.55%     0.00%  [k] unmap_vmas                             -      -            
+            |
+            ---unmap_single_vma
+               unmap_page_range
+               zap_pmd_range.isra.0
+
+     0.55%     0.00%  [k] unmap_single_vma                       -      -            
+            |
+            ---unmap_page_range
+               zap_pmd_range.isra.0
+
+     0.55%     0.00%  [k] unmap_page_range                       -      -            
+            |
+            ---zap_pmd_range.isra.0
+
+     0.55%     0.00%  [k] zap_pmd_range.isra.0                   -      -            
+     0.53%     0.53%  [k] _raw_spin_lock                         -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               main
+               asm_exc_page_fault
+               exc_page_fault
+               do_user_addr_fault
+               handle_mm_fault
+               __handle_mm_fault
+               handle_pte_fault
+               _raw_spin_lock
+
+     0.50%     0.00%  [.] 0x000055eeae0a71f0                     -      -            
+     0.50%     0.50%  [.] 0x0000000000002354                     -      -            
+            |
+            ---__libc_start_main@@GLIBC_2.34
+               __libc_start_call_main
+               __cos_fma
+
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

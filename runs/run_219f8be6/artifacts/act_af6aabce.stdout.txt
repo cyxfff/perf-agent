@@ -1,1 +1,0 @@
-disk_util=89.0\nawait_ms=23.5\nread_mb_s=120.0\nwrite_mb_s=15.0\n

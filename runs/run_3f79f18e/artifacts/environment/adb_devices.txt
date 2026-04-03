@@ -1,0 +1,3 @@
+List of devices attached
+10.87.51.151:5555      device product:scout_cn_sys model:XT2503_3 device:scout transport_id:1
+

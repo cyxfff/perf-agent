@@ -1,0 +1,37 @@
+{
+  "action_id": "act_2216dc36",
+  "tool": "perf_record",
+  "command": [
+    "perf",
+    "record",
+    "-o",
+    "/tmp/act_2216dc36_x2097izf.perf.data",
+    "--call-graph",
+    "fp",
+    "--",
+    "examples/bin/multiprocess_fanout_demo"
+  ],
+  "report_command": [
+    "perf",
+    "report",
+    "--stdio",
+    "--sort",
+    "symbol",
+    "--percent-limit",
+    "0.5",
+    "-i",
+    "/tmp/act_2216dc36_x2097izf.perf.data"
+  ],
+  "script_command": [
+    "perf",
+    "script",
+    "-F",
+    "comm,pid,tid,time,ip,sym,dso",
+    "-i",
+    "/tmp/act_2216dc36_x2097izf.perf.data"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 1.4568,
+  "error_message": null
+}

@@ -1,8 +1,0 @@
-0.087560496,1757613838,,cpu_core/cycles/,344600416,100.00,,
-0.087560496,<not counted>,,cpu_atom/cycles/,0,0.00,,
-0.087560496,6719381984,,cpu_core/Instructions/,344600416,99.00,,
-0.087560496,42384,,cpu_core/cache-misses/,344600416,100.00,,
-0.087560496,<not counted>,,cpu_atom/cache-misses/,0,0.00,,
-0.087560496,27,,context-switches,344600416,100.00,,
-0.087560496,<not supported>,,cpu_core/topdown-fe-bound/,0,0.00,,
-0.087560496,<not supported>,,cpu_core/topdown-be-bound/,0,0.00,,

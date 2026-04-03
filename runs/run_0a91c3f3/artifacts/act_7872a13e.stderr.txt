@@ -1,0 +1,14 @@
+
+ Performance counter stats for 'examples/bin/multiprocess_fanout_demo':
+
+                 6      context-switches                                                      
+                 4      cpu-migrations                                                        
+               292      page-faults                                                           
+             23281      cpu_core/mem_inst_retired.lock_loads/                                      
+
+       0.073253259 seconds time elapsed
+
+       0.218303000 seconds user
+       0.000000000 seconds sys
+
+

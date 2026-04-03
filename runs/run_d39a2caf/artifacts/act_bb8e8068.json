@@ -1,0 +1,22 @@
+{
+  "action_id": "act_bb8e8068",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-x,",
+    "-I",
+    "100",
+    "-e",
+    "cycles,Instructions,cache-references,cache-misses",
+    "--",
+    "/home/tchen/agent/perf_agent/examples/bin/phased_cache_wave_demo",
+    "8",
+    "140",
+    "128"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 3.2205,
+  "error_message": null
+}

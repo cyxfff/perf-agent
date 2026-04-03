@@ -1,1 +1,0 @@
-User time (seconds): 0.90\nSystem time (seconds): 0.25\nPercent of CPU this job got: 32%\nMaximum resident set size (kbytes): 30720\nMajor (requiring I/O) page faults: 4\nVoluntary context switches: 122\nInvoluntary context switches: 18\n

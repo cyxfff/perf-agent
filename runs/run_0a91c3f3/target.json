@@ -1,0 +1,12 @@
+{
+  "executable_path": "examples/bin/multiprocess_fanout_demo",
+  "target_args": [],
+  "target_cmd": [
+    "examples/bin/multiprocess_fanout_demo"
+  ],
+  "target_pid": null,
+  "workload_label": "multiprocess_fanout_demo",
+  "source_dir": "examples/cpp",
+  "build_cmd": [],
+  "cwd": "/home/tchen/agent/perf_agent"
+}

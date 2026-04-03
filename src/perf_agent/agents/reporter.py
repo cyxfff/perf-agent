@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import shutil
+from pathlib import Path
+
 from perf_agent.llm.client import LLMClient
 from perf_agent.models.report import ChartSpec, FinalReport, TargetSummary
 from perf_agent.models.state import AnalysisState
@@ -139,9 +142,6 @@ class Reporter:
         for item in report.recommended_next_steps:
             lines.append(f"- {item}")
 
-        lines.extend(["", "## 11. 产物"])
-        for item in report.artifacts:
-            lines.append(f"- {item}")
         return "\n".join(lines).rstrip() + "\n"
 
     def render_html(self, state: AnalysisState) -> str:
@@ -160,27 +160,49 @@ class Reporter:
 
     def _build_environment_summary(self, state: AnalysisState) -> list[str]:
         environment = state.environment
+        selected_device = next(
+            (device for device in environment.connected_devices if device.serial == environment.selected_device_serial),
+            None,
+        )
+        memory_gb = self._read_total_memory_gb()
+        tool_list = self._detect_tool_availability()
         lines = [
             f"架构: {environment.arch or '未知'}",
             f"内核: {environment.kernel_release or '未知'}",
             f"CPU: {environment.cpu_model or '未知'}",
-            f"逻辑核数: {environment.logical_cores or '未知'}",
+            f"CPU 配置: 物理核 {environment.physical_cores or '未知'} / 逻辑核 {environment.logical_cores or '未知'}",
+            f"内存: {memory_gb if memory_gb is not None else '未知'} GB",
+            f"CPU 频率: {self._format_cpu_frequency(environment)}",
+            f"Cache: {self._format_cache_summary(environment)}",
+            f"NUMA: {environment.numa_nodes if environment.numa_nodes is not None else '未知'} 节点",
             f"perf: {'可用' if environment.perf_available else '不可用'} {environment.perf_version or ''}".strip(),
-            f"可用事件数: {len(environment.available_events)}",
             f"调用栈模式: {', '.join(environment.callgraph_modes) or '未探测到'}",
+            f"可用工具: {', '.join(tool_list) if tool_list else '未探测到'}",
         ]
-        if environment.hybrid_pmus:
-            lines.append(f"hybrid PMU: {', '.join(environment.hybrid_pmus)}")
-        if environment.topdown_events or environment.tma_metrics:
-            lines.append(
-                f"Top-Down/TMA: topdown 事件 {len(environment.topdown_events)} 个，TMA 指标 {len(environment.tma_metrics)} 个"
+        if environment.execution_target == "device" and selected_device is not None:
+            lines.extend(
+                [
+                    f"目标执行位置: 设备端",
+                    f"目标设备: {selected_device.serial} / {selected_device.model or '未知型号'}",
+                    f"设备架构: {selected_device.arch or '未知'}",
+                    f"设备系统: Android {selected_device.os_release or '未知'} (SDK {selected_device.sdk or '未知'})",
+                    f"设备后端能力: {', '.join(selected_device.backend_tools) or '未探测到'}",
+                ]
             )
-        lines.append(f"addr2line: {'可用' if environment.supports_addr2line else '不可用'}")
-        if environment.perf_permissions is not None:
-            lines.append(f"perf_event_paranoid: {environment.perf_permissions}")
-        for note in environment.notes:
-            if note not in lines:
-                lines.append(note)
+        if environment.profiling_backend_name:
+            lines.append(f"采样后端: {environment.profiling_backend_name}")
+        if environment.profiling_backend_summary:
+            lines.append(f"后端选择: {environment.profiling_backend_summary}")
+        if environment.adb_available:
+            lines.append(f"ADB: 可用，已发现 {len(environment.connected_devices)} 台设备")
+        if environment.selected_device_serial:
+            lines.append(f"目标设备: {environment.selected_device_serial}")
+        if environment.selected_device_summary:
+            lines.append(f"设备选择: {environment.selected_device_summary}")
+        if environment.hybrid_pmus:
+            lines.append(f"PMU: {', '.join(environment.hybrid_pmus)}")
+        if environment.supports_addr2line:
+            lines.append("源码映射: addr2line 可用")
         return lines
 
     def _build_experiment_history(self, state: AnalysisState) -> list[str]:
@@ -199,8 +221,9 @@ class Reporter:
         lines = [latest.summary]
         if latest.highlighted_metrics:
             lines.append(f"重点指标: {', '.join(latest.highlighted_metrics[:8])}")
-        if latest.hotspot_symbols:
-            lines.append(f"热点符号: {', '.join(latest.hotspot_symbols[:5])}")
+        hotspot_symbols = [symbol for symbol in latest.hotspot_symbols if self._keep_hotspot_symbol(symbol)]
+        if hotspot_symbols:
+            lines.append(f"热点符号: {', '.join(hotspot_symbols[:5])}")
         if latest.timeline_metrics:
             lines.append(f"时间序列指标: {', '.join(latest.timeline_metrics[:6])}")
         if latest.top_processes:
@@ -260,6 +283,17 @@ class Reporter:
                     focus="thread_breakdown",
                 )
             )
+        if any(observation.metric == "hot_symbol_pct" for observation in state.observations):
+            specs.append(
+                ChartSpec(
+                    chart_id="hotspot-symbols",
+                    title="热点函数占比",
+                    chart_type="bar",
+                    metrics=["hot_symbol_pct"],
+                    rationale="已经拿到热点函数样本后，应展示最热函数分布，帮助验证热点是否集中。",
+                    focus="hotspot_distribution",
+                )
+            )
         if self._available_topdown_metrics(state):
             specs.append(
                 ChartSpec(
@@ -272,32 +306,139 @@ class Reporter:
                 )
             )
         timeline_metrics = self._available_timeline_metrics(state)
-        for metric in ("ipc", "cache_misses", "context_switches", "cycles"):
+        miss_rate_metrics = [
+            metric
+            for metric in ("cache_miss_rate_pct", "l1_miss_rate_pct", "l2_miss_rate_pct", "l3_miss_rate_pct", "llc_miss_rate_pct")
+            if metric in timeline_metrics
+        ]
+        if miss_rate_metrics:
+            specs.append(
+                ChartSpec(
+                    chart_id="timeline-cache-miss-rates",
+                    title="Cache Miss Rate 时间序列",
+                    chart_type="multiline",
+                    metrics=miss_rate_metrics[:4],
+                    rationale="优先展示各级 cache miss-rate 的时间变化，便于识别哪一级缓存开始成为瓶颈。",
+                    focus="temporal_behavior",
+                )
+            )
+        mpki_metrics = [
+            metric
+            for metric in ("cache_mpki", "l1_mpki", "l2_mpki", "l3_mpki", "llc_mpki", "branch_mpki")
+            if metric in timeline_metrics
+        ]
+        if mpki_metrics:
+            specs.append(
+                ChartSpec(
+                    chart_id="timeline-mpki",
+                    title="MPKI 时间序列",
+                    chart_type="multiline",
+                    metrics=mpki_metrics[:5],
+                    rationale="MPKI 可以把 miss 开销按千条指令归一化，便于跨阶段比较真实压力强度。",
+                    focus="temporal_behavior",
+                )
+            )
+        for metric, title, rationale in (
+            ("ipc", "IPC 时间序列", "IPC 趋势可以帮助识别阶段性效率下降。"),
+            ("cpi", "CPI 时间序列", "CPI 与 IPC 互补，能更直观看出每条指令平均消耗的周期数。"),
+            ("branch_miss_rate_pct", "Branch Miss Rate 时间序列", "分支 miss-rate 的突增通常意味着控制流或数据相关性变化。"),
+            ("branch_mpki", "Branch MPKI 时间序列", "Branch MPKI 更适合对比分支预测代价在各阶段的真实强度。"),
+            ("context_switches", "上下文切换时间序列", "上下文切换抖动适合用来识别并发调度干扰。"),
+        ):
             if metric in timeline_metrics:
                 specs.append(
                     ChartSpec(
                         chart_id=f"timeline-{metric}",
-                        title=f"{metric} 时间序列",
+                        title=title,
                         chart_type="line",
                         metrics=[metric],
-                        rationale="存在时间序列观测时，应直接展示关键指标随时间的变化趋势。",
+                        rationale=rationale,
                         focus="temporal_behavior",
                     )
                 )
-                if len(specs) >= 5:
-                    break
-        if any(observation.metric == "hot_symbol_pct" for observation in state.observations):
-            specs.append(
-                ChartSpec(
-                    chart_id="hotspot-symbols",
-                    title="热点函数占比",
-                    chart_type="bar",
-                    metrics=["hot_symbol_pct"],
-                    rationale="已经拿到热点函数样本后，应展示最热函数分布，帮助验证热点是否集中。",
-                    focus="hotspot_distribution",
-                )
-            )
-        return specs[:6]
+        return specs[:12]
+
+    def _read_total_memory_gb(self) -> int | None:
+        path = Path("/proc/meminfo")
+        if not path.exists():
+            return None
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.startswith("MemTotal:"):
+                continue
+            digits = "".join(ch for ch in line if ch.isdigit())
+            if not digits:
+                return None
+            return round(int(digits) / 1024 / 1024)
+        return None
+
+    def _detect_tool_availability(self) -> list[str]:
+        detected = []
+        for name in ("perf", "pidstat", "mpstat", "iostat", "addr2line"):
+            if shutil.which(name):
+                detected.append(name)
+        return detected
+
+    def _format_cpu_frequency(self, environment) -> str:
+        max_mhz = self._compact_frequency(environment.cpu_max_mhz)
+        min_mhz = self._compact_frequency(environment.cpu_min_mhz)
+        current = self._sanitize_frequency(environment.cpu_scaling_mhz)
+        if max_mhz and min_mhz:
+            summary = f"{min_mhz} - {max_mhz}"
+        elif max_mhz:
+            summary = f"最高 {max_mhz}"
+        elif min_mhz:
+            summary = f"最低 {min_mhz}"
+        else:
+            summary = "未知"
+        if current and current.endswith("%"):
+            summary = f"{summary}，当前缩放 {current}"
+        elif current and current != summary:
+            summary = f"{summary}，当前 {self._compact_frequency(current)}"
+        return summary
+
+    def _sanitize_frequency(self, value: str | None) -> str | None:
+        if value is None:
+            return None
+        text = value.strip()
+        return text or None
+
+    def _compact_frequency(self, value: str | None) -> str | None:
+        text = self._sanitize_frequency(value)
+        if text is None:
+            return None
+        if text.endswith("%"):
+            return text
+        try:
+            mhz = float(text)
+        except ValueError:
+            return text
+        if mhz >= 1000:
+            return f"{mhz / 1000:.2f} GHz"
+        return f"{mhz:.0f} MHz"
+
+    def _format_cache_summary(self, environment) -> str:
+        parts = []
+        for label, value in (
+            ("L1d", environment.l1d_cache),
+            ("L1i", environment.l1i_cache),
+            ("L2", environment.l2_cache),
+            ("L3", environment.l3_cache),
+        ):
+            if value:
+                parts.append(f"{label} {value}")
+        return " / ".join(parts) if parts else "未知"
+
+    def _keep_hotspot_symbol(self, symbol: str) -> bool:
+        lowered = symbol.lower()
+        if lowered.startswith("_start") or lowered.startswith("__libc") or "@@glibc" in lowered:
+            return False
+        if lowered.startswith("__") or lowered.startswith("std::"):
+            return False
+        if lowered.startswith("0x"):
+            return False
+        if "__cos" in lowered or "__sin" in lowered or "libm" in lowered:
+            return False
+        return True
 
     def _available_timeline_metrics(self, state: AnalysisState) -> set[str]:
         counts: dict[str, int] = {}

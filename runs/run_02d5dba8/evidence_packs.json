@@ -1,0 +1,90 @@
+[
+  {
+    "round_index": 1,
+    "summary": "\u7b2c 1 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a cpu_bound\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 0 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 0 \u4e2a\uff0c\u8fdb\u7a0b\u62c6\u8d26 0 \u6761\uff0c\u7ebf\u7a0b\u62c6\u8d26 0 \u6761\u3002",
+    "top_observation_ids": [
+      "obs_fcb649a7",
+      "obs_d0fae650",
+      "obs_566771a8",
+      "obs_21282e3b",
+      "obs_1d666f41",
+      "obs_9e1a0f9a",
+      "obs_ba05ebc1",
+      "obs_f9607c43",
+      "obs_95511af1",
+      "obs_99aee510"
+    ],
+    "highlighted_metrics": [
+      "voluntary_context_switches",
+      "cache_misses",
+      "context_switches",
+      "cpu_utilization_pct",
+      "topdown_be_bound_pct",
+      "involuntary_context_switches",
+      "cache_references",
+      "llc_miss_count",
+      "l2_miss_count",
+      "cpu_migrations"
+    ],
+    "hotspot_symbols": [],
+    "timeline_metrics": [],
+    "top_processes": [],
+    "top_threads": [],
+    "unresolved_questions": [
+      "\u662f\u5426\u9700\u8981\u8fdb\u4e00\u6b65\u533a\u5206 cpu_bound \u4e0e\u5176\u4ed6\u5019\u9009\u74f6\u9888\u3002",
+      "\u5f53\u524d\u8fd8\u7f3a\u5c11\u65f6\u95f4\u5e8f\u5217\u8bc1\u636e\uff0c\u5c1a\u4e0d\u80fd\u5224\u65ad\u74f6\u9888\u662f\u5426\u9636\u6bb5\u6027\u51fa\u73b0\u3002",
+      "\u5f53\u524d\u8fd8\u7f3a\u5c11\u70ed\u70b9\u51fd\u6570\u7ea7\u8bc1\u636e\uff0c\u5c1a\u4e0d\u80fd\u7a33\u5b9a\u6620\u5c04\u5230\u8c03\u7528\u8def\u5f84\u3002",
+      "\u5f53\u524d\u8fd8\u7f3a\u5c11\u7ebf\u7a0b\u7ea7 / \u5b50\u8fdb\u7a0b\u7ea7\u6837\u672c\u62c6\u8d26\uff0c\u5c1a\u4e0d\u80fd\u91cf\u5316\u5e76\u53d1\u5355\u5143\u7684\u5f00\u9500\u5206\u5e03\u3002"
+    ]
+  },
+  {
+    "round_index": 2,
+    "summary": "\u7b2c 2 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a cpu_bound\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 7 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 4 \u4e2a\uff0c\u8fdb\u7a0b\u62c6\u8d26 4 \u6761\uff0c\u7ebf\u7a0b\u62c6\u8d26 4 \u6761\u3002",
+    "top_observation_ids": [
+      "obs_a402f9dd",
+      "obs_87fa1251",
+      "obs_fcb649a7",
+      "obs_d0fae650",
+      "obs_566771a8",
+      "obs_9d8c7913",
+      "obs_19ceec47",
+      "obs_ad856bb3",
+      "obs_ea574412",
+      "obs_47fa2a53"
+    ],
+    "highlighted_metrics": [
+      "cache_misses",
+      "context_switches",
+      "voluntary_context_switches",
+      "hot_symbol_pct"
+    ],
+    "hotspot_symbols": [
+      "_start",
+      "__libc_start_main@@GLIBC_2.34",
+      "__libc_start_call_main",
+      "main",
+      "__cos_fma"
+    ],
+    "timeline_metrics": [
+      "cache_misses",
+      "context_switches",
+      "cycles",
+      "instructions"
+    ],
+    "top_processes": [
+      "multiprocess_fa pid=3620574 33.29%",
+      "multiprocess_fa pid=3620575 33.29%",
+      "multiprocess_fa pid=3620573 33.17%",
+      "multiprocess_fa pid=3620571 0.24%"
+    ],
+    "top_threads": [
+      "multiprocess_fa pid/tid=3620574/3620574 33.29%",
+      "multiprocess_fa pid/tid=3620575/3620575 33.29%",
+      "multiprocess_fa pid/tid=3620573/3620573 33.17%",
+      "multiprocess_fa pid/tid=3620571/3620571 0.24%"
+    ],
+    "unresolved_questions": [
+      "\u662f\u5426\u9700\u8981\u8fdb\u4e00\u6b65\u533a\u5206 cpu_bound \u4e0e\u5176\u4ed6\u5019\u9009\u74f6\u9888\u3002"
+    ]
+  }
+]

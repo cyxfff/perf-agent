@@ -1,0 +1,16 @@
+{
+  "action_id": "act_f233af9b",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "cycles,Instructions,task-clock,cpu-clock,SLOTS",
+    "--",
+    "examples/bin/multiprocess_fanout_demo"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.0891,
+  "error_message": null
+}

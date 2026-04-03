@@ -1,0 +1,19 @@
+{
+  "action_id": "act_8f41b323",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "cycles,Instructions,task-clock,cpu-clock,SLOTS",
+    "--",
+    "/home/tchen/agent/perf_agent/examples/bin/phased_cache_wave_demo",
+    "8",
+    "140",
+    "128"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 3.2547,
+  "error_message": null
+}

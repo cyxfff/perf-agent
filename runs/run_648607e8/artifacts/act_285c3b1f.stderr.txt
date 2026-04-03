@@ -1,0 +1,18 @@
+
+ Performance counter stats for 'examples/bin/multiprocess_fanout_demo':
+
+        6682465668      cpu_core/SLOTS/                                                       
+   <not supported>      cpu_core/topdown-retiring/                                              (0.00%)
+   <not supported>      cpu_core/topdown-bad-spec/                                              (0.00%)
+   <not supported>      cpu_core/topdown-fe-bound/                                              (0.00%)
+   <not supported>      cpu_core/topdown-be-bound/                                              (0.00%)
+        1113878817      cpu_core/cycles/                                                      
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+        4401125833      cpu_core/Instructions/                                                  (99.69%)
+
+       0.073411477 seconds time elapsed
+
+       0.218558000 seconds user
+       0.000000000 seconds sys
+
+

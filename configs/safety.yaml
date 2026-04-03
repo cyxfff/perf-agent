@@ -1,0 +1,55 @@
+sandbox_enabled: false
+default_runtime: auto
+preferred_runtimes:
+  - bubblewrap
+  - firejail
+  - none
+fallback_to_none: true
+
+runtimes:
+  none:
+    enabled: true
+    kind: none
+    detection: always
+    description: 不启用额外隔离，保持当前直接执行方式。
+
+  bubblewrap:
+    enabled: true
+    kind: bubblewrap
+    executable: bwrap
+    detection: which
+    description: 使用 bubblewrap 对目标程序做轻量内核级隔离。
+    extra_args:
+      - --die-with-parent
+      - --new-session
+      - --proc
+      - /proc
+      - --dev
+      - /dev
+    read_only_paths:
+      - /usr
+      - /bin
+      - /sbin
+      - /lib
+      - /lib64
+      - /etc
+    writable_paths:
+      - "{cwd}"
+      - "{executable_dir}"
+      - "{source_dir}"
+      - /tmp
+    workdir: "{cwd}"
+    network_access: true
+
+  firejail:
+    enabled: true
+    kind: template
+    executable: firejail
+    detection: which
+    description: 使用 firejail 对目标程序做轻量隔离。
+    template:
+      - firejail
+      - --quiet
+      - --noprofile
+      - --private-tmp
+      - --

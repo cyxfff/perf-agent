@@ -1,0 +1,18 @@
+{
+  "action_id": "act_6c6529a8",
+  "tool": "perf_stat",
+  "command": [
+    "perf",
+    "stat",
+    "-e",
+    "topdown-be-bound,cache-references,cache-misses,longest_lat_cache.miss",
+    "--",
+    "examples/bin/cpu_bound_demo",
+    "700",
+    "18000"
+  ],
+  "exit_code": 0,
+  "success": true,
+  "duration_sec": 0.1598,
+  "error_message": null
+}

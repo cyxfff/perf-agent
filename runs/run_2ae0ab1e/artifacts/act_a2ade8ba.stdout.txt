@@ -1,1 +1,0 @@
-avg_cpu=55.0\niowait=5.0\ncswch_per_sec=22000\nrun_queue=9\n

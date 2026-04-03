@@ -11,4 +11,4 @@ class TimeTool(BaseCommandTool):
     def build_command(self, state: AnalysisState, action: PlannedAction) -> list[str]:
         if state.target_pid is not None and not state.target_cmd:
             return ["sh", "-c", f"/usr/bin/time -v sh -c 'kill -0 {state.target_pid}'"]
-        return ["/usr/bin/time", "-v", *state.target_cmd]
+        return ["/usr/bin/time", "-v", *self.sandbox_target_command(state, action)]

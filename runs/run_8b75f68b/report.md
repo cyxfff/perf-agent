@@ -1,0 +1,250 @@
+# 性能分析报告
+
+## 1. 执行摘要
+当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。
+
+## 2. 分析目标
+- 命令: /home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo
+- 可执行文件: /home/tchen/agent/perf_agent/examples/bin/cpu_bound_demo
+- 源码目录: /home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo
+- 运行信息: verification_rounds=1, actions_executed=14
+- 工作目录: 
+
+## 3. 运行环境
+- 架构: x86_64
+- 内核: 6.2.0-37-generic
+- CPU: 13th Gen Intel(R) Core(TM) i5-13600K
+- CPU 配置: 物理核 14 / 逻辑核 20
+- 内存: 31 GB
+- CPU 频率: 800 MHz - 5.10 GHz，当前缩放 88%
+- Cache: L1d 544 KiB (14 instances) / L1i 704 KiB (14 instances) / L2 20 MiB (8 instances) / L3 24 MiB (1 instance)
+- NUMA: 1 节点
+- perf: 可用 perf version 6.2.16
+- 调用栈模式: fp, dwarf
+- 可用工具: perf, pidstat, mpstat, iostat, addr2line
+- 采样后端: host_perf
+- 后端选择: 当前目标被识别为宿主机程序，使用本机 perf 工具链采样。
+- ADB: 可用，已发现 1 台设备
+- 目标设备: 10.87.51.151:5555
+- 设备选择: 已自动选择 ADB 设备 10.87.51.151:5555（XT2503_3，android，后端 simpleperf），因为它是当前唯一在线的可分析设备。
+- PMU: cpu_atom, cpu_core
+- 源码映射: addr2line 可用
+
+## 4. 实验设计与执行
+- 第 1 轮 [baseline] /usr/bin/time / 运行时基线: 用 /usr/bin/time -v 建立程序运行基线。
+- 第 1 轮 [baseline] perf stat / 指令效率: 判断 cycles、instructions 和 IPC 的健康度。当前使用首选事件组合。 事件为 cycles, Instructions, task-clock, cpu-clock, SLOTS。
+- 第 1 轮 [baseline] perf stat / 缓存与内存压力 [1/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 cache-references, cache-misses, mem_load_retired.l1_hit, mem_load_retired.l1_miss, l2_rqsts.references, L2_RQSTS.MISS, longest_lat_cache.reference, longest_lat_cache.miss, topdown-be-bound。 第 1/2 批。，已退化到当前机器可用方案
+- 第 1 轮 [baseline] perf stat / 缓存与内存压力 [2/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 cache-references, cache-misses, mem_load_retired.l1_hit, mem_load_retired.l1_miss, l2_rqsts.references, L2_RQSTS.MISS, longest_lat_cache.reference, longest_lat_cache.miss, topdown-be-bound。 第 2/2 批。，已退化到当前机器可用方案
+- 第 1 轮 [baseline] perf stat / 前后端停顿 [1/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 SLOTS, topdown-retiring, topdown-bad-spec, topdown-fe-bound, topdown-be-bound, cycles, Instructions。 第 1/2 批。，已退化到当前机器可用方案
+- 第 1 轮 [baseline] perf stat / 前后端停顿 [2/2]: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 SLOTS, topdown-retiring, topdown-bad-spec, topdown-fe-bound, topdown-be-bound, cycles, Instructions。 第 2/2 批。，已退化到当前机器可用方案
+- 第 1 轮 [baseline] perf stat / 调度上下文: 判断调度切换、迁移与系统级 CPU 上下文。当前使用首选事件组合。 事件为 context-switches, cpu-migrations, page-faults, mem_inst_retired.lock_loads。
+- 第 1 轮 [baseline] pidstat / 调度上下文: 补充进程级 CPU 与等待拆分。
+- 第 1 轮 [baseline] mpstat / 调度上下文: 补充系统级 CPU 与调度上下文。
+- 第 2 轮 [verification] perf record / 热点函数调用链: 使用 perf record 采样热点函数和调用链，调用栈模式为 fp。 采样事件为 cycles。
+- 第 2 轮 [verification] perf stat / 时间序列行为 [1/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 1/4 批。，已退化到当前机器可用方案
+- 第 2 轮 [verification] perf stat / 时间序列行为 [2/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 2/4 批。，已退化到当前机器可用方案
+- 第 2 轮 [verification] perf stat / 时间序列行为 [3/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 3/4 批。，已退化到当前机器可用方案
+- 第 2 轮 [verification] perf stat / 时间序列行为 [4/4]: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。 第 4/4 批。，已退化到当前机器可用方案
+
+## 5. 证据摘要
+- 第 2 轮后，当前最强规则候选为 cpu_bound。 重点 observation 数量 10，热点符号 7 个，时间序列指标 28 个，进程拆账 1 条，线程拆账 1 条。
+- 重点指标: cache_misses, context_switches, voluntary_context_switches
+- 热点符号: main
+- 时间序列指标: 013, 017, 564, 658, 703, 879
+- 进程级样本拆账: cpu_bound_demo pid=3901685 100.00%
+- 线程级样本拆账: cpu_bound_demo pid/tid=3901685/3901685 100.00%
+- 是否需要进一步区分 cpu_bound 与其他候选瓶颈。
+
+## 6. 关键观测
+- obs_14a33ea2: time.user_time_sec=0.34
+- obs_8890b2e2: time.system_time_sec=0.0
+- obs_4e8bce7e: time.cpu_utilization_pct=100
+- obs_62b42c23: time.max_rss_kb=4320
+- obs_242252a9: time.major_faults=0
+- obs_330c0722: time.voluntary_context_switches=1
+- obs_b0bf4773: time.involuntary_context_switches=3
+- obs_9fb23252: time.elapsed_time_sec=0.34
+- obs_30dd0445: perf_stat.703=733
+- obs_a96f828c: perf_stat.013=13.0
+- obs_5d558096: perf_stat.msec=342.04
+- obs_ab677617: perf_stat.564=382
+- obs_a7a5b845: perf_stat.seconds=0.34217471
+- obs_3159456b: perf_stat.cache_references=58861
+- obs_682d9dfb: perf_stat.cache_misses=21323
+- obs_917cb3b8: perf_stat.901=734
+- obs_e07d96b4: perf_stat.l1_miss_count=32399
+- obs_9c28c73e: perf_stat.l2_access_count=3766497
+- obs_3d5c522d: perf_stat.l2_miss_count=69237
+- obs_c06e8439: perf_stat.seconds=0.339684986
+- obs_43154149: perf_stat.cache_miss_rate_pct=36.226
+- obs_1a8c1b90: perf_stat.l2_miss_rate_pct=1.8382
+- obs_2c4db72c: perf_stat.llc_access_count=61176
+- obs_ca5d322b: perf_stat.llc_miss_count=18309
+- obs_87a22657: perf_stat.seconds=0.339657337
+- obs_aed208e0: perf_stat.llc_miss_rate_pct=29.9284
+- obs_6a40b51d: perf_stat.879=383
+- obs_2a932a72: perf_stat.seconds=0.339454167
+- obs_b6bd1f94: perf_stat.658=731
+- obs_743d64ea: perf_stat.017=17.0
+- obs_4a0aa235: perf_stat.seconds=0.339610036
+- obs_e127cc20: perf_stat.context_switches=3
+- obs_cd009832: perf_stat.cpu_migrations=0
+- obs_219d5bca: perf_stat.page_faults=178
+- obs_793e3f96: perf_stat.lock_loads=10168
+- obs_ce794289: perf_stat.seconds=0.339504232
+- obs_f1a8af37: mpstat.average=all    0.10    0.00    0.05    0.05    0.00    0.00    0.00    0.00    0.00   99.80
+- obs_3466eff3: perf_record.hot_symbol_pct=100.0
+- obs_4692fcca: perf_record.hot_symbol_pct=100.0
+- obs_fb290d4d: perf_record.hot_symbol_pct=100.0
+- obs_fdcbbd86: perf_record.hot_symbol_pct=93.88
+- obs_2fa437f1: perf_record.hot_symbol_pct=49.55
+- obs_10ab5455: perf_record.hot_symbol_pct=29.65
+- obs_b268634e: perf_record.hot_symbol_pct=2.11
+- obs_ade2ba70: perf_record.hot_symbol_pct=2.11
+- obs_063cc811: perf_record.callgraph_samples=1358
+- obs_102eeaf1: perf_record.process_sample_count=1357
+- obs_c9149c07: perf_record.process_sample_pct=100.0
+- obs_feccf9d8: perf_record.thread_sample_count=1357
+- obs_08894ec1: perf_record.thread_sample_pct=100.0
+- obs_8abd18ba: perf_record.hot_frame_sample_pct=3.9794
+- obs_73ba3de8: perf_record.hot_frame_sample_pct=2.874
+- obs_ad25d8e8: perf_record.hot_frame_sample_pct=2.8003
+- obs_6bcf5f4f: perf_record.hot_frame_sample_pct=2.3581
+- obs_213aa39c: perf_record.hot_frame_sample_pct=2.2108
+- obs_244c8691: perf_record.hot_frame_sample_pct=2.2108
+- obs_d4138e51: perf_record.hot_frame_sample_pct=2.2108
+- obs_b82f9966: perf_record.hot_frame_sample_pct=2.2108
+- obs_3094eb73: perf_record.hot_frame_sample_pct=2.1371
+- obs_5a5e8a1d: perf_record.hot_frame_sample_pct=2.0634
+- obs_3ae66432: perf_stat.cycles=510247063
+- obs_2cf08583: perf_stat.instructions=1975340965
+- obs_596b1927: perf_stat.cache_references=51930
+- obs_d458e096: perf_stat.cache_misses=22129
+- obs_9a369358: perf_stat.cycles=511028340
+- obs_e84f3434: perf_stat.instructions=1983952596
+- obs_300a864f: perf_stat.cache_references=4966
+- obs_fda4432b: perf_stat.cache_misses=2055
+- obs_56f3f217: perf_stat.cycles=510950361
+- obs_4377611a: perf_stat.instructions=1984766428
+- obs_5ae3b982: perf_stat.cache_references=2688
+- obs_9fbc9903: perf_stat.cache_misses=410
+- obs_55772f7d: perf_stat.cycles=199748494
+- obs_66bcfe38: perf_stat.instructions=773976902
+- obs_3664b640: perf_stat.cache_references=17984
+- obs_31b6a148: perf_stat.cache_misses=7152
+- obs_97254049: perf_stat.ipc=3.8713
+- obs_25a134a0: perf_stat.cpi=0.2583
+- obs_befe5326: perf_stat.cache_miss_rate_pct=42.6131
+- obs_338a438c: perf_stat.cache_mpki=0.0112
+- obs_9286dcf5: perf_stat.ipc=3.8823
+- obs_7153055c: perf_stat.cpi=0.2576
+- obs_d74d4f45: perf_stat.cache_miss_rate_pct=41.3814
+- obs_91bb693b: perf_stat.cache_mpki=0.001
+- obs_4d8a0b55: perf_stat.ipc=3.8845
+- obs_49a64d7f: perf_stat.cpi=0.2574
+- obs_a622df67: perf_stat.cache_miss_rate_pct=15.253
+- obs_194d0d04: perf_stat.cache_mpki=0.0002
+- obs_7f7694c5: perf_stat.ipc=3.8748
+- obs_fc8fa5f0: perf_stat.cpi=0.2581
+- obs_ed073163: perf_stat.cache_miss_rate_pct=39.7687
+- obs_7119a791: perf_stat.cache_mpki=0.0092
+- obs_157ae905: perf_stat.l1_hit_count=510797185
+- obs_4398e8d7: perf_stat.l1_miss_count=17713
+- obs_1032f1cf: perf_stat.l2_access_count=1201617
+- obs_e98aeb2e: perf_stat.l2_miss_count=51861
+- obs_7dc7a296: perf_stat.l1_hit_count=512624716
+- obs_db294121: perf_stat.l1_miss_count=4099
+- obs_c246f479: perf_stat.l2_access_count=1049267
+- obs_7f39eb84: perf_stat.l2_miss_count=3141
+- obs_b492a4dc: perf_stat.l1_hit_count=512399085
+- obs_a6d1eb59: perf_stat.l1_miss_count=3775
+- obs_1bcbe8fc: perf_stat.l2_access_count=1054824
+- obs_f3d4193e: perf_stat.l2_miss_count=4088
+- obs_69b6eaba: perf_stat.l1_hit_count=199075079
+- obs_5fc129d0: perf_stat.l1_miss_count=5857
+- obs_4d3dcfbc: perf_stat.l2_access_count=428735
+- obs_17ec15f9: perf_stat.l2_miss_count=11559
+- obs_cff8d42e: perf_stat.l1_miss_rate_pct=0.0035
+- obs_ca669d90: perf_stat.l2_miss_rate_pct=4.3159
+- obs_070dd11f: perf_stat.l1_miss_rate_pct=0.0008
+- obs_8eb6dc63: perf_stat.l2_miss_rate_pct=0.2994
+- obs_6d1a6d7f: perf_stat.l1_miss_rate_pct=0.0007
+- obs_733f5529: perf_stat.l2_miss_rate_pct=0.3876
+- obs_9820982c: perf_stat.l1_miss_rate_pct=0.0029
+- obs_9d091f66: perf_stat.l2_miss_rate_pct=2.6961
+- obs_57615fd5: perf_stat.llc_access_count=44756
+- obs_8359e6ce: perf_stat.llc_miss_count=15990
+- obs_46c29f8e: perf_stat.branches=262356387
+- obs_4148a2d6: perf_stat.branch_misses=496293
+- obs_83691be7: perf_stat.llc_access_count=2140
+- obs_5d49908e: perf_stat.llc_miss_count=270
+- obs_4f77083c: perf_stat.branches=264024619
+- obs_68773652: perf_stat.branch_misses=487358
+- obs_695a25e3: perf_stat.llc_access_count=3467
+- obs_3513d55b: perf_stat.llc_miss_count=557
+- obs_2e97d585: perf_stat.branches=263718810
+- obs_3a6ceb55: perf_stat.branch_misses=491686
+- obs_680fb19d: perf_stat.llc_access_count=16078
+- obs_a11a1258: perf_stat.llc_miss_count=8775
+- obs_26d2d0b3: perf_stat.branches=103595503
+- obs_395ef179: perf_stat.branch_misses=194372
+- obs_a228b158: perf_stat.branch_miss_rate_pct=0.1892
+- obs_242fa92a: perf_stat.llc_miss_rate_pct=35.7271
+- obs_56321b69: perf_stat.branch_miss_rate_pct=0.1846
+- obs_c9d9b80f: perf_stat.llc_miss_rate_pct=12.6168
+- obs_1d25335a: perf_stat.branch_miss_rate_pct=0.1864
+- obs_22807a91: perf_stat.llc_miss_rate_pct=16.0658
+- obs_f281d5c8: perf_stat.branch_miss_rate_pct=0.1876
+- obs_d1ced3ea: perf_stat.llc_miss_rate_pct=54.5777
+- obs_5cb7e067: perf_stat.context_switches=4
+- obs_59006d17: perf_stat.context_switches=0
+- obs_6a9a3cc3: perf_stat.context_switches=1
+- obs_950ad85d: perf_stat.context_switches=0
+
+## 7. 候选瓶颈
+### 7.1 CPU 瓶颈
+- 置信度: 0.95
+- 支持证据: obs_4e8bce7e, obs_c9149c07, obs_08894ec1, obs_97254049, obs_9286dcf5, obs_4d8a0b55, obs_7f7694c5
+- 反证: 无
+- 验证状态: 证据基本充分
+### 7.2 分支预测失误
+- 置信度: 0.77
+- 支持证据: obs_4148a2d6, obs_68773652, obs_3a6ceb55, obs_395ef179
+- 反证: 无
+- 验证状态: 需要进一步验证
+
+## 8. 源码定位
+- 未发现可直接关联的源码位置。
+
+## 9. 二次验证
+- 已执行动作:
+- act_28f48556: /usr/bin/time / 运行时基线 [done]
+- act_28504bcd: perf stat / 指令效率 [done]
+- act_792e1a5d: perf stat / 缓存与内存压力 [1/2] [done]
+- act_9bcc1ad2: perf stat / 缓存与内存压力 [2/2] [done]
+- act_a4b9c048: perf stat / 前后端停顿 [1/2] [done]
+- act_f61a2a4a: perf stat / 前后端停顿 [2/2] [done]
+- act_9dc451e0: perf stat / 调度上下文 [done]
+- act_4591bfc0: pidstat / 调度上下文 [done]
+- act_e9ab044b: mpstat / 调度上下文 [done]
+- act_c59a1778: perf record / 热点函数调用链 [done]
+- act_4aa164ae: perf stat / 时间序列行为 [1/4] [done]
+- act_18f2b2ee: perf stat / 时间序列行为 [2/4] [done]
+- act_c86e141c: perf stat / 时间序列行为 [3/4] [done]
+- act_2c5272c7: perf stat / 时间序列行为 [4/4] [done]
+- 新证据:
+- CPU 瓶颈: time.cpu_utilization_pct=100
+- CPU 瓶颈: perf_record.process_sample_pct=100.0
+- CPU 瓶颈: perf_record.thread_sample_pct=100.0
+- CPU 瓶颈: perf_stat.ipc=3.8713
+- CPU 瓶颈: perf_stat.ipc=3.8823
+- CPU 瓶颈: perf_stat.ipc=3.8845
+- CPU 瓶颈: perf_stat.ipc=3.8748
+- 分支预测失误: perf_stat.branch_misses=496293
+- 分支预测失误: perf_stat.branch_misses=487358
+- 分支预测失误: perf_stat.branch_misses=491686
+- 分支预测失误: perf_stat.branch_misses=194372
+
+## 10. 建议
+- 建议追加 perf record -g，定位最热函数和调用栈。
+- 建议检查高频分支代码并结合调用栈定位热点分支。

@@ -1,0 +1,236 @@
+{
+  "executive_summary": "\u5f53\u524d\u6700\u53ef\u80fd\u7684\u74f6\u9888\u65b9\u5411\u662f CPU \u74f6\u9888\uff0c\u7f6e\u4fe1\u5ea6\u4e3a 0.76\u3002",
+  "target": {
+    "command": [
+      "examples/bin/cpu_bound_demo",
+      "700",
+      "18000"
+    ],
+    "executable_path": "examples/bin/cpu_bound_demo",
+    "source_dir": "examples/cpp",
+    "source_file_count": 4,
+    "runtime_notes": [
+      "verification_rounds=1",
+      "actions_executed=9"
+    ]
+  },
+  "environment_summary": [
+    "\u67b6\u6784: x86_64",
+    "\u5185\u6838: 6.2.0-37-generic",
+    "CPU: 13th Gen Intel(R) Core(TM) i5-13600K",
+    "\u903b\u8f91\u6838\u6570: 20",
+    "perf: \u53ef\u7528 perf version 6.2.16",
+    "\u53ef\u7528\u4e8b\u4ef6\u6570: 1070",
+    "\u8c03\u7528\u6808\u6a21\u5f0f: fp, dwarf, lbr",
+    "hybrid PMU: cpu_atom, cpu_core",
+    "Top-Down/TMA: topdown \u4e8b\u4ef6 50 \u4e2a\uff0cTMA \u6307\u6807 125 \u4e2a",
+    "addr2line: \u53ef\u7528",
+    "perf_event_paranoid: -1",
+    "\u68c0\u6d4b\u5230 top-down / TMA \u76f8\u5173\u4e8b\u4ef6\uff0c\u540e\u7eed\u5b9e\u9a8c\u4f1a\u4f18\u5148\u5c1d\u8bd5\u66f4\u7ec6\u7c92\u5ea6\u7684\u524d\u540e\u7aef\u62c6\u5206\u3002",
+    "\u68c0\u6d4b\u5230 hybrid PMU: cpu_atom, cpu_core\u3002\u4e8b\u4ef6\u6620\u5c04\u4f1a\u4f18\u5148\u9009\u62e9\u901a\u7528\u522b\u540d\uff0c\u4e0d\u8db3\u65f6\u518d\u9000\u5316\u5230\u5177\u4f53 PMU\u3002",
+    "\u68c0\u6d4b\u5230 addr2line\uff0c\u53ef\u5728\u7b26\u53f7\u548c\u5730\u5740\u53ef\u7528\u65f6\u5c1d\u8bd5\u6620\u5c04\u5230\u6e90\u7801\u884c\u53f7\u3002"
+  ],
+  "experiment_history": [
+    "\u7b2c 1 \u8f6e [baseline] /usr/bin/time / \u8fd0\u884c\u65f6\u57fa\u7ebf: \u7528 /usr/bin/time -v \u5efa\u7acb\u7a0b\u5e8f\u8fd0\u884c\u57fa\u7ebf\u3002",
+    "\u7b2c 1 \u8f6e [baseline] perf stat / \u6307\u4ee4\u6548\u7387: \u5224\u65ad cycles\u3001instructions \u548c IPC \u7684\u5065\u5eb7\u5ea6\u3002\u5f53\u524d\u4f7f\u7528\u9996\u9009\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a cycles, Instructions, task-clock, cpu-clock, SLOTS\u3002",
+    "\u7b2c 1 \u8f6e [baseline] perf stat / \u7f13\u5b58\u4e0e\u5185\u5b58\u538b\u529b: \u5224\u65ad cache miss\u3001\u5185\u5b58\u538b\u529b\u4ee5\u53ca\u524d\u540e\u7aef\u505c\u987f\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a topdown-be-bound, cache-references, cache-misses, longest_lat_cache.miss\u3002\uff0c\u5df2\u9000\u5316\u5230\u5f53\u524d\u673a\u5668\u53ef\u7528\u65b9\u6848",
+    "\u7b2c 1 \u8f6e [baseline] perf stat / \u524d\u540e\u7aef\u505c\u987f: \u5224\u65ad cache miss\u3001\u5185\u5b58\u538b\u529b\u4ee5\u53ca\u524d\u540e\u7aef\u505c\u987f\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a SLOTS, topdown-retiring, topdown-bad-spec, topdown-fe-bound, topdown-be-bound, cycles, Instructions\u3002\uff0c\u5df2\u9000\u5316\u5230\u5f53\u524d\u673a\u5668\u53ef\u7528\u65b9\u6848",
+    "\u7b2c 1 \u8f6e [baseline] perf stat / \u8c03\u5ea6\u4e0a\u4e0b\u6587: \u5224\u65ad\u8c03\u5ea6\u5207\u6362\u3001\u8fc1\u79fb\u4e0e\u7cfb\u7edf\u7ea7 CPU \u4e0a\u4e0b\u6587\u3002\u5f53\u524d\u4f7f\u7528\u9000\u5316\u4e8b\u4ef6\u7ec4\u5408\u3002 \u4e8b\u4ef6\u4e3a context-switches, cpu-migrations, page-faults\u3002\uff0c\u5df2\u9000\u5316\u5230\u5f53\u524d\u673a\u5668\u53ef\u7528\u65b9\u6848",
+    "\u7b2c 1 \u8f6e [baseline] pidstat / \u8c03\u5ea6\u4e0a\u4e0b\u6587: \u8865\u5145\u8fdb\u7a0b\u7ea7 CPU \u4e0e\u7b49\u5f85\u62c6\u5206\u3002",
+    "\u7b2c 1 \u8f6e [baseline] mpstat / \u8c03\u5ea6\u4e0a\u4e0b\u6587: \u8865\u5145\u7cfb\u7edf\u7ea7 CPU \u4e0e\u8c03\u5ea6\u4e0a\u4e0b\u6587\u3002",
+    "\u7b2c 2 \u8f6e [verification] perf record / \u70ed\u70b9\u51fd\u6570\u8c03\u7528\u94fe: \u4f7f\u7528 perf record \u91c7\u6837\u70ed\u70b9\u51fd\u6570\u548c\u8c03\u7528\u94fe\uff0c\u8c03\u7528\u6808\u6a21\u5f0f\u4e3a fp\u3002",
+    "\u7b2c 2 \u8f6e [verification] perf stat / \u65f6\u95f4\u5e8f\u5217\u884c\u4e3a: \u4f7f\u7528 perf stat interval mode \u89c2\u5bdf IPC\u3001cache \u548c\u8c03\u5ea6\u6307\u6807\u968f\u65f6\u95f4\u7684\u6ce2\u52a8\u3002"
+  ],
+  "evidence_summary": [
+    "\u7b2c 2 \u8f6e\u540e\uff0c\u5f53\u524d\u6700\u5f3a\u89c4\u5219\u5019\u9009\u4e3a cpu_bound\u3002 \u91cd\u70b9 observation \u6570\u91cf 10\uff0c\u70ed\u70b9\u7b26\u53f7 6 \u4e2a\uff0c\u65f6\u95f4\u5e8f\u5217\u6307\u6807 4 \u4e2a\uff0c\u8fdb\u7a0b\u62c6\u8d26 1 \u6761\uff0c\u7ebf\u7a0b\u62c6\u8d26 1 \u6761\u3002",
+    "\u91cd\u70b9\u6307\u6807: cache_misses, context_switches, voluntary_context_switches, hot_symbol_pct",
+    "\u70ed\u70b9\u7b26\u53f7: _start, __libc_start_main@@GLIBC_2.34, __libc_start_call_main, main, __cos_fma",
+    "\u65f6\u95f4\u5e8f\u5217\u6307\u6807: cache_misses, context_switches, cycles, instructions",
+    "\u8fdb\u7a0b\u7ea7\u6837\u672c\u62c6\u8d26: cpu_bound_demo pid=3640271 100.00%",
+    "\u7ebf\u7a0b\u7ea7\u6837\u672c\u62c6\u8d26: cpu_bound_demo pid/tid=3640271/3640271 100.00%",
+    "\u662f\u5426\u9700\u8981\u8fdb\u4e00\u6b65\u533a\u5206 cpu_bound \u4e0e\u5176\u4ed6\u5019\u9009\u74f6\u9888\u3002"
+  ],
+  "chart_specs": [
+    {
+      "chart_id": "hypothesis-confidence",
+      "title": "\u5019\u9009\u74f6\u9888\u7f6e\u4fe1\u5ea6\u5bf9\u6bd4",
+      "chart_type": "bar",
+      "metrics": [
+        "hypothesis_confidence"
+      ],
+      "rationale": "\u6240\u6709\u62a5\u544a\u90fd\u5e94\u5148\u5c55\u793a\u5f53\u524d\u6700\u4e3b\u8981\u7684\u74f6\u9888\u5019\u9009\u53ca\u5176\u76f8\u5bf9\u7f6e\u4fe1\u5ea6\u3002",
+      "focus": "overall_diagnosis"
+    },
+    {
+      "chart_id": "process-sample-breakdown",
+      "title": "\u8fdb\u7a0b\u7ea7\u6837\u672c\u62c6\u8d26",
+      "chart_type": "bar",
+      "metrics": [
+        "process_sample_pct"
+      ],
+      "rationale": "\u5e76\u53d1\u7a0b\u5e8f\u9700\u8981\u5148\u770b\u6bcf\u4e2a\u8fdb\u7a0b\u6216\u5b50\u8fdb\u7a0b\u8d21\u732e\u4e86\u591a\u5c11\u70ed\u70b9\u6837\u672c\u3002",
+      "focus": "process_breakdown"
+    },
+    {
+      "chart_id": "thread-sample-breakdown",
+      "title": "\u7ebf\u7a0b\u7ea7\u6837\u672c\u62c6\u8d26",
+      "chart_type": "bar",
+      "metrics": [
+        "thread_sample_pct"
+      ],
+      "rationale": "\u591a\u7ebf\u7a0b\u7a0b\u5e8f\u9700\u8981\u62c6\u51fa\u4e3b\u7ebf\u7a0b\u4e0e\u5de5\u4f5c\u7ebf\u7a0b\u7684\u6837\u672c\u5360\u6bd4\u3002",
+      "focus": "thread_breakdown"
+    },
+    {
+      "chart_id": "timeline-cache_misses",
+      "title": "cache_misses \u65f6\u95f4\u5e8f\u5217",
+      "chart_type": "line",
+      "metrics": [
+        "cache_misses"
+      ],
+      "rationale": "\u5b58\u5728\u65f6\u95f4\u5e8f\u5217\u89c2\u6d4b\u65f6\uff0c\u5e94\u76f4\u63a5\u5c55\u793a\u5173\u952e\u6307\u6807\u968f\u65f6\u95f4\u7684\u53d8\u5316\u8d8b\u52bf\u3002",
+      "focus": "temporal_behavior"
+    },
+    {
+      "chart_id": "timeline-context_switches",
+      "title": "context_switches \u65f6\u95f4\u5e8f\u5217",
+      "chart_type": "line",
+      "metrics": [
+        "context_switches"
+      ],
+      "rationale": "\u5b58\u5728\u65f6\u95f4\u5e8f\u5217\u89c2\u6d4b\u65f6\uff0c\u5e94\u76f4\u63a5\u5c55\u793a\u5173\u952e\u6307\u6807\u968f\u65f6\u95f4\u7684\u53d8\u5316\u8d8b\u52bf\u3002",
+      "focus": "temporal_behavior"
+    },
+    {
+      "chart_id": "hotspot-symbols",
+      "title": "\u70ed\u70b9\u51fd\u6570\u5360\u6bd4",
+      "chart_type": "bar",
+      "metrics": [
+        "hot_symbol_pct"
+      ],
+      "rationale": "\u5df2\u7ecf\u62ff\u5230\u70ed\u70b9\u51fd\u6570\u6837\u672c\u540e\uff0c\u5e94\u5c55\u793a\u6700\u70ed\u51fd\u6570\u5206\u5e03\uff0c\u5e2e\u52a9\u9a8c\u8bc1\u70ed\u70b9\u662f\u5426\u96c6\u4e2d\u3002",
+      "focus": "hotspot_distribution"
+    }
+  ],
+  "detected_bottlenecks": [
+    "cpu_bound"
+  ],
+  "supporting_evidence": [
+    "CPU \u74f6\u9888: time.cpu_utilization_pct=100",
+    "CPU \u74f6\u9888: perf_record.process_sample_pct=100.0",
+    "CPU \u74f6\u9888: perf_record.thread_sample_pct=100.0"
+  ],
+  "rejected_alternatives": [],
+  "source_findings": [
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo.cpp",
+      "line_no": 14,
+      "line_end": 16,
+      "symbol_hint": "main",
+      "issue_type": "addr2line \u70ed\u70b9\u5b9a\u4f4d",
+      "rationale": "perf record \u6837\u672c\u4e2d main \u5360 2.08%\uff0c\u5730\u5740 0x143d \u901a\u8fc7 addr2line \u6620\u5c04\u5230\u8be5\u6e90\u7801\u4f4d\u7f6e\u3002",
+      "snippet": "  12 |         for (std::size_t i = 0; i < inner_loops; ++i) {\n  13 |             const double x = static_cast<double>((round + 1) * (i + 3));\n  14 |             values[i] = std::sin(x) * std::cos(x / 3.0) + std::sqrt(x + 11.0);\n  15 |             checksum += values[i];\n  16 |         }",
+      "related_hypothesis": "cpu_bound",
+      "mapping_method": "addr2line",
+      "confidence": 0.0208
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo.cpp",
+      "line_no": 13,
+      "line_end": 15,
+      "symbol_hint": "hot_loop",
+      "issue_type": "addr2line \u70ed\u70b9\u5b9a\u4f4d",
+      "rationale": "perf record \u6837\u672c\u4e2d main \u5360 1.90%\uff0c\u5730\u5740 0x1430 \u901a\u8fc7 addr2line \u6620\u5c04\u5230\u8be5\u6e90\u7801\u4f4d\u7f6e\u3002",
+      "snippet": "  11 |     for (std::size_t round = 0; round < outer_loops; ++round) {\n  12 |         for (std::size_t i = 0; i < inner_loops; ++i) {\n  13 |             const double x = static_cast<double>((round + 1) * (i + 3));\n  14 |             values[i] = std::sin(x) * std::cos(x / 3.0) + std::sqrt(x + 11.0);\n  15 |             checksum += values[i];",
+      "related_hypothesis": "cpu_bound",
+      "mapping_method": "addr2line",
+      "confidence": 0.019
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo.cpp",
+      "line_no": 14,
+      "line_end": 16,
+      "symbol_hint": "hot_loop",
+      "issue_type": "addr2line \u70ed\u70b9\u5b9a\u4f4d",
+      "rationale": "perf record \u6837\u672c\u4e2d main \u5360 1.90%\uff0c\u5730\u5740 0x1463 \u901a\u8fc7 addr2line \u6620\u5c04\u5230\u8be5\u6e90\u7801\u4f4d\u7f6e\u3002",
+      "snippet": "  12 |         for (std::size_t i = 0; i < inner_loops; ++i) {\n  13 |             const double x = static_cast<double>((round + 1) * (i + 3));\n  14 |             values[i] = std::sin(x) * std::cos(x / 3.0) + std::sqrt(x + 11.0);\n  15 |             checksum += values[i];\n  16 |         }",
+      "related_hypothesis": "cpu_bound",
+      "mapping_method": "addr2line",
+      "confidence": 0.019
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo.cpp",
+      "line_no": 23,
+      "line_end": 25,
+      "symbol_hint": "main",
+      "issue_type": "\u70ed\u70b9\u51fd\u6570\u5b9a\u4f4d",
+      "rationale": "perf record / report \u663e\u793a\u70ed\u70b9\u7b26\u53f7 main\uff0c\u8be5\u6e90\u7801\u4f4d\u7f6e\u4e0e\u70ed\u70b9\u8c03\u7528\u8def\u5f84\u76f4\u63a5\u76f8\u5173\u3002",
+      "snippet": "  21 | }  // namespace\n  22 | \n  23 | int main(int argc, char** argv) {\n  24 |     std::size_t outer_loops = 1200;\n  25 |     std::size_t inner_loops = 24000;",
+      "related_hypothesis": "cpu_bound",
+      "mapping_method": "symbol_scan",
+      "confidence": 0.5
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo.cpp",
+      "line_no": 9,
+      "line_end": 11,
+      "symbol_hint": "double hot_loop(std::size_t outer_loops, std::size_t inner_loops) {",
+      "issue_type": "\u5927\u89c4\u6a21\u5411\u91cf\u5904\u7406",
+      "rationale": "\u68c0\u6d4b\u5230\u53ef\u80fd\u53c2\u4e0e\u9ad8\u9891\u6570\u636e\u5904\u7406\u7684\u5bb9\u5668\u4ee3\u7801\u3002",
+      "snippet": "   7 | \n   8 | double hot_loop(std::size_t outer_loops, std::size_t inner_loops) {\n   9 |     std::vector<double> values(inner_loops, 0.0);\n  10 |     double checksum = 0.0;\n  11 |     for (std::size_t round = 0; round < outer_loops; ++round) {",
+      "related_hypothesis": "cpu_bound",
+      "mapping_method": "heuristic",
+      "confidence": 0.35
+    },
+    {
+      "file_path": "/home/tchen/agent/perf_agent/examples/cpp/cpu_bound_demo.cpp",
+      "line_no": 11,
+      "line_end": 13,
+      "symbol_hint": "for (std::size_t round = 0; round < outer_loops; ++round) {",
+      "issue_type": "\u70ed\u70b9\u5faa\u73af",
+      "rationale": "\u68c0\u6d4b\u5230\u7591\u4f3c\u9ad8\u9891\u8ba1\u7b97\u5faa\u73af\u6216\u6570\u5b66\u51fd\u6570\u8c03\u7528\u3002",
+      "snippet": "   9 |     std::vector<double> values(inner_loops, 0.0);\n  10 |     double checksum = 0.0;\n  11 |     for (std::size_t round = 0; round < outer_loops; ++round) {\n  12 |         for (std::size_t i = 0; i < inner_loops; ++i) {\n  13 |             const double x = static_cast<double>((round + 1) * (i + 3));",
+      "related_hypothesis": "cpu_bound",
+      "mapping_method": "heuristic",
+      "confidence": 0.35
+    }
+  ],
+  "confidence_overall": 0.76,
+  "recommended_next_steps": [
+    "\u5efa\u8bae\u8ffd\u52a0 perf record -g\uff0c\u5b9a\u4f4d\u6700\u70ed\u51fd\u6570\u548c\u8c03\u7528\u6808\u3002"
+  ],
+  "artifacts": [
+    "runs/run_cd90fc87/artifacts/act_16a552ab.json",
+    "runs/run_cd90fc87/artifacts/act_16a552ab.stdout.txt",
+    "runs/run_cd90fc87/artifacts/act_26fd339b.json",
+    "runs/run_cd90fc87/artifacts/act_26fd339b.stderr.txt",
+    "runs/run_cd90fc87/artifacts/act_26fd339b.stdout.txt",
+    "runs/run_cd90fc87/artifacts/act_29e9da50.json",
+    "runs/run_cd90fc87/artifacts/act_29e9da50.stderr.txt",
+    "runs/run_cd90fc87/artifacts/act_29e9da50.stdout.txt",
+    "runs/run_cd90fc87/artifacts/act_76612cdc.json",
+    "runs/run_cd90fc87/artifacts/act_76612cdc.stderr.txt",
+    "runs/run_cd90fc87/artifacts/act_76612cdc.stdout.txt",
+    "runs/run_cd90fc87/artifacts/act_797b3f84.json",
+    "runs/run_cd90fc87/artifacts/act_797b3f84.stderr.txt",
+    "runs/run_cd90fc87/artifacts/act_797b3f84.stdout.txt",
+    "runs/run_cd90fc87/artifacts/act_9cb4db4f.json",
+    "runs/run_cd90fc87/artifacts/act_9cb4db4f.stderr.txt",
+    "runs/run_cd90fc87/artifacts/act_9cb4db4f.stdout.txt",
+    "runs/run_cd90fc87/artifacts/act_e931cfe2.json",
+    "runs/run_cd90fc87/artifacts/act_e931cfe2.perf.data",
+    "runs/run_cd90fc87/artifacts/act_e931cfe2.record.stdout.txt",
+    "runs/run_cd90fc87/artifacts/act_e931cfe2.script.txt",
+    "runs/run_cd90fc87/artifacts/act_e931cfe2.stderr.txt",
+    "runs/run_cd90fc87/artifacts/act_e931cfe2.stdout.txt",
+    "runs/run_cd90fc87/artifacts/act_eec314c8.json",
+    "runs/run_cd90fc87/artifacts/act_eec314c8.stderr.txt",
+    "runs/run_cd90fc87/artifacts/act_eec314c8.stdout.txt",
+    "runs/run_cd90fc87/artifacts/act_f18a4123.json",
+    "runs/run_cd90fc87/artifacts/act_f18a4123.stdout.txt",
+    "runs/run_cd90fc87/artifacts/perf_list.txt",
+    "runs/run_cd90fc87/environment.json",
+    "runs/run_cd90fc87/source_manifest.json",
+    "runs/run_cd90fc87/target.json"
+  ]
+}

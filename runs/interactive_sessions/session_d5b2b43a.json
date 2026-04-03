@@ -1,0 +1,353 @@
+{
+  "session_id": "session_d5b2b43a",
+  "context": {
+    "executable_path": null,
+    "target_cmd": [],
+    "source_dir": null,
+    "target_pid": null,
+    "workload_label": null,
+    "goal": "开始分析",
+    "cwd": "/home/tchen/agent/perf_agent",
+    "env": {},
+    "attachments": []
+  },
+  "history": [
+    {
+      "id": "msg_87c0ca84",
+      "role": "system",
+      "created_at": "2026-04-03T14:02:53.688581Z",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "已进入 perf_agent 交互模式。你可以直接说“分析 ./bin/demo，源码在 ./src”，也可以用 /set、/run、/show、/history、/compact。",
+          "attachment": null
+        }
+      ],
+      "tags": [
+        "welcome"
+      ],
+      "token_estimate": 0,
+      "meta": {}
+    },
+    {
+      "id": "msg_7c734a49",
+      "role": "user",
+      "created_at": "2026-04-03T14:03:07.536190Z",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "分析/bin/demo，源码就在附近，直接开始跑吧",
+          "attachment": null
+        }
+      ],
+      "tags": [
+        "interactive_input"
+      ],
+      "token_estimate": 6,
+      "meta": {}
+    },
+    {
+      "id": "msg_80d55acf",
+      "role": "assistant",
+      "created_at": "2026-04-03T14:04:18.217304Z",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "我先把当前上下文更新好了：\n- 目标说明: 分析/bin/demo，源码就在附近，直接开始跑吧\n准备好后直接输入“开始分析”或 /run。",
+          "attachment": null
+        }
+      ],
+      "tags": [
+        "interactive_response"
+      ],
+      "token_estimate": 0,
+      "meta": {}
+    },
+    {
+      "id": "msg_fa713f03",
+      "role": "user",
+      "created_at": "2026-04-03T14:04:53.546846Z",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "开始分析",
+          "attachment": null
+        }
+      ],
+      "tags": [
+        "interactive_input"
+      ],
+      "token_estimate": 1,
+      "meta": {}
+    },
+    {
+      "id": "msg_51341b4f",
+      "role": "assistant",
+      "created_at": "2026-04-03T14:06:02.890090Z",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "我先把当前上下文更新好了：\n- 目标说明: 开始分析\n准备好后直接输入“开始分析”或 /run。",
+          "attachment": null
+        }
+      ],
+      "tags": [
+        "interactive_response"
+      ],
+      "token_estimate": 0,
+      "meta": {}
+    },
+    {
+      "id": "msg_0903bd57",
+      "role": "user",
+      "created_at": "2026-04-03T14:06:13.141929Z",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "/run",
+          "attachment": null
+        }
+      ],
+      "tags": [
+        "slash_command"
+      ],
+      "token_estimate": 0,
+      "meta": {}
+    },
+    {
+      "id": "msg_31e33c4b",
+      "role": "assistant",
+      "created_at": "2026-04-03T14:06:13.142019Z",
+      "blocks": [
+        {
+          "type": "text",
+          "text": "还不能开始分析: 当前还没有分析目标。",
+          "attachment": null
+        }
+      ],
+      "tags": [
+        "slash_response"
+      ],
+      "token_estimate": 0,
+      "meta": {}
+    }
+  ],
+  "compact_summary": null,
+  "last_query_view": {
+    "messages": [
+      {
+        "id": "msg_87c0ca84",
+        "role": "system",
+        "created_at": "2026-04-03T14:02:53.688581Z",
+        "blocks": [
+          {
+            "type": "text",
+            "text": "已进入 perf_agent 交互模式。你可以直接说“分析 ./bin/demo，源码在 ./src”，也可以用 /set、/run、/show、/history、/compact。",
+            "attachment": null
+          }
+        ],
+        "tags": [
+          "welcome"
+        ],
+        "token_estimate": 0,
+        "meta": {}
+      },
+      {
+        "id": "msg_7c734a49",
+        "role": "user",
+        "created_at": "2026-04-03T14:03:07.536190Z",
+        "blocks": [
+          {
+            "type": "text",
+            "text": "分析/bin/demo，源码就在附近，直接开始跑吧",
+            "attachment": null
+          }
+        ],
+        "tags": [
+          "interactive_input"
+        ],
+        "token_estimate": 6,
+        "meta": {}
+      },
+      {
+        "id": "msg_80d55acf",
+        "role": "assistant",
+        "created_at": "2026-04-03T14:04:18.217304Z",
+        "blocks": [
+          {
+            "type": "text",
+            "text": "我先把当前上下文更新好了：\n- 目标说明: 分析/bin/demo，源码就在附近，直接开始跑吧\n准备好后直接输入“开始分析”或 /run。",
+            "attachment": null
+          }
+        ],
+        "tags": [
+          "interactive_response"
+        ],
+        "token_estimate": 0,
+        "meta": {}
+      },
+      {
+        "id": "msg_fa713f03",
+        "role": "user",
+        "created_at": "2026-04-03T14:04:53.546846Z",
+        "blocks": [
+          {
+            "type": "text",
+            "text": "开始分析",
+            "attachment": null
+          }
+        ],
+        "tags": [
+          "interactive_input"
+        ],
+        "token_estimate": 1,
+        "meta": {}
+      }
+    ],
+    "compact_summary": null,
+    "token_estimate": 46,
+    "stages": [
+      {
+        "name": "initial",
+        "detail": "原始消息视图。",
+        "token_estimate": 46
+      },
+      {
+        "name": "applyToolResultBudget",
+        "detail": "限制工具输出与分析结果进入上下文的体积。",
+        "token_estimate": 46
+      },
+      {
+        "name": "snipCompactIfNeeded",
+        "detail": "优先保留最近可见上下文。",
+        "token_estimate": 46
+      },
+      {
+        "name": "microcompact",
+        "detail": "对长消息做细粒度压缩。",
+        "token_estimate": 46
+      },
+      {
+        "name": "contextCollapse",
+        "detail": "折叠重复进度和相邻工具结果。",
+        "token_estimate": 46
+      }
+    ]
+  },
+  "last_prepared_request": {
+    "messages": [
+      {
+        "role": "system",
+        "content": [
+          {
+            "type": "text",
+            "text": "已进入 perf_agent 交互模式。你可以直接说“分析 ./bin/demo，源码在 ./src”，也可以用 /set、/run、/show、/history、/compact。"
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "分析/bin/demo，源码就在附近，直接开始跑吧"
+          }
+        ]
+      },
+      {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": "我先把当前上下文更新好了：\n- 目标说明: 分析/bin/demo，源码就在附近，直接开始跑吧\n准备好后直接输入“开始分析”或 /run。"
+          }
+        ]
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "开始分析"
+          }
+        ]
+      }
+    ],
+    "system": [
+      "perf_agent interactive intake",
+      "You are operating inside a terminal-style performance analysis assistant.",
+      "Prefer structured interpretation, local slash-command interception, and conservative clarification when user intent is ambiguous.",
+      "Current session context: exe=; cmd=; pid=; source=; goal=分析/bin/demo，源码就在附近，直接开始跑吧."
+    ],
+    "tools": [
+      {
+        "type": "function",
+        "name": "set_analysis_target",
+        "description": "Update executable path, command, PID, or workload label in the local interactive session.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "executable_path": {
+              "type": "string"
+            },
+            "target_cmd": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "target_pid": {
+              "type": "integer"
+            },
+            "workload_label": {
+              "type": "string"
+            }
+          }
+        },
+        "strict": true
+      },
+      {
+        "type": "function",
+        "name": "set_source_context",
+        "description": "Attach or update the source directory used for later source-side correlation.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "source_dir": {
+              "type": "string"
+            }
+          }
+        },
+        "strict": true
+      },
+      {
+        "type": "function",
+        "name": "launch_analysis",
+        "description": "Launch a new analysis run when the session already has enough target context.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "goal": {
+              "type": "string"
+            }
+          }
+        },
+        "strict": true
+      }
+    ],
+    "tool_choice": "auto",
+    "max_tokens": 1200,
+    "thinking": {
+      "type": "none"
+    },
+    "output_config": {
+      "format": "json_object"
+    },
+    "cache_markers": [
+      "interactive-intake",
+      "full-context"
+    ]
+  },
+  "runs": [],
+  "pending_approval": null
+}

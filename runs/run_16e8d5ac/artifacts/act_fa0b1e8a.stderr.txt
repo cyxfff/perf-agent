@@ -1,0 +1,16 @@
+
+ Performance counter stats for 'examples/bin/multiprocess_fanout_demo':
+
+        1112930939      cpu_core/cycles/                 #    4.960 G/sec                     
+     <not counted>      cpu_atom/cycles/                                                        (0.00%)
+        4401096456      cpu_core/Instructions/           #   19.614 G/sec                       (99.72%)
+            224.39 msec task-clock                       #    2.978 CPUs utilized             
+            224.38 msec cpu-clock                        #    2.978 CPUs utilized             
+        6675912912      cpu_core/SLOTS/                  #   29.752 G/sec                     
+
+       0.075348068 seconds time elapsed
+
+       0.224591000 seconds user
+       0.000000000 seconds sys
+
+

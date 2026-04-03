@@ -36,6 +36,10 @@ class ConsoleProgress:
             self.info(f"调用栈模式: {action.call_graph_mode}")
         if action.sample_interval_ms:
             self.info(f"时间间隔: {action.sample_interval_ms}ms")
+        if action.sandbox_runtime:
+            self.info(f"隔离运行时: {action.sandbox_runtime}")
+        if action.sandbox_summary:
+            self.info(f"隔离说明: {action.sandbox_summary}")
         if action.command:
             self.info(f"命令: {' '.join(action.command)}")
 

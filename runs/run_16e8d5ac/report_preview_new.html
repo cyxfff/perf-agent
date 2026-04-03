@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>性能分析报告</title>
+  <style>
+    :root {
+      --bg: #f5efe5;
+      --panel: rgba(255, 250, 244, 0.86);
+      --panel-strong: rgba(255, 252, 248, 0.96);
+      --ink: #1b1a18;
+      --muted: #69645c;
+      --muted-strong: #4b463f;
+      --line: rgba(111, 95, 76, 0.18);
+      --line-strong: rgba(111, 95, 76, 0.28);
+      --accent: #c55f2d;
+      --accent-soft: rgba(197, 95, 45, 0.12);
+      --accent-2: #0f766e;
+      --accent-2-soft: rgba(15, 118, 110, 0.12);
+      --shadow: 0 22px 60px rgba(66, 46, 26, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --mono: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+      --sans: "Segoe UI Variable Text", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 14% 12%, rgba(15,118,110,0.08), transparent 22%),
+        radial-gradient(circle at 84% 8%, rgba(197,95,45,0.12), transparent 24%),
+        linear-gradient(180deg, #fbf5ee 0%, #f2eadf 46%, #efe7dd 100%);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.28;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.28) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(circle at center, black 48%, transparent 100%);
+    }
+    .page {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 28px 24px 56px;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 30px 30px 26px;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(130deg, rgba(255,255,255,0.92) 0%, rgba(255,246,236,0.88) 60%, rgba(243,255,252,0.78) 100%);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      right: -80px;
+      top: -90px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(197,95,45,0.18), transparent 68%);
+    }
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .hero h1 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 1.06;
+      letter-spacing: -0.04em;
+      font-weight: 760;
+    }
+    .hero-sub {
+      margin-top: 14px;
+      max-width: 760px;
+      color: var(--muted-strong);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      margin-top: 26px;
+    }
+    .hero-main {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .metric-card, .panel, .chart-card, .observation-card, .source-card, .hypothesis-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+    .metric-card {
+      padding: 16px 18px;
+    }
+    .metric-label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .metric-value {
+      margin-top: 8px;
+      font-size: 30px;
+      font-weight: 720;
+      line-height: 1;
+    }
+    .metric-footnote {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted-strong);
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(197, 95, 45, 0.2);
+      background: rgba(255,255,255,0.6);
+      color: var(--muted-strong);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .chip--accent {
+      background: var(--accent-soft);
+      color: #8f421f;
+      border-color: rgba(197, 95, 45, 0.24);
+    }
+    .chip--teal {
+      background: var(--accent-2-soft);
+      color: #0f5e58;
+      border-color: rgba(15, 118, 110, 0.24);
+    }
+    .toolbar {
+      position: sticky;
+      top: 14px;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      margin: 22px 0;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(252, 248, 242, 0.88);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 12px 30px rgba(56, 38, 17, 0.06);
+    }
+    .tab-row, .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .tab-button, .filter-chip, .ghost-button, .inline-toggle {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.78);
+      color: var(--muted-strong);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 160ms ease;
+    }
+    .tab-button:hover, .filter-chip:hover, .ghost-button:hover, .inline-toggle:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+    }
+    .tab-button.is-active, .filter-chip.is-active {
+      background: linear-gradient(135deg, rgba(197,95,45,0.18), rgba(15,118,110,0.14));
+      color: var(--ink);
+      border-color: rgba(197,95,45,0.32);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+    }
+    .search-shell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 280px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.78);
+    }
+    .search-shell input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      padding: 10px 0;
+    }
+    .tab-pane {
+      display: none;
+      margin-top: 18px;
+    }
+    .tab-pane.is-active {
+      display: block;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 18px;
+    }
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+    .panel {
+      padding: 20px 22px;
+    }
+    .panel h2, .panel h3 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+    .panel-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .panel-list li {
+      padding: 11px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.64);
+      border: 1px solid rgba(111,95,76,0.08);
+      line-height: 1.65;
+      color: var(--muted-strong);
+    }
+    .panel-list li strong {
+      color: var(--ink);
+    }
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+    .grid--2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .grid--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.04em;
+    }
+    .section-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .hypothesis-grid, .source-grid, .chart-grid, .evidence-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .hypothesis-card, .source-card, .chart-card, .observation-card {
+      padding: 18px;
+    }
+    .hypothesis-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+    .hypothesis-title {
+      font-size: 18px;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+    .confidence {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .bar {
+      position: relative;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(111,95,76,0.12);
+      overflow: hidden;
+      margin: 14px 0 12px;
+    }
+    .bar > span {
+      position: absolute;
+      inset: 0 auto 0 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #d9733f 0%, #d49047 48%, #0f766e 100%);
+    }
+    .meta-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .meta-pill {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(111,95,76,0.12);
+      color: var(--muted-strong);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .chart-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .chart-row {
+      display: grid;
+      gap: 6px;
+    }
+    .chart-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      font-size: 13px;
+    }
+    .chart-label strong {
+      font-weight: 640;
+    }
+    .chart-value {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .line-chart {
+      width: 100%;
+      height: 230px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(246,239,230,0.94));
+      border: 1px solid rgba(111,95,76,0.12);
+      padding: 10px;
+    }
+    .obs-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .obs-metric {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .obs-value {
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: 720;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+    .obs-source {
+      margin-top: 10px;
+      color: var(--muted-strong);
+      font-size: 13px;
+    }
+    .obs-tags {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .callout {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(15,118,110,0.16);
+      background: linear-gradient(180deg, rgba(15,118,110,0.08), rgba(255,255,255,0.72));
+      color: var(--muted-strong);
+      line-height: 1.7;
+    }
+    .expandable {
+      display: grid;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .expandable details {
+      border-radius: 12px;
+      border: 1px solid rgba(111,95,76,0.12);
+      background: rgba(255,255,255,0.74);
+      overflow: hidden;
+    }
+    .expandable summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted-strong);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .expandable summary::-webkit-details-marker {
+      display: none;
+    }
+    .expandable details[open] summary {
+      border-bottom: 1px solid rgba(111,95,76,0.12);
+      background: rgba(255,255,255,0.88);
+    }
+    .expandable-body {
+      padding: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.75;
+      color: var(--ink);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .source-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .code-block {
+      display: grid;
+      gap: 0;
+      border-radius: 16px;
+      border: 1px solid rgba(111,95,76,0.12);
+      overflow: hidden;
+      background: #1d1a17;
+      color: #f6efe6;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+    .code-row {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .code-row:nth-child(odd) {
+      background: rgba(255,255,255,0.02);
+    }
+    .code-line-no {
+      padding: 8px 10px;
+      color: rgba(246,239,230,0.46);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      user-select: none;
+      text-align: right;
+    }
+    .code-line {
+      padding: 8px 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .raw-shell {
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.7);
+    }
+    .raw-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .raw-table th, .raw-table td {
+      padding: 11px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(111,95,76,0.1);
+      vertical-align: top;
+    }
+    .raw-table thead th {
+      position: sticky;
+      top: 0;
+      background: rgba(248,242,234,0.96);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .raw-table code {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted-strong);
+    }
+    .empty {
+      padding: 24px;
+      border-radius: 18px;
+      border: 1px dashed rgba(111,95,76,0.24);
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255,255,255,0.45);
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .artifact-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .artifact-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(111,95,76,0.08);
+      font-family: var(--mono);
+      font-size: 12px;
+      word-break: break-word;
+    }
+    .mono {
+      font-family: var(--mono);
+    }
+    [data-filterable][hidden] {
+      display: none !important;
+    }
+    @media (max-width: 1120px) {
+      .hero-grid, .layout {
+        grid-template-columns: 1fr;
+      }
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 760px) {
+      .page {
+        padding: 18px 14px 40px;
+      }
+      .hero {
+        padding: 24px 20px 20px;
+      }
+      .metric-value {
+        font-size: 24px;
+      }
+      .grid--2, .grid--3 {
+        grid-template-columns: 1fr;
+      }
+      .search-shell {
+        min-width: 100%;
+      }
+      .code-row {
+        grid-template-columns: 48px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="eyebrow">Interactive Investigation Report</div>
+      <h1><span title='当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。'>当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。</span></h1>
+      <p class="hero-sub">
+        这份报告已经从原始命令输出里提炼出更高价值的信息层。默认优先显示关键现象、热点路径和源码定位，原始 observation 被折叠到后面的可检索视图里。
+      </p>
+      <div class="chip-row">
+        <span class='chip chip--accent'>Top hypothesis <span title='CPU 瓶颈'>CPU 瓶颈</span> </span><span class='chip chip--teal'>置信度 0.95</span><span class='chip'>Observation 71</span><span class='chip'>源码定位 3</span><span class='chip'>动作 9</span>
+      </div>
+      <div class="hero-grid">
+        <div class="hero-main">
+          <div class="hero-meta">
+            <div class='metric-card'><div class='metric-label'>目标命令</div><div class='metric-value'>examples/bin/multiprocess_fanout_demo</div><div class='metric-footnote'><span title='examples/bin/multiprocess_fanout_demo'>examples/bin/multiprocess_fanout_demo</span></div></div>
+            <div class='metric-card'><div class='metric-label'>源码规模</div><div class='metric-value'>4</div><div class='metric-footnote'><span title='examples/cpp'>examples/cpp</span></div></div>
+            <div class='metric-card'><div class='metric-label'>实验轮次</div><div class='metric-value'>2</div><div class='metric-footnote'><span class='mono'>9</span> 个动作</div></div>
+            <div class='metric-card'><div class='metric-label'>总体置信度</div><div class='metric-value'>0.95</div><div class='metric-footnote'>1 个候选瓶颈</div></div>
+          </div>
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>调查结论</h2>
+                <p>先看最终结论和下一步建议，而不是被原始表格淹没。</p>
+              </div>
+            </div>
+            <div class="callout"><span title='当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。'>当前最可能的瓶颈方向是 CPU 瓶颈，置信度为 0.95。</span></div>
+            <ul class="panel-list" style="margin-top:14px">
+              <li><span title='建议追加 perf record -g，定位最热函数和调用栈。'>建议追加 perf record -g，定位最热函数和调用栈。</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>关键上下文</h2>
+                <p>运行环境、工具能力和代码关联会直接影响结论可信度。</p>
+              </div>
+            </div>
+            <ul class="panel-list">
+              <li><span title='架构: x86_64'>架构: x86_64</span></li><li><span title='内核: 6.2.0-37-generic'>内核: 6.2.0-37-generic</span></li><li><span title='CPU: 13th Gen Intel(R) Core(TM) i5-13600K'>CPU: 13th Gen Intel(R) Core(TM) i5-13600K</span></li><li><span title='逻辑核数: 20'>逻辑核数: 20</span></li><li><span title='perf: 可用 perf version 6.2.16'>perf: 可用 perf version 6.2.16</span></li><li><span title='可用事件数: 856'>可用事件数: 856</span></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>证据要点</h2>
+                <p>这里保留压缩后的重点，不把所有 observation 全部摊开。</p>
+              </div>
+            </div>
+            <ul class="panel-list">
+              <li><span title='第 2 轮后，当前最强规则候选为 cpu_bound。 重点 observation 数量 10，热点符号 8 个，时间序列指标 4 个，进程拆账 4 条，线程拆账 4 条。'>第 2 轮后，当前最强规则候选为 cpu_bound。 重点 observation 数量 10，热点符号 8 个，时间序列指标 4 个，进程拆账 4 条，线程拆账 4 条。</span></li><li><span title='重点指标: cache_misses, context_switches, voluntary_context_switches, hot_symbol_pct'>重点指标: cache_misses, context_switches, voluntary_context_switches, hot_symbol_pct</span></li><li><span title='热点符号: _start, __libc_start_main@@GLIBC_2.34, __libc_start_call_main, main, __cos_fma'>热点符号: _start, __libc_start_main@@GLIBC_2.34, __libc_start_call_main, main, __cos_fma</span></li><li><span title='时间序列指标: cache_misses, context_switches, cycles, instructions'>时间序列指标: cache_misses, context_switches, cycles, instructions</span></li><li><span title='进程级样本拆账: multiprocess_fa pid=3619816 33.94%, multiprocess_fa pid=3619817 33.82%, multiprocess_fa pid=3619818 32.00%, multiprocess_fa pid=3619814 0.24%'>进程级样本拆账: multiprocess_fa pid=3619816 33.94%, multiprocess_fa pid=3619817 33.82%, multiprocess_fa pid=3619818 32.00%, multiprocess_fa pid=3619814 0.24%</span></li><li><span title='线程级样本拆账: multiprocess_fa pid/tid=3619816/3619816 33.94%, multiprocess_fa pid/tid=3619817/3619817 33.82%, multiprocess_fa pid/tid=3619818/3619818 32.00%, multiprocess_fa pid/tid=3619814/3619814 0.24%'>线程级样本拆账: multiprocess_fa pid/tid=3619816/3619816 33.94%, multiprocess_fa pid/tid=3619817/3619817 33.82%, multiprocess_fa pid/tid=3619818/3619818 32.00%, multiprocess_fa pid/tid=3619814/3619814 0.24%</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div class="tab-row">
+        <button class="tab-button is-active" data-tab-button="overview">总览</button>
+        <button class="tab-button" data-tab-button="hotspots">热点与并发</button>
+        <button class="tab-button" data-tab-button="source">源码定位</button>
+        <button class="tab-button" data-tab-button="evidence">证据明细</button>
+      </div>
+      <div class="filter-row">
+        <div class="search-shell">
+          <span class="mono">/</span>
+          <input type="search" placeholder="搜索函数名、文件路径、指标名..." data-search-input>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-pane is-active" data-tab-pane="overview">
+      <div class="layout">
+        <div class="stack">
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>实验过程</h2>
+                <p>这里保留“为什么采样、用了什么工具、有没有 fallback”的路径感。</p>
+              </div>
+            </div>
+            <ul class="panel-list">
+              <li><span title='第 1 轮 [baseline] /usr/bin/time / 运行时基线: 用 /usr/bin/time -v 建立程序运行基线。'>第 1 轮 [baseline] /usr/bin/time / 运行时基线: 用 /usr/bin/time -v 建立程序运行基线。</span></li><li><span title='第 1 轮 [baseline] perf stat / 指令效率: 判断 cycles、instructions 和 IPC 的健康度。当前使用首选事件组合。 事件为 cycles, Instructions, task-clock, cpu-clock, SLOTS。'>第 1 轮 [baseline] perf stat / 指令效率: 判断 cycles、instructions 和 IPC 的健康度。当前使用首选事件组合。 事件为 cycles, Instructions, task-clock, cpu-clock, SLOTS。</span></li><li><span title='第 1 轮 [baseline] perf stat / 缓存与内存压力: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 topdown-be-bound, cache-references, cache-misses, longest_lat_cache.miss, l2_rqsts.miss, mem_load_completed.l1_miss_any。，已退化到当前机器可用方案'>第 1 轮 [baseline] perf stat / 缓存与内存压力: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 topdown-be-bound, cache-references, cache-misses, longest_lat_cache.miss, l2_rqsts.miss, mem_load_completed.l1_miss_any。，已退化到当前机器可用方案</span></li><li><span title='第 1 轮 [baseline] perf stat / 前后端停顿: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 SLOTS, topdown-retiring, topdown-bad-spec, topdown-fe-bound, topdown-be-bound, cycles, Instructions。，已退化到当前机器可用方案'>第 1 轮 [baseline] perf stat / 前后端停顿: 判断 cache miss、内存压力以及前后端停顿。当前使用退化事件组合。 事件为 SLOTS, topdown-retiring, topdown-bad-spec, topdown-fe-bound, topdown-be-bound, cycles, Instructions。，已退化到当前机器可用方案</span></li><li><span title='第 1 轮 [baseline] perf stat / 调度上下文: 判断调度切换、迁移与系统级 CPU 上下文。当前使用首选事件组合。 事件为 context-switches, cpu-migrations, page-faults, mem_inst_retired.lock_loads。'>第 1 轮 [baseline] perf stat / 调度上下文: 判断调度切换、迁移与系统级 CPU 上下文。当前使用首选事件组合。 事件为 context-switches, cpu-migrations, page-faults, mem_inst_retired.lock_loads。</span></li><li><span title='第 1 轮 [baseline] pidstat / 调度上下文: 补充进程级 CPU 与等待拆分。'>第 1 轮 [baseline] pidstat / 调度上下文: 补充进程级 CPU 与等待拆分。</span></li><li><span title='第 1 轮 [baseline] mpstat / 调度上下文: 补充系统级 CPU 与调度上下文。'>第 1 轮 [baseline] mpstat / 调度上下文: 补充系统级 CPU 与调度上下文。</span></li><li><span title='第 2 轮 [verification] perf record / 热点函数调用链: 使用 perf record 采样热点函数和调用链，调用栈模式为 fp。'>第 2 轮 [verification] perf record / 热点函数调用链: 使用 perf record 采样热点函数和调用链，调用栈模式为 fp。</span></li><li><span title='第 2 轮 [verification] perf stat / 时间序列行为: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。'>第 2 轮 [verification] perf stat / 时间序列行为: 使用 perf stat interval mode 观察 IPC、cache 和调度指标随时间的波动。</span></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>关键证据</h2>
+                <p>默认只展示最关键的 observation 卡片，原始列表挪到证据明细页。</p>
+              </div>
+            </div>
+            <div class="obs-grid">
+              <article class='observation-card'><div class='obs-metric'><span title='CPU 利用率'>CPU 利用率</span></div><div class='obs-value'><span title='296 percent'>296 percent</span></div><div class='obs-source'><span title='time · process'>time · process</span></div><div class='obs-tags'><span title='action_id=act_f0a1fcb5'>action_id=act_f0a1fcb5</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Cycles'>Cycles</span></div><div class='obs-value'><span title='1112930939 count'>1112930939 count</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_fa0b1e8a, event_name=cycles, raw_event_name=cpu_core/cycles'>action_id=act_fa0b1e8a, event_name=cycles, raw_event_name=cpu_core/cycles</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Instructions'>Instructions</span></div><div class='obs-value'><span title='4401096456 percent'>4401096456 percent</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_fa0b1e8a, event_name=cpu_core/Instructions, raw_event_name=cpu_core/Instructions'>action_id=act_fa0b1e8a, event_name=cpu_core/Instructions, raw_event_name=cpu_core/Instructions</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Backend Bound'>Backend Bound</span></div><div class='obs-value'><span title='132221171 percent'>132221171 percent</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_6fcff3dc, event_name=topdown-be-bound, raw_event_name=cpu_core/topdown-be-bound'>action_id=act_6fcff3dc, event_name=topdown-be-bound, raw_event_name=cpu_core/topdown-be-bound</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Cache Misses'>Cache Misses</span></div><div class='obs-value'><span title='23242 count'>23242 count</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_6fcff3dc, event_name=cache-misses, raw_event_name=cpu_core/cache-misses'>action_id=act_6fcff3dc, event_name=cache-misses, raw_event_name=cpu_core/cache-misses</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Cycles'>Cycles</span></div><div class='obs-value'><span title='1113131881 count'>1113131881 count</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_bf1c66fb, event_name=cycles, raw_event_name=cpu_core/cycles'>action_id=act_bf1c66fb, event_name=cycles, raw_event_name=cpu_core/cycles</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Instructions'>Instructions</span></div><div class='obs-value'><span title='4401102253 percent'>4401102253 percent</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_bf1c66fb, event_name=cpu_core/Instructions, raw_event_name=cpu_core/Instructions'>action_id=act_bf1c66fb, event_name=cpu_core/Instructions, raw_event_name=cpu_core/Instructions</span></div></article><article class='observation-card'><div class='obs-metric'><span title='Context Switches'>Context Switches</span></div><div class='obs-value'><span title='7 count'>7 count</span></div><div class='obs-source'><span title='perf_stat · process'>perf_stat · process</span></div><div class='obs-tags'><span title='action_id=act_d27fbc6c, event_name=context-switches, raw_event_name=context-switches'>action_id=act_d27fbc6c, event_name=context-switches, raw_event_name=context-switches</span></div></article><article class='observation-card'><div class='obs-metric'><span title='热点函数占比'>热点函数占比</span></div><div class='obs-value'><span title='99.30 percent'>99.30 percent</span></div><div class='obs-source'><span title='perf_record · function'>perf_record · function</span></div><div class='obs-tags'><span title='action_id=act_e3b9c340, symbol=_start, rank=1'>action_id=act_e3b9c340, symbol=_start, rank=1</span></div></article><article class='observation-card'><div class='obs-metric'><span title='热点函数占比'>热点函数占比</span></div><div class='obs-value'><span title='99.30 percent'>99.30 percent</span></div><div class='obs-source'><span title='perf_record · function'>perf_record · function</span></div><div class='obs-tags'><span title='action_id=act_e3b9c340, symbol=__libc_start_main@@GLIBC_2.34, rank=2'>action_id=act_e3b9c340, symbol=__libc_start_main@@GLIBC_2.34, rank=2</span></div></article>
+            </div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>候选瓶颈概览</h2>
+                <p>候选之间的支持力度和验证状态一眼能看清。</p>
+              </div>
+            </div>
+            <div class="hypothesis-grid">
+              <article class='hypothesis-card' data-filterable data-kind='cpu_bound' data-search='cpu_bound CPU 瓶颈 活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。 obs_55b2a9ed, obs_cf878977, obs_9c623595, obs_0d63d760, obs_6badaa70, obs_80272453, obs_e59f7bbe, obs_d1663ab2 依据观测指标: cpu_utilization_pct, process_sample_pct, process_sample_pct, process_sample_pct, process_sample_pct, thread_sample_pct, thread_sample_pct, thread_sample_pct, thread_sample_pct'><div class='hypothesis-top'><div class='hypothesis-title'><span title='CPU 瓶颈'>CPU 瓶颈</span></div><div class='confidence'>confidence=0.95</div></div><div class='bar'><span style='width:95%'></span></div><p class='hint'><span title='活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。'>活跃 CPU 利用率很高，疑似属于 CPU 密集型瓶颈。</span></p><div class='meta-line'><span class='meta-pill'>证据基本充分</span><span class='meta-pill'>9 条支持证据</span><span class='meta-pill'>0 条反证</span></div><div class='expandable' style='margin-top:12px'><div class='expandable'><details><summary>支持证据 ID: obs_55b2a9ed, obs_cf878977, obs...e59f7bbe, obs_d1663ab2<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>obs_55b2a9ed, obs_cf878977, obs_9c623595, obs_0d63d760, obs_6badaa70, obs_80272453, obs_e59f7bbe, obs_d1663ab2</div></details></div><div class='expandable'><details><summary>推理依据: 依据观测指标: cpu_utilization_pct, process_sam...sample_pct, thread_sample_pct<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>依据观测指标: cpu_utilization_pct, process_sample_pct, process_sample_pct, process_sample_pct, process_sample_pct, thread_sample_pct, thread_sample_pct, thread_sample_pct, thread_sample_pct</div></details></div></div></article>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-head">
+              <div>
+                <h2>推荐图表</h2>
+                <p>只保留当前最有解释力的图，不再机械堆满所有可视化。</p>
+              </div>
+            </div>
+            <div class="chart-grid">
+              <article class='chart-card'><h3><span title='候选瓶颈置信度对比'>候选瓶颈置信度对比</span></h3><p class='hint'><span title='所有报告都应先展示当前最主要的瓶颈候选及其相对置信度。'>所有报告都应先展示当前最主要的瓶颈候选及其相对置信度。</span></p><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>CPU 瓶颈</span></strong><span class='chart-value'>95.00%</span></div><div class='bar'><span style='width:95%'></span></div></div></div></article><article class='chart-card'><h3><span title='进程级样本拆账'>进程级样本拆账</span></h3><p class='hint'><span title='并发程序需要先看每个进程或子进程贡献了多少热点样本。'>并发程序需要先看每个进程或子进程贡献了多少热点样本。</span></p><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / pid 3619816</span></strong><span class='chart-value'>33.94%</span></div><div class='bar'><span style='width:33%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / pid 3619817</span></strong><span class='chart-value'>33.82%</span></div><div class='bar'><span style='width:33%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / pid 3619818</span></strong><span class='chart-value'>32.00%</span></div><div class='bar'><span style='width:32%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / pid 3619814</span></strong><span class='chart-value'>0.24%</span></div><div class='bar'><span style='width:8%'></span></div></div></div></article><article class='chart-card'><h3><span title='线程级样本拆账'>线程级样本拆账</span></h3><p class='hint'><span title='多线程程序需要拆出主线程与工作线程的样本占比。'>多线程程序需要拆出主线程与工作线程的样本占比。</span></p><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / 3619816:3619816</span></strong><span class='chart-value'>33.94%</span></div><div class='bar'><span style='width:33%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / 3619817:3619817</span></strong><span class='chart-value'>33.82%</span></div><div class='bar'><span style='width:33%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / 3619818:3619818</span></strong><span class='chart-value'>32.00%</span></div><div class='bar'><span style='width:32%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / 3619814:3619814</span></strong><span class='chart-value'>0.24%</span></div><div class='bar'><span style='width:8%'></span></div></div></div></article><article class='chart-card'><h3><span title='热点函数占比'>热点函数占比</span></h3><p class='hint'><span title='已经拿到热点函数样本后，应展示最热函数分布，帮助验证热点是否集中。'>已经拿到热点函数样本后，应展示最热函数分布，帮助验证热点是否集中。</span></p><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>main</span></strong><span class='chart-value'>92.07%</span></div><div class='bar'><span style='width:92%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>__cos_fma</span></strong><span class='chart-value'>44.67%</span></div><div class='bar'><span style='width:44%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>__sin_fma</span></strong><span class='chart-value'>38.52%</span></div><div class='bar'><span style='width:38%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>__sqrt</span></strong><span class='chart-value'>3.20%</span></div><div class='bar'><span style='width:8%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>0x000055cd09eee290</span></strong><span class='chart-value'>2.04%</span></div><div class='bar'><span style='width:8%'></span></div></div></div></article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-pane" data-tab-pane="hotspots">
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>热点、进程和线程拆账</h2>
+            <p>长函数名默认做智能收缩，可展开查看完整名字；启动器和运行时噪声会尽量弱化。</p>
+          </div>
+        </div>
+        <div class="filter-row" style="margin-bottom:14px">
+          <button class='filter-chip is-active' data-filter-chip='all'>全部</button><button class='filter-chip' data-filter-chip='cpu_bound'><span title='CPU 瓶颈'>CPU 瓶颈</span></button>
+        </div>
+        <div class="chart-grid">
+          <article class='chart-card' data-filterable data-kind='all' data-search='热点函数分布 main __cos_fma __sin_fma __sqrt 0x000055cd09eee290'><h3>热点函数分布</h3><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>main</span></strong><span class='chart-value'>92.07%</span></div><div class='bar'><span style='width:92%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>__cos_fma</span></strong><span class='chart-value'>44.67%</span></div><div class='bar'><span style='width:44%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>__sin_fma</span></strong><span class='chart-value'>38.52%</span></div><div class='bar'><span style='width:38%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>__sqrt</span></strong><span class='chart-value'>3.20%</span></div><div class='bar'><span style='width:8%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>0x000055cd09eee290</span></strong><span class='chart-value'>2.04%</span></div><div class='bar'><span style='width:8%'></span></div></div></div></article><article class='chart-card' data-filterable data-kind='all' data-search='进程级样本拆账 multiprocess_fa / pid 3619816 multiprocess_fa / pid 3619817 multiprocess_fa / pid 3619818 multiprocess_fa / pid 3619814'><h3>进程级样本拆账</h3><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / pid 3619816</span></strong><span class='chart-value'>33.94%</span></div><div class='bar'><span style='width:33%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / pid 3619817</span></strong><span class='chart-value'>33.82%</span></div><div class='bar'><span style='width:33%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / pid 3619818</span></strong><span class='chart-value'>32.00%</span></div><div class='bar'><span style='width:32%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / pid 3619814</span></strong><span class='chart-value'>0.24%</span></div><div class='bar'><span style='width:8%'></span></div></div></div></article><article class='chart-card' data-filterable data-kind='all' data-search='线程级样本拆账 multiprocess_fa / 3619816:3619816 multiprocess_fa / 3619817:3619817 multiprocess_fa / 3619818:3619818 multiprocess_fa / 3619814:3619814'><h3>线程级样本拆账</h3><div class='chart-list'><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / 3619816:3619816</span></strong><span class='chart-value'>33.94%</span></div><div class='bar'><span style='width:33%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / 3619817:3619817</span></strong><span class='chart-value'>33.82%</span></div><div class='bar'><span style='width:33%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / 3619818:3619818</span></strong><span class='chart-value'>32.00%</span></div><div class='bar'><span style='width:32%'></span></div></div><div class='chart-row'><div class='chart-label'><strong><span class='mono'>multiprocess_fa / 3619814:3619814</span></strong><span class='chart-value'>0.24%</span></div><div class='bar'><span style='width:8%'></span></div></div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-pane" data-tab-pane="source">
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>源码定位</h2>
+            <p>优先展示热点证据能对齐到的代码片段，文件路径、符号名和 snippet 都支持展开。</p>
+          </div>
+        </div>
+        <div class="filter-row" style="margin-bottom:14px">
+          <button class='filter-chip is-active' data-filter-chip='all'>全部</button><button class='filter-chip' data-filter-chip='cpu_bound'><span title='CPU 瓶颈'>CPU 瓶颈</span></button>
+        </div>
+        <div class="source-grid">
+          <article class='source-card' data-filterable data-kind='cpu_bound' data-search='/home/tchen/agent/perf_agent/examples/cpp/multiprocess_fanout_demo.cpp 热点函数定位 perf record / report 显示热点符号 main，该源码位置与热点调用路径直接相关。 main cpu_bound'><h3><span title='热点函数定位'>热点函数定位</span></h3><div class='source-meta'><span class='meta-pill'><span title='CPU 瓶颈'>CPU 瓶颈</span></span><span class='meta-pill'><span title='symbol_scan'>symbol_scan</span></span><span class='meta-pill'>置信度 0.50</span></div><div class='expandable'><details><summary>文件: /home/tchen/agent/perf_agent/examples/cpp...iprocess_fanout_demo.cpp:26-28<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>/home/tchen/agent/perf_agent/examples/cpp/multiprocess_fanout_demo.cpp:26-28</div></details></div><span class='mono'>符号: main</span><p class='hint' style='margin-top:12px'><span title='perf record / report 显示热点符号 main，该源码位置与热点调用路径直接相关。'>perf record / report 显示热点符号 main，该源码位置与热点调用路径直接相关。</span></p><div class='code-block'><div class='code-row'><div class='code-line-no'>24</div><div class='code-line'>}  // namespace</div></div><div class='code-row'><div class='code-line-no'>25</div><div class='code-line'>&nbsp;</div></div><div class='code-row'><div class='code-line-no'>26</div><div class='code-line'>int main(int argc, char** argv) {</div></div><div class='code-row'><div class='code-line-no'>27</div><div class='code-line'>    std::size_t process_count = 3;</div></div><div class='code-row'><div class='code-line-no'>28</div><div class='code-line'>    std::size_t outer_loops = 250;</div></div></div></article><article class='source-card' data-filterable data-kind='cpu_bound' data-search='/home/tchen/agent/perf_agent/examples/cpp/multiprocess_fanout_demo.cpp 并发工作函数 检测到并发工作单元入口，CPU 消耗可能分散在多个线程或子进程。 double worker(std::size_t outer_loops, std::size_t inner_loops, std::size_t seed) { cpu_bound'><h3><span title='并发工作函数'>并发工作函数</span></h3><div class='source-meta'><span class='meta-pill'><span title='CPU 瓶颈'>CPU 瓶颈</span></span><span class='meta-pill'><span title='heuristic'>heuristic</span></span><span class='meta-pill'>置信度 0.35</span></div><div class='expandable'><details><summary>文件: /home/tchen/agent/perf_agent/examples/cpp...iprocess_fanout_demo.cpp:13-15<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>/home/tchen/agent/perf_agent/examples/cpp/multiprocess_fanout_demo.cpp:13-15</div></details></div><div class='expandable'><details><summary>符号: …::size_t outer_loops, std::size_t inner_loops, std::size_t seed) {<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>double worker(std::size_t outer_loops, std::size_t inner_loops, std::size_t seed) {</div></details></div><p class='hint' style='margin-top:12px'><span title='检测到并发工作单元入口，CPU 消耗可能分散在多个线程或子进程。'>检测到并发工作单元入口，CPU 消耗可能分散在多个线程或子进程。</span></p><div class='code-block'><div class='code-row'><div class='code-line-no'>11</div><div class='code-line'>namespace {</div></div><div class='code-row'><div class='code-line-no'>12</div><div class='code-line'>&nbsp;</div></div><div class='code-row'><div class='code-line-no'>13</div><div class='code-line'>double worker(std::size_t outer_loops, std::size_t inner_loops, std::size_t seed) {</div></div><div class='code-row'><div class='code-line-no'>14</div><div class='code-line'>    double checksum = 0.0;</div></div><div class='code-row'><div class='code-line-no'>15</div><div class='code-line'>    for (std::size_t round = 0; round &lt; outer_loops; ++round) {</div></div></div></article><article class='source-card' data-filterable data-kind='cpu_bound' data-search='/home/tchen/agent/perf_agent/examples/cpp/multiprocess_fanout_demo.cpp 热点循环 检测到疑似高频计算循环或数学函数调用。 for (std::size_t round = 0; round &lt; outer_loops; ++round) { cpu_bound'><h3><span title='热点循环'>热点循环</span></h3><div class='source-meta'><span class='meta-pill'><span title='CPU 瓶颈'>CPU 瓶颈</span></span><span class='meta-pill'><span title='heuristic'>heuristic</span></span><span class='meta-pill'>置信度 0.35</span></div><div class='expandable'><details><summary>文件: /home/tchen/agent/perf_agent/examples/cpp...iprocess_fanout_demo.cpp:15-17<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>/home/tchen/agent/perf_agent/examples/cpp/multiprocess_fanout_demo.cpp:15-17</div></details></div><div class='expandable'><details><summary>符号: for (…) {<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>for (std::size_t round = 0; round &lt; outer_loops; ++round) {</div></details></div><p class='hint' style='margin-top:12px'><span title='检测到疑似高频计算循环或数学函数调用。'>检测到疑似高频计算循环或数学函数调用。</span></p><div class='code-block'><div class='code-row'><div class='code-line-no'>13</div><div class='code-line'>double worker(std::size_t outer_loops, std::size_t inner_loops, std::size_t seed) {</div></div><div class='code-row'><div class='code-line-no'>14</div><div class='code-line'>    double checksum = 0.0;</div></div><div class='code-row'><div class='code-line-no'>15</div><div class='code-line'>    for (std::size_t round = 0; round &lt; outer_loops; ++round) {</div></div><div class='code-row'><div class='code-line-no'>16</div><div class='code-line'>        for (std::size_t i = 0; i &lt; inner_loops; ++i) {</div></div><div class='code-row'><div class='code-line-no'>17</div><div class='code-line'>            const double x = static_cast&lt;double&gt;((round + seed + 3) * (i + 11));</div></div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-pane" data-tab-pane="evidence">
+      <div class="stack">
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>关键 observation</h2>
+              <p>支持证据优先排前，保留搜索和按瓶颈类型过滤能力。</p>
+            </div>
+          </div>
+          <div class="filter-row" style="margin-bottom:14px">
+            <button class='filter-chip is-active' data-filter-chip='all'>全部</button><button class='filter-chip' data-filter-chip='cpu_bound'><span title='CPU 瓶颈'>CPU 瓶颈</span></button>
+          </div>
+          <div class="obs-grid">
+            <article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_cf878977 perf_record process_sample_pct 33.9394 act_e3b9c340 multiprocess_fa 3619816 1 child_or_peer'><div class='obs-metric'><span title='obs_cf878977 · 进程样本占比'>obs_cf878977 · 进程样本占比</span></div><div class='obs-value'><span title='33.94 percent'>33.94 percent</span></div><div class='obs-source'><span title='perf_record · process · callgraph'>perf_record · process · callgraph</span></div><div class='obs-tags'><span title='action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, rank=1, relation=child_or_peer'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, rank=1, relation=child_or_peer</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_9c623595 perf_record process_sample_pct 33.8182 act_e3b9c340 multiprocess_fa 3619817 2 child_or_peer'><div class='obs-metric'><span title='obs_9c623595 · 进程样本占比'>obs_9c623595 · 进程样本占比</span></div><div class='obs-value'><span title='33.82 percent'>33.82 percent</span></div><div class='obs-source'><span title='perf_record · process · callgraph'>perf_record · process · callgraph</span></div><div class='obs-tags'><span title='action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, rank=2, relation=child_or_peer'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, rank=2, relation=child_or_peer</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_0d63d760 perf_record process_sample_pct 32.0 act_e3b9c340 multiprocess_fa 3619818 3 child_or_peer'><div class='obs-metric'><span title='obs_0d63d760 · 进程样本占比'>obs_0d63d760 · 进程样本占比</span></div><div class='obs-value'><span title='32.00 percent'>32.00 percent</span></div><div class='obs-source'><span title='perf_record · process · callgraph'>perf_record · process · callgraph</span></div><div class='obs-tags'><span title='action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, rank=3, relation=child_or_peer'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, rank=3, relation=child_or_peer</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_6badaa70 perf_record process_sample_pct 0.2424 act_e3b9c340 multiprocess_fa 3619814 4 primary'><div class='obs-metric'><span title='obs_6badaa70 · 进程样本占比'>obs_6badaa70 · 进程样本占比</span></div><div class='obs-value'><span title='0.24 percent'>0.24 percent</span></div><div class='obs-source'><span title='perf_record · process · callgraph'>perf_record · process · callgraph</span></div><div class='obs-tags'><span title='action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, rank=4, relation=primary'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, rank=4, relation=primary</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_80272453 perf_record thread_sample_pct 33.9394 act_e3b9c340 multiprocess_fa 3619816 3619816 1 main_thread'><div class='obs-metric'><span title='obs_80272453 · 线程样本占比'>obs_80272453 · 线程样本占比</span></div><div class='obs-value'><span title='33.94 percent'>33.94 percent</span></div><div class='obs-source'><span title='perf_record · thread · callgraph'>perf_record · thread · callgraph</span></div><div class='obs-tags'><span title='action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=1, thread_role=main_thread'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=1, thread_role=main_thread</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_e59f7bbe perf_record thread_sample_pct 33.8182 act_e3b9c340 multiprocess_fa 3619817 3619817 2 main_thread'><div class='obs-metric'><span title='obs_e59f7bbe · 线程样本占比'>obs_e59f7bbe · 线程样本占比</span></div><div class='obs-value'><span title='33.82 percent'>33.82 percent</span></div><div class='obs-source'><span title='perf_record · thread · callgraph'>perf_record · thread · callgraph</span></div><div class='obs-tags'><span title='action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=2, thread_role=main_thread'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=2, thread_role=main_thread</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_d1663ab2 perf_record thread_sample_pct 32.0 act_e3b9c340 multiprocess_fa 3619818 3619818 3 main_thread'><div class='obs-metric'><span title='obs_d1663ab2 · 线程样本占比'>obs_d1663ab2 · 线程样本占比</span></div><div class='obs-value'><span title='32.00 percent'>32.00 percent</span></div><div class='obs-source'><span title='perf_record · thread · callgraph'>perf_record · thread · callgraph</span></div><div class='obs-tags'><span title='action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, tid=3619818, rank=3, thread_role=main_thread'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, tid=3619818, rank=3, thread_role=main_thread</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_94d4e707 perf_record thread_sample_pct 0.2424 act_e3b9c340 multiprocess_fa 3619814 3619814 4 main_thread'><div class='obs-metric'><span title='obs_94d4e707 · 线程样本占比'>obs_94d4e707 · 线程样本占比</span></div><div class='obs-value'><span title='0.24 percent'>0.24 percent</span></div><div class='obs-source'><span title='perf_record · thread · callgraph'>perf_record · thread · callgraph</span></div><div class='obs-tags'><span title='action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, tid=3619814, rank=4, thread_role=main_thread'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, tid=3619814, rank=4, thread_role=main_thread</span></div></article><article class='observation-card' data-filterable data-kind='cpu_bound' data-search='obs_55b2a9ed time cpu_utilization_pct 296 act_f0a1fcb5'><div class='obs-metric'><span title='obs_55b2a9ed · CPU 利用率'>obs_55b2a9ed · CPU 利用率</span></div><div class='obs-value'><span title='296 percent'>296 percent</span></div><div class='obs-source'><span title='time · process · cpu'>time · process · cpu</span></div><div class='obs-tags'><span title='action_id=act_f0a1fcb5'>action_id=act_f0a1fcb5</span></div></article>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>原始 observation 视图</h2>
+              <p>默认折叠。真的需要时再下钻，不让低价值数据占满整个页面。</p>
+            </div>
+          </div>
+          <details class="expandable">
+            <summary><span class="mono">展开原始 observation 表</span></summary>
+            <div class="raw-shell">
+              <table class="raw-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>来源</th>
+                    <th>指标</th>
+                    <th>值</th>
+                    <th>范围</th>
+                    <th>标签</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-filterable data-kind='all' data-search='obs_13c60fbf mpstat 01 24:58 CPU %usr %nice %sys %iowait %irq %soft %steal %guest %gnice %idle action_id=act_b50042f9, source=mpstat'><td><code>obs_13c60fbf</code></td><td><span title='mpstat'>mpstat</span></td><td><span class='mono'>01</span></td><td><span title='24:58 CPU %usr %nice %sys %iowait %irq %soft %steal %guest %gnice %idle'>24:58 CPU %usr %nice %s...est %gnice %idle</span></td><td><span title='system'>system</span></td><td><span class='mono'>action_id=act_b50042f9, source=mpstat</span></td></tr><tr data-filterable data-kind='all' data-search='obs_d25f0257 mpstat 01 24:59 all 1.05 0.00 0.35 0.25 0.00 0.00 0.00 0.00 0.00 98.35 action_id=act_b50042f9, source=mpstat'><td><code>obs_d25f0257</code></td><td><span title='mpstat'>mpstat</span></td><td><span class='mono'>01</span></td><td><span title='24:59 all 1.05 0.00 0.35 0.25 0.00 0.00 0.00 0.00 0.00 98.35'>24:59 all 1.05 0.00 0.3... 0.00 0.00 98.35</span></td><td><span title='system'>system</span></td><td><span class='mono'>action_id=act_b50042f9, source=mpstat</span></td></tr><tr data-filterable data-kind='all' data-search='obs_4152306f mpstat average all 1.05 0.00 0.35 0.25 0.00 0.00 0.00 0.00 0.00 98.35 action_id=act_b50042f9, source=mpstat'><td><code>obs_4152306f</code></td><td><span title='mpstat'>mpstat</span></td><td><span class='mono'>average</span></td><td><span title='all 1.05 0.00 0.35 0.25 0.00 0.00 0.00 0.00 0.00 98.35'>all 1.05 0.00 0.35 0.25... 0.00 0.00 98.35</span></td><td><span title='system'>system</span></td><td><span class='mono'>action_id=act_b50042f9, source=mpstat</span></td></tr><tr data-filterable data-kind='all' data-search='obs_e8b55860 perf_record callgraph_samples 831 action_id=act_e3b9c340'><td><code>obs_e8b55860</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>callgraph_samples</span></td><td><span title='831 count'>831 count</span></td><td><span title='callchain'>callchain</span></td><td><span class='mono'>action_id=act_e3b9c340</span></td></tr><tr data-filterable data-kind='all' data-search='obs_a22b4ec8 perf_record hot_frame_sample_pct 1.2136 action_id=act_e3b9c340, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b43d, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=1'><td><code>obs_a22b4ec8</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='1.21 percent'>1.21 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=__s...9817, tid=3619817, rank=1<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b43d, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=1</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_c0f5fa00 perf_record hot_frame_sample_pct 1.0922 action_id=act_e3b9c340, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bad9, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=2'><td><code>obs_c0f5fa00</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='1.09 percent'>1.09 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=__c...9816, tid=3619816, rank=2<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bad9, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=2</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_a8647228 perf_record hot_frame_sample_pct 1.0922 action_id=act_e3b9c340, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bad9, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=3'><td><code>obs_a8647228</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='1.09 percent'>1.09 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=__c...9817, tid=3619817, rank=3<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bad9, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=3</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_e2bad5fb perf_record hot_frame_sample_pct 1.0922 action_id=act_e3b9c340, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b2f1, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=4'><td><code>obs_e2bad5fb</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='1.09 percent'>1.09 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=__s...9817, tid=3619817, rank=4<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b2f1, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=4</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_5ba95d52 perf_record hot_frame_sample_pct 0.9709 action_id=act_e3b9c340, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bdd3, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=5'><td><code>obs_5ba95d52</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='0.97 percent'>0.97 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=__c...9816, tid=3619816, rank=5<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bdd3, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=5</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_6879801a perf_record hot_frame_sample_pct 0.9709 action_id=act_e3b9c340, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b337, comm=multiprocess_fa, pid=3619818, tid=3619818, rank=6'><td><code>obs_6879801a</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='0.97 percent'>0.97 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=__s...9818, tid=3619818, rank=6<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b337, comm=multiprocess_fa, pid=3619818, tid=3619818, rank=6</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_d9b44a28 perf_record hot_frame_sample_pct 0.9709 action_id=act_e3b9c340, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b5ca, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=7'><td><code>obs_d9b44a28</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='0.97 percent'>0.97 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=__s...9816, tid=3619816, rank=7<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b5ca, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=7</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_202f94a1 perf_record hot_frame_sample_pct 0.9709 action_id=act_e3b9c340, symbol=[unknown], dso=/home/tchen/agent/perf_agent/examples/bin/multiprocess_fanout_demo, ip=2290, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=8'><td><code>obs_202f94a1</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='0.97 percent'>0.97 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=[un...9816, tid=3619816, rank=8<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=[unknown], dso=/home/tchen/agent/perf_agent/examples/bin/multiprocess_fanout_demo, ip=2290, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=8</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_fa3d07ad perf_record hot_frame_sample_pct 0.9709 action_id=act_e3b9c340, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bdd3, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=9'><td><code>obs_fa3d07ad</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='0.97 percent'>0.97 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=__c...9817, tid=3619817, rank=9<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=__cos_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7bdd3, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=9</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_6faec63a perf_record hot_frame_sample_pct 0.9709 action_id=act_e3b9c340, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b4cc, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=10'><td><code>obs_6faec63a</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_frame_sample_pct</span></td><td><span title='0.97 percent'>0.97 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=__s...816, tid=3619816, rank=10<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=__sin_fma, dso=/usr/lib/x86_64-linux-gnu/libm.so.6, ip=7b4cc, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=10</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4fb5a6a8 perf_record hot_symbol_pct 99.3 action_id=act_e3b9c340, symbol=_start, rank=1'><td><code>obs_4fb5a6a8</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_symbol_pct</span></td><td><span title='99.30 percent'>99.30 percent</span></td><td><span title='function'>function</span></td><td><span class='mono'>action_id=act_e3b9c340, symbol=_start, rank=1</span></td></tr><tr data-filterable data-kind='all' data-search='obs_5a322318 perf_record hot_symbol_pct 99.3 action_id=act_e3b9c340, symbol=__libc_start_main@@GLIBC_2.34, rank=2'><td><code>obs_5a322318</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_symbol_pct</span></td><td><span title='99.30 percent'>99.30 percent</span></td><td><span title='function'>function</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, symbol=__l..._main@@GLIBC_2.34, rank=2<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, symbol=__libc_start_main@@GLIBC_2.34, rank=2</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_b4f8d10f perf_record hot_symbol_pct 99.3 action_id=act_e3b9c340, symbol=__libc_start_call_main, rank=3'><td><code>obs_b4f8d10f</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_symbol_pct</span></td><td><span title='99.30 percent'>99.30 percent</span></td><td><span title='function'>function</span></td><td><span class='mono'>action_id=act_e3b9c340, symbol=__libc_start_call_main, rank=3</span></td></tr><tr data-filterable data-kind='all' data-search='obs_b47ddf0e perf_record hot_symbol_pct 92.07 action_id=act_e3b9c340, symbol=main, rank=4'><td><code>obs_b47ddf0e</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_symbol_pct</span></td><td><span title='92.07 percent'>92.07 percent</span></td><td><span title='function'>function</span></td><td><span class='mono'>action_id=act_e3b9c340, symbol=main, rank=4</span></td></tr><tr data-filterable data-kind='all' data-search='obs_d2e721f8 perf_record hot_symbol_pct 44.67 action_id=act_e3b9c340, symbol=__cos_fma, rank=5'><td><code>obs_d2e721f8</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_symbol_pct</span></td><td><span title='44.67 percent'>44.67 percent</span></td><td><span title='function'>function</span></td><td><span class='mono'>action_id=act_e3b9c340, symbol=__cos_fma, rank=5</span></td></tr><tr data-filterable data-kind='all' data-search='obs_fdb41b36 perf_record hot_symbol_pct 38.52 action_id=act_e3b9c340, symbol=__sin_fma, rank=6'><td><code>obs_fdb41b36</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_symbol_pct</span></td><td><span title='38.52 percent'>38.52 percent</span></td><td><span title='function'>function</span></td><td><span class='mono'>action_id=act_e3b9c340, symbol=__sin_fma, rank=6</span></td></tr><tr data-filterable data-kind='all' data-search='obs_e4cece81 perf_record hot_symbol_pct 3.2 action_id=act_e3b9c340, symbol=__sqrt, rank=7'><td><code>obs_e4cece81</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_symbol_pct</span></td><td><span title='3.20 percent'>3.20 percent</span></td><td><span title='function'>function</span></td><td><span class='mono'>action_id=act_e3b9c340, symbol=__sqrt, rank=7</span></td></tr><tr data-filterable data-kind='all' data-search='obs_07b1a04a perf_record hot_symbol_pct 2.04 action_id=act_e3b9c340, symbol=0x000055cd09eee290, rank=8'><td><code>obs_07b1a04a</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>hot_symbol_pct</span></td><td><span title='2.04 percent'>2.04 percent</span></td><td><span title='function'>function</span></td><td><span class='mono'>action_id=act_e3b9c340, symbol=0x000055cd09eee290, rank=8</span></td></tr><tr data-filterable data-kind='all' data-search='obs_ddad12aa perf_record process_sample_count 280 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, rank=1, relation=child_or_peer'><td><code>obs_ddad12aa</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>process_sample_count</span></td><td><span title='280 count'>280 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi...1, relation=child_or_peer<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, rank=1, relation=child_or_peer</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_f55ed356 perf_record process_sample_count 279 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, rank=2, relation=child_or_peer'><td><code>obs_f55ed356</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>process_sample_count</span></td><td><span title='279 count'>279 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi...2, relation=child_or_peer<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, rank=2, relation=child_or_peer</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_3299292c perf_record process_sample_count 264 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, rank=3, relation=child_or_peer'><td><code>obs_3299292c</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>process_sample_count</span></td><td><span title='264 count'>264 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi...3, relation=child_or_peer<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, rank=3, relation=child_or_peer</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_8e3a0f36 perf_record process_sample_count 2 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, rank=4, relation=primary'><td><code>obs_8e3a0f36</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>process_sample_count</span></td><td><span title='2 count'>2 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi... rank=4, relation=primary<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, rank=4, relation=primary</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_cf878977 perf_record process_sample_pct 33.9394 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, rank=1, relation=child_or_peer'><td><code>obs_cf878977</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>process_sample_pct</span></td><td><span title='33.94 percent'>33.94 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi...1, relation=child_or_peer<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, rank=1, relation=child_or_peer</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_9c623595 perf_record process_sample_pct 33.8182 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, rank=2, relation=child_or_peer'><td><code>obs_9c623595</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>process_sample_pct</span></td><td><span title='33.82 percent'>33.82 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi...2, relation=child_or_peer<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, rank=2, relation=child_or_peer</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_0d63d760 perf_record process_sample_pct 32.0 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, rank=3, relation=child_or_peer'><td><code>obs_0d63d760</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>process_sample_pct</span></td><td><span title='32.00 percent'>32.00 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi...3, relation=child_or_peer<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, rank=3, relation=child_or_peer</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_6badaa70 perf_record process_sample_pct 0.2424 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, rank=4, relation=primary'><td><code>obs_6badaa70</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>process_sample_pct</span></td><td><span title='0.24 percent'>0.24 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi... rank=4, relation=primary<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, rank=4, relation=primary</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_e132e288 perf_record thread_sample_count 280 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=1, thread_role=main_thread'><td><code>obs_e132e288</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>thread_sample_count</span></td><td><span title='280 count'>280 count</span></td><td><span title='thread'>thread</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi..., thread_role=main_thread<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=1, thread_role=main_thread</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_a6c2619c perf_record thread_sample_count 279 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=2, thread_role=main_thread'><td><code>obs_a6c2619c</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>thread_sample_count</span></td><td><span title='279 count'>279 count</span></td><td><span title='thread'>thread</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi..., thread_role=main_thread<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=2, thread_role=main_thread</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_6719e9b2 perf_record thread_sample_count 264 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, tid=3619818, rank=3, thread_role=main_thread'><td><code>obs_6719e9b2</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>thread_sample_count</span></td><td><span title='264 count'>264 count</span></td><td><span title='thread'>thread</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi..., thread_role=main_thread<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, tid=3619818, rank=3, thread_role=main_thread</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4b00a4e2 perf_record thread_sample_count 2 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, tid=3619814, rank=4, thread_role=main_thread'><td><code>obs_4b00a4e2</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>thread_sample_count</span></td><td><span title='2 count'>2 count</span></td><td><span title='thread'>thread</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi..., thread_role=main_thread<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, tid=3619814, rank=4, thread_role=main_thread</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_80272453 perf_record thread_sample_pct 33.9394 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=1, thread_role=main_thread'><td><code>obs_80272453</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>thread_sample_pct</span></td><td><span title='33.94 percent'>33.94 percent</span></td><td><span title='thread'>thread</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi..., thread_role=main_thread<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619816, tid=3619816, rank=1, thread_role=main_thread</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_e59f7bbe perf_record thread_sample_pct 33.8182 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=2, thread_role=main_thread'><td><code>obs_e59f7bbe</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>thread_sample_pct</span></td><td><span title='33.82 percent'>33.82 percent</span></td><td><span title='thread'>thread</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi..., thread_role=main_thread<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619817, tid=3619817, rank=2, thread_role=main_thread</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_d1663ab2 perf_record thread_sample_pct 32.0 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, tid=3619818, rank=3, thread_role=main_thread'><td><code>obs_d1663ab2</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>thread_sample_pct</span></td><td><span title='32.00 percent'>32.00 percent</span></td><td><span title='thread'>thread</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi..., thread_role=main_thread<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619818, tid=3619818, rank=3, thread_role=main_thread</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_94d4e707 perf_record thread_sample_pct 0.2424 action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, tid=3619814, rank=4, thread_role=main_thread'><td><code>obs_94d4e707</code></td><td><span title='perf_record'>perf_record</span></td><td><span class='mono'>thread_sample_pct</span></td><td><span title='0.24 percent'>0.24 percent</span></td><td><span title='thread'>thread</span></td><td><div class='expandable'><details><summary>action_id=act_e3b9c340, comm=multi..., thread_role=main_thread<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_e3b9c340, comm=multiprocess_fa, pid=3619814, tid=3619814, rank=4, thread_role=main_thread</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_8cb86e63 perf_stat cache_misses 23242 action_id=act_6fcff3dc, event_name=cache-misses, raw_event_name=cpu_core/cache-misses'><td><code>obs_8cb86e63</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_misses</span></td><td><span title='23242 count'>23242 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_6fcff3dc, event_name...ame=cpu_core/cache-misses<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_6fcff3dc, event_name=cache-misses, raw_event_name=cpu_core/cache-misses</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_1f0da0fb perf_stat cache_misses 34159 action_id=act_7f47f13e, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.073'><td><code>obs_1f0da0fb</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_misses</span></td><td><span title='34159 count'>34159 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_7f47f13e, event_name...ne, time_bucket_sec=0.073<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_7f47f13e, event_name=cache-misses, series_type=timeline, time_bucket_sec=0.073</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_94077341 perf_stat cache_references 159055 action_id=act_6fcff3dc, event_name=cache-references, raw_event_name=cpu_core/cache-references'><td><code>obs_94077341</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cache_references</span></td><td><span title='159055 count'>159055 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_6fcff3dc, event_name...cpu_core/cache-references<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_6fcff3dc, event_name=cache-references, raw_event_name=cpu_core/cache-references</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_b28f8129 perf_stat context_switches 7 action_id=act_d27fbc6c, event_name=context-switches, raw_event_name=context-switches'><td><code>obs_b28f8129</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>context_switches</span></td><td><span title='7 count'>7 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_d27fbc6c, event_name...ent_name=context-switches<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_d27fbc6c, event_name=context-switches, raw_event_name=context-switches</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_4ed69343 perf_stat context_switches 7 action_id=act_7f47f13e, event_name=context-switches, series_type=timeline, time_bucket_sec=0.073'><td><code>obs_4ed69343</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>context_switches</span></td><td><span title='7 count'>7 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_7f47f13e, event_name...ne, time_bucket_sec=0.073<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_7f47f13e, event_name=context-switches, series_type=timeline, time_bucket_sec=0.073</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_121af927 perf_stat cpu_migrations 2 action_id=act_d27fbc6c, event_name=cpu-migrations, raw_event_name=cpu-migrations'><td><code>obs_121af927</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cpu_migrations</span></td><td><span title='2 count'>2 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_d27fbc6c, event_name...event_name=cpu-migrations<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_d27fbc6c, event_name=cpu-migrations, raw_event_name=cpu-migrations</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_8e21ad92 perf_stat cycles 1112930939 action_id=act_fa0b1e8a, event_name=cycles, raw_event_name=cpu_core/cycles'><td><code>obs_8e21ad92</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cycles</span></td><td><span title='1112930939 count'>1112930939 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_fa0b1e8a, event_name...vent_name=cpu_core/cycles<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_fa0b1e8a, event_name=cycles, raw_event_name=cpu_core/cycles</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_fba08c4a perf_stat cycles 1113131881 action_id=act_bf1c66fb, event_name=cycles, raw_event_name=cpu_core/cycles'><td><code>obs_fba08c4a</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cycles</span></td><td><span title='1113131881 count'>1113131881 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_bf1c66fb, event_name...vent_name=cpu_core/cycles<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_bf1c66fb, event_name=cycles, raw_event_name=cpu_core/cycles</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_cc8b2b60 perf_stat cycles 1113429588 action_id=act_7f47f13e, event_name=cycles, series_type=timeline, time_bucket_sec=0.073'><td><code>obs_cc8b2b60</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>cycles</span></td><td><span title='1113429588 count'>1113429588 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_7f47f13e, event_name...ne, time_bucket_sec=0.073<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_7f47f13e, event_name=cycles, series_type=timeline, time_bucket_sec=0.073</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_8fe6519d perf_stat instructions 4401096456 action_id=act_fa0b1e8a, event_name=cpu_core/Instructions, raw_event_name=cpu_core/Instructions'><td><code>obs_8fe6519d</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>instructions</span></td><td><span title='4401096456 percent'>4401096456 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_fa0b1e8a, event_name...ame=cpu_core/Instructions<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_fa0b1e8a, event_name=cpu_core/Instructions, raw_event_name=cpu_core/Instructions</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_1dd7df1d perf_stat instructions 4401102253 action_id=act_bf1c66fb, event_name=cpu_core/Instructions, raw_event_name=cpu_core/Instructions'><td><code>obs_1dd7df1d</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>instructions</span></td><td><span title='4401102253 percent'>4401102253 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_bf1c66fb, event_name...ame=cpu_core/Instructions<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_bf1c66fb, event_name=cpu_core/Instructions, raw_event_name=cpu_core/Instructions</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_39e7d9c5 perf_stat instructions 4401099197 action_id=act_7f47f13e, event_name=cpu_core/Instructions/, series_type=timeline, time_bucket_sec=0.073'><td><code>obs_39e7d9c5</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>instructions</span></td><td><span title='4401099197 count'>4401099197 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_7f47f13e, event_name...ne, time_bucket_sec=0.073<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_7f47f13e, event_name=cpu_core/Instructions/, series_type=timeline, time_bucket_sec=0.073</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_433eed42 perf_stat l1_miss_count 174529 action_id=act_6fcff3dc, event_name=mem_load_completed.l1_miss_any, raw_event_name=cpu_core/mem_load_completed.l1_miss_any'><td><code>obs_433eed42</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l1_miss_count</span></td><td><span title='174529 count'>174529 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_6fcff3dc, event_name...oad_completed.l1_miss_any<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_6fcff3dc, event_name=mem_load_completed.l1_miss_any, raw_event_name=cpu_core/mem_load_completed.l1_miss_any</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_f8e6782d perf_stat l2_miss_count 163759 action_id=act_6fcff3dc, event_name=l2_rqsts.miss, raw_event_name=cpu_core/l2_rqsts.miss'><td><code>obs_f8e6782d</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>l2_miss_count</span></td><td><span title='163759 count'>163759 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_6fcff3dc, event_name...me=cpu_core/l2_rqsts.miss<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_6fcff3dc, event_name=l2_rqsts.miss, raw_event_name=cpu_core/l2_rqsts.miss</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_fb9f7ed0 perf_stat llc_miss_count 23316 action_id=act_6fcff3dc, event_name=longest_lat_cache.miss, raw_event_name=cpu_core/longest_lat_cache.miss'><td><code>obs_fb9f7ed0</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>llc_miss_count</span></td><td><span title='23316 count'>23316 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_6fcff3dc, event_name...re/longest_lat_cache.miss<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_6fcff3dc, event_name=longest_lat_cache.miss, raw_event_name=cpu_core/longest_lat_cache.miss</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_86c141b9 perf_stat lock_loads 23171 action_id=act_d27fbc6c, event_name=mem_inst_retired.lock_loads, raw_event_name=cpu_core/mem_inst_retired.lock_loads'><td><code>obs_86c141b9</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>lock_loads</span></td><td><span title='23171 count'>23171 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_d27fbc6c, event_name...m_inst_retired.lock_loads<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_d27fbc6c, event_name=mem_inst_retired.lock_loads, raw_event_name=cpu_core/mem_inst_retired.lock_loads</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_680f9795 perf_stat msec 224.39 action_id=act_fa0b1e8a, event_name=msec, raw_event_name=msec'><td><code>obs_680f9795</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>msec</span></td><td><span title='224.39 count'>224.39 count</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_fa0b1e8a, event_name=msec, raw_event_name=msec</span></td></tr><tr data-filterable data-kind='all' data-search='obs_265b8ac9 perf_stat page_faults 292 action_id=act_d27fbc6c, event_name=page-faults, raw_event_name=page-faults'><td><code>obs_265b8ac9</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>page_faults</span></td><td><span title='292 count'>292 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_d27fbc6c, event_name...aw_event_name=page-faults<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_d27fbc6c, event_name=page-faults, raw_event_name=page-faults</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_7524391f perf_stat seconds 0.075348068 action_id=act_fa0b1e8a, event_name=seconds, raw_event_name=seconds'><td><code>obs_7524391f</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>seconds</span></td><td><span title='0.08 count'>0.08 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_fa0b1e8a, event_name...s, raw_event_name=seconds<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_fa0b1e8a, event_name=seconds, raw_event_name=seconds</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_3ef86d0e perf_stat seconds 0.082577676 action_id=act_6fcff3dc, event_name=seconds, raw_event_name=seconds'><td><code>obs_3ef86d0e</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>seconds</span></td><td><span title='0.08 count'>0.08 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_6fcff3dc, event_name...s, raw_event_name=seconds<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_6fcff3dc, event_name=seconds, raw_event_name=seconds</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_68f08a62 perf_stat seconds 0.073338888 action_id=act_bf1c66fb, event_name=seconds, raw_event_name=seconds'><td><code>obs_68f08a62</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>seconds</span></td><td><span title='0.07 count'>0.07 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_bf1c66fb, event_name...s, raw_event_name=seconds<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_bf1c66fb, event_name=seconds, raw_event_name=seconds</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_733ab546 perf_stat seconds 0.073264864 action_id=act_d27fbc6c, event_name=seconds, raw_event_name=seconds'><td><code>obs_733ab546</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>seconds</span></td><td><span title='0.07 count'>0.07 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_d27fbc6c, event_name...s, raw_event_name=seconds<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_d27fbc6c, event_name=seconds, raw_event_name=seconds</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_90b496ad perf_stat slots 6675912912 action_id=act_fa0b1e8a, event_name=cpu_core/SLOTS, raw_event_name=cpu_core/SLOTS'><td><code>obs_90b496ad</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>slots</span></td><td><span title='6675912912 count'>6675912912 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_fa0b1e8a, event_name...event_name=cpu_core/SLOTS<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_fa0b1e8a, event_name=cpu_core/SLOTS, raw_event_name=cpu_core/SLOTS</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_fae023e6 perf_stat slots 6676921734 action_id=act_bf1c66fb, event_name=cpu_core/SLOTS, raw_event_name=cpu_core/SLOTS'><td><code>obs_fae023e6</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>slots</span></td><td><span title='6676921734 count'>6676921734 count</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_bf1c66fb, event_name...event_name=cpu_core/SLOTS<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_bf1c66fb, event_name=cpu_core/SLOTS, raw_event_name=cpu_core/SLOTS</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_11add397 perf_stat topdown_be_bound_pct 132221171 action_id=act_6fcff3dc, event_name=topdown-be-bound, raw_event_name=cpu_core/topdown-be-bound'><td><code>obs_11add397</code></td><td><span title='perf_stat'>perf_stat</span></td><td><span class='mono'>topdown_be_bound_pct</span></td><td><span title='132221171 percent'>132221171 percent</span></td><td><span title='process'>process</span></td><td><div class='expandable'><details><summary>action_id=act_6fcff3dc, event_name...cpu_core/topdown-be-bound<span class='inline-toggle'>展开</span></summary><div class='expandable-body'>action_id=act_6fcff3dc, event_name=topdown-be-bound, raw_event_name=cpu_core/topdown-be-bound</div></details></div></td></tr><tr data-filterable data-kind='all' data-search='obs_55b2a9ed time cpu_utilization_pct 296 action_id=act_f0a1fcb5'><td><code>obs_55b2a9ed</code></td><td><span title='time'>time</span></td><td><span class='mono'>cpu_utilization_pct</span></td><td><span title='296 percent'>296 percent</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_f0a1fcb5</span></td></tr><tr data-filterable data-kind='all' data-search='obs_0cf6eb99 time elapsed_time_sec 0.07 action_id=act_f0a1fcb5'><td><code>obs_0cf6eb99</code></td><td><span title='time'>time</span></td><td><span class='mono'>elapsed_time_sec</span></td><td><span title='0.07 seconds'>0.07 seconds</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_f0a1fcb5</span></td></tr><tr data-filterable data-kind='all' data-search='obs_1b4386f0 time involuntary_context_switches 4 action_id=act_f0a1fcb5'><td><code>obs_1b4386f0</code></td><td><span title='time'>time</span></td><td><span class='mono'>involuntary_context_switches</span></td><td><span title='4 count'>4 count</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_f0a1fcb5</span></td></tr><tr data-filterable data-kind='all' data-search='obs_9ca542bc time major_faults 0 action_id=act_f0a1fcb5'><td><code>obs_9ca542bc</code></td><td><span title='time'>time</span></td><td><span class='mono'>major_faults</span></td><td><span title='0 count'>0 count</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_f0a1fcb5</span></td></tr><tr data-filterable data-kind='all' data-search='obs_b4c62e6c time max_rss_kb 4000 action_id=act_f0a1fcb5'><td><code>obs_b4c62e6c</code></td><td><span title='time'>time</span></td><td><span class='mono'>max_rss_kb</span></td><td><span title='4000 kb'>4000 kb</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_f0a1fcb5</span></td></tr><tr data-filterable data-kind='all' data-search='obs_70d790dd time system_time_sec 0.0 action_id=act_f0a1fcb5'><td><code>obs_70d790dd</code></td><td><span title='time'>time</span></td><td><span class='mono'>system_time_sec</span></td><td><span title='0.00 seconds'>0.00 seconds</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_f0a1fcb5</span></td></tr><tr data-filterable data-kind='all' data-search='obs_24d75e97 time user_time_sec 0.22 action_id=act_f0a1fcb5'><td><code>obs_24d75e97</code></td><td><span title='time'>time</span></td><td><span class='mono'>user_time_sec</span></td><td><span title='0.22 seconds'>0.22 seconds</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_f0a1fcb5</span></td></tr><tr data-filterable data-kind='all' data-search='obs_3208d7e8 time voluntary_context_switches 7 action_id=act_f0a1fcb5'><td><code>obs_3208d7e8</code></td><td><span title='time'>time</span></td><td><span class='mono'>voluntary_context_switches</span></td><td><span title='7 count'>7 count</span></td><td><span title='process'>process</span></td><td><span class='mono'>action_id=act_f0a1fcb5</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>产物</h2>
+              <p>生成的 JSON、Markdown、HTML 和中间采样产物都在这里。</p>
+            </div>
+          </div>
+          <div class="artifact-list">
+            <div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_6fcff3dc.json'>runs/run_16e8d5ac/artifacts/act_6fcff3dc.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_6fcff3dc.stderr.txt'>runs/run_16e8d5ac/artifacts/act_6fcff3dc.stderr.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_6fcff3dc.stdout.txt'>runs/run_16e8d5ac/artifacts/act_6fcff3dc.stdout.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_778961a0.json'>runs/run_16e8d5ac/artifacts/act_778961a0.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_778961a0.stdout.txt'>runs/run_16e8d5ac/artifacts/act_778961a0.stdout.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_7f47f13e.json'>runs/run_16e8d5ac/artifacts/act_7f47f13e.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_7f47f13e.stderr.txt'>runs/run_16e8d5ac/artifacts/act_7f47f13e.stderr.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_7f47f13e.stdout.txt'>runs/run_16e8d5ac/artifacts/act_7f47f13e.stdout.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_b50042f9.json'>runs/run_16e8d5ac/artifacts/act_b50042f9.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_b50042f9.stdout.txt'>runs/run_16e8d5ac/artifacts/act_b50042f9.stdout.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_bf1c66fb.json'>runs/run_16e8d5ac/artifacts/act_bf1c66fb.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_bf1c66fb.stderr.txt'>runs/run_16e8d5ac/artifacts/act_bf1c66fb.stderr.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_bf1c66fb.stdout.txt'>runs/run_16e8d5ac/artifacts/act_bf1c66fb.stdout.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_d27fbc6c.json'>runs/run_16e8d5ac/artifacts/act_d27fbc6c.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_d27fbc6c.stderr.txt'>runs/run_16e8d5ac/artifacts/act_d27fbc6c.stderr.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_d27fbc6c.stdout.txt'>runs/run_16e8d5ac/artifacts/act_d27fbc6c.stdout.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_e3b9c340.json'>runs/run_16e8d5ac/artifacts/act_e3b9c340.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_e3b9c340.perf.data'>runs/run_16e8d5ac/artifacts/act_e3b9c340.perf.data</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_e3b9c340.record.stdout.txt'>runs/run_16e8d5ac/artifacts/act_e3b9c340.record.stdout.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_e3b9c340.script.txt'>runs/run_16e8d5ac/artifacts/act_e3b9c340.script.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_e3b9c340.stderr.txt'>runs/run_16e8d5ac/artifacts/act_e3b9c340.stderr.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_e3b9c340.stdout.txt'>runs/run_16e8d5ac/artifacts/act_e3b9c340.stdout.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_f0a1fcb5.json'>runs/run_16e8d5ac/artifacts/act_f0a1fcb5.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_f0a1fcb5.stderr.txt'>runs/run_16e8d5ac/artifacts/act_f0a1fcb5.stderr.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_f0a1fcb5.stdout.txt'>runs/run_16e8d5ac/artifacts/act_f0a1fcb5.stdout.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_fa0b1e8a.json'>runs/run_16e8d5ac/artifacts/act_fa0b1e8a.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_fa0b1e8a.stderr.txt'>runs/run_16e8d5ac/artifacts/act_fa0b1e8a.stderr.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/act_fa0b1e8a.stdout.txt'>runs/run_16e8d5ac/artifacts/act_fa0b1e8a.stdout.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/artifacts/perf_list.txt'>runs/run_16e8d5ac/artifacts/perf_list.txt</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/environment.json'>runs/run_16e8d5ac/environment.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/source_manifest.json'>runs/run_16e8d5ac/source_manifest.json</span></div><div class='artifact-item'><span title='runs/run_16e8d5ac/target.json'>runs/run_16e8d5ac/target.json</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script id="report-data" type="application/json">{"hypothesisKinds": ["cpu_bound"], "observationCount": 71, "sourceFindingCount": 3, "artifacts": ["runs/run_16e8d5ac/artifacts/act_6fcff3dc.json", "runs/run_16e8d5ac/artifacts/act_6fcff3dc.stderr.txt", "runs/run_16e8d5ac/artifacts/act_6fcff3dc.stdout.txt", "runs/run_16e8d5ac/artifacts/act_778961a0.json", "runs/run_16e8d5ac/artifacts/act_778961a0.stdout.txt", "runs/run_16e8d5ac/artifacts/act_7f47f13e.json", "runs/run_16e8d5ac/artifacts/act_7f47f13e.stderr.txt", "runs/run_16e8d5ac/artifacts/act_7f47f13e.stdout.txt", "runs/run_16e8d5ac/artifacts/act_b50042f9.json", "runs/run_16e8d5ac/artifacts/act_b50042f9.stdout.txt", "runs/run_16e8d5ac/artifacts/act_bf1c66fb.json", "runs/run_16e8d5ac/artifacts/act_bf1c66fb.stderr.txt", "runs/run_16e8d5ac/artifacts/act_bf1c66fb.stdout.txt", "runs/run_16e8d5ac/artifacts/act_d27fbc6c.json", "runs/run_16e8d5ac/artifacts/act_d27fbc6c.stderr.txt", "runs/run_16e8d5ac/artifacts/act_d27fbc6c.stdout.txt", "runs/run_16e8d5ac/artifacts/act_e3b9c340.json", "runs/run_16e8d5ac/artifacts/act_e3b9c340.perf.data", "runs/run_16e8d5ac/artifacts/act_e3b9c340.record.stdout.txt", "runs/run_16e8d5ac/artifacts/act_e3b9c340.script.txt", "runs/run_16e8d5ac/artifacts/act_e3b9c340.stderr.txt", "runs/run_16e8d5ac/artifacts/act_e3b9c340.stdout.txt", "runs/run_16e8d5ac/artifacts/act_f0a1fcb5.json", "runs/run_16e8d5ac/artifacts/act_f0a1fcb5.stderr.txt", "runs/run_16e8d5ac/artifacts/act_f0a1fcb5.stdout.txt", "runs/run_16e8d5ac/artifacts/act_fa0b1e8a.json", "runs/run_16e8d5ac/artifacts/act_fa0b1e8a.stderr.txt", "runs/run_16e8d5ac/artifacts/act_fa0b1e8a.stdout.txt", "runs/run_16e8d5ac/artifacts/perf_list.txt", "runs/run_16e8d5ac/environment.json", "runs/run_16e8d5ac/source_manifest.json", "runs/run_16e8d5ac/target.json"], "labels": {"cpu_bound": "CPU 瓶颈"}}</script>
+  <script>
+    (() => {
+      const root = document;
+      const data = JSON.parse(document.getElementById("report-data").textContent);
+      let activeTab = "overview";
+      let activeKind = "all";
+      let query = "";
+
+      const tabButtons = Array.from(root.querySelectorAll("[data-tab-button]"));
+      const panes = Array.from(root.querySelectorAll("[data-tab-pane]"));
+      const searchInput = root.querySelector("[data-search-input]");
+
+      function normalize(text) {
+        return String(text || "").toLowerCase();
+      }
+
+      function applyState() {
+        tabButtons.forEach((button) => {
+          const isActive = button.dataset.tabButton === activeTab;
+          button.classList.toggle("is-active", isActive);
+        });
+        panes.forEach((pane) => {
+          pane.classList.toggle("is-active", pane.dataset.tabPane === activeTab);
+        });
+
+        root.querySelectorAll("[data-filter-chip]").forEach((chip) => {
+          chip.classList.toggle("is-active", chip.dataset.filterChip === activeKind);
+        });
+
+        root.querySelectorAll("[data-filterable]").forEach((node) => {
+          const kind = node.dataset.kind || "all";
+          const hay = normalize(node.dataset.search || "");
+          const kindMatched = activeKind === "all" || kind === activeKind || kind.split("|").includes(activeKind);
+          const queryMatched = !query || hay.includes(query);
+          node.hidden = !(kindMatched && queryMatched);
+        });
+      }
+
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          activeTab = button.dataset.tabButton;
+          applyState();
+        });
+      });
+
+      root.querySelectorAll("[data-filter-chip]").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          activeKind = chip.dataset.filterChip || "all";
+          applyState();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener("input", (event) => {
+          query = normalize(event.target.value);
+          applyState();
+        });
+      }
+
+      applyState();
+      window.__PERF_REPORT_DATA__ = data;
+    })();
+  </script>
+</body>
+</html>
