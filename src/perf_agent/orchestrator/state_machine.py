@@ -8,6 +8,7 @@ RunStatus = Literal[
     "running",
     "profiling_environment",
     "planning",
+    "tool_selecting",
     "collecting",
     "parsing",
     "analyzing",

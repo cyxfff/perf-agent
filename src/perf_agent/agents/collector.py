@@ -21,6 +21,10 @@ class Collector:
         state.pending_actions = []
 
         for action in pending:
+            if action.request_id:
+                request = state.find_request(action.request_id)
+                if request is not None and request.status == "tool_selected":
+                    request.status = "collecting"
             action.command = self.runner.get_tool(action.tool).build_command(state, action)
             self.progress.action_start(action)
             result = self.runner.run_action(action, state, self.store)
@@ -42,11 +46,36 @@ class Collector:
                 success=result.success,
                 exit_code=result.exit_code,
                 duration_sec=result.duration_sec,
-            )
+                )
 
+            self._refresh_request_status(state, action.request_id)
             if not result.success and not action.retryable:
                 state.add_error(
                     f"Non-retryable action {action.id} failed with exit code {result.exit_code}: {result.error_message or ''}".strip()
                 )
 
         return state
+
+    def _refresh_request_status(self, state: AnalysisState, request_id: str | None) -> None:
+        if request_id is None:
+            return
+        request = state.find_request(request_id)
+        plan = state.find_execution_plan(request_id)
+        if request is None:
+            return
+        related = [action for action in state.actions_taken if action.request_id == request_id]
+        still_pending = any(action.request_id == request_id for action in state.pending_actions)
+        if still_pending:
+            request.status = "collecting"
+            if plan is not None:
+                plan.status = "actions_created"
+            return
+        if related and all(action.status == "done" for action in related):
+            request.status = "completed"
+            if plan is not None:
+                plan.status = "completed"
+            return
+        if any(action.status == "failed" for action in related):
+            request.status = "failed"
+            if plan is not None:
+                plan.status = "failed"

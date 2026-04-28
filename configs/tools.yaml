@@ -22,6 +22,10 @@ iostat:
   enabled: true
   timeout_sec: 60
   parser: generic_parser
+sar:
+  enabled: true
+  timeout_sec: 60
+  parser: sar_parser
 flamegraph:
   enabled: false
   timeout_sec: 180

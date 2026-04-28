@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import re
 
-from perf_agent.config import EventIntentConfig, ToolConfig, load_event_intent_configs
+from perf_agent.config import EventIntentConfig, ToolConfig, load_event_intent_configs, load_tool_configs
 from perf_agent.models.action import PlannedAction
 from perf_agent.models.environment import AnalysisIntent, EventDescriptor, EventMapping
 from perf_agent.models.state import AnalysisState
+from perf_agent.models.state import EvidenceRequest
 from perf_agent.tools.backend import select_backend, tool_display_label
 from perf_agent.tools.runner import ToolRunner
 from perf_agent.utils.ids import new_id
@@ -28,10 +29,11 @@ class EventMapper:
         self,
         tool_runner: ToolRunner | None = None,
         tool_configs: dict[str, ToolConfig] | None = None,
+        tool_config_path: str | None = None,
         event_config_path: str | None = None,
     ) -> None:
         self.tool_runner = tool_runner or ToolRunner()
-        self.tool_configs = tool_configs or {}
+        self.tool_configs = tool_configs or load_tool_configs(tool_config_path)
         self.intent_configs = load_event_intent_configs(event_config_path)
 
     def build_actions(
@@ -39,13 +41,15 @@ class EventMapper:
         state: AnalysisState,
         intents: list[AnalysisIntent],
         round_index: int,
+        selected_tools_by_intent: dict[str, set[str]] | None = None,
     ) -> tuple[list[PlannedAction], list[EventMapping]]:
         actions: list[PlannedAction] = []
         mappings: list[EventMapping] = []
         seen: set[tuple[str, tuple[str, ...], str | None, str]] = set()
 
         for intent in intents:
-            for action, mapping in self._map_intent(state, intent, round_index):
+            selected_tools = selected_tools_by_intent.get(intent.name) if selected_tools_by_intent else None
+            for action, mapping in self._map_intent(state, intent, round_index, selected_tools=selected_tools):
                 key = (action.tool, tuple(action.event_names), action.call_graph_mode, action.phase)
                 if key in seen:
                     continue
@@ -56,20 +60,57 @@ class EventMapper:
                 mappings.append(mapping)
         return actions, mappings
 
+    def build_actions_for_request(
+        self,
+        state: AnalysisState,
+        request: EvidenceRequest,
+        round_index: int,
+        selected_tools: set[str] | None = None,
+    ) -> tuple[list[PlannedAction], list[EventMapping]]:
+        intent = AnalysisIntent(
+            name=request.intent,
+            question=request.question,
+            phase=request.phase,
+            priority=request.priority,
+            requested_by=request.requested_by,
+        )
+        actions, mappings = self.build_actions(
+            state,
+            [intent],
+            round_index=round_index,
+            selected_tools_by_intent={intent.name: selected_tools or set(request.preferred_tools or [])},
+        )
+        for action in actions:
+            action.request_id = request.id
+        for mapping in mappings:
+            mapping.request_id = request.id
+        return actions, mappings
+
     def _map_intent(
         self,
         state: AnalysisState,
         intent: AnalysisIntent,
         round_index: int,
+        selected_tools: set[str] | None = None,
     ) -> list[tuple[PlannedAction, EventMapping]]:
         config = self.intent_configs.get(intent.name, EventIntentConfig())
         if intent.name == "baseline_runtime":
-            if not self._tool_enabled("time") or state.environment.execution_target == "device":
+            if not self._tool_enabled(state, "time") or state.environment.execution_target == "device" or not self._tool_selected("time", selected_tools):
                 return []
             return [self._build_simple_action(state, intent, round_index, "time", "runtime", "用 /usr/bin/time -v 建立程序运行基线。")]
 
+        if intent.name == "system_cpu_profile":
+            if state.environment.execution_target == "device":
+                return []
+            built: list[tuple[PlannedAction, EventMapping]] = []
+            if self._tool_enabled(state, "sar") and self._tool_selected("sar", selected_tools):
+                built.append(self._build_simple_action(state, intent, round_index, "sar", "system", "用 sar 采集系统级 CPU 利用率、iowait 和 busiest core。"))
+            if self._tool_enabled(state, "mpstat") and self._tool_selected("mpstat", selected_tools):
+                built.append(self._build_simple_action(state, intent, round_index, "mpstat", "system", "用 mpstat 作为系统级 CPU 压力的降级补充。"))
+            return built
+
         if intent.name == "temporal_behavior":
-            if not self._tool_enabled("perf_stat") or not state.environment.perf_available:
+            if not self._tool_enabled(state, "perf_stat") or not state.environment.perf_available or not self._tool_selected("perf_stat", selected_tools):
                 return []
             config = self.intent_configs.get(intent.name, EventIntentConfig())
             events, fallback_used, notes = self._select_perf_events(state, config, intent_name=intent.name)
@@ -86,22 +127,22 @@ class EventMapper:
             )
 
         if intent.name in {"instruction_efficiency", "branch_behavior", "cache_memory_pressure", "frontend_backend_bound", "scheduler_context"}:
-            if not self._tool_enabled("perf_stat") or not state.environment.perf_available:
+            if not self._tool_enabled(state, "perf_stat") or not state.environment.perf_available or not self._tool_selected("perf_stat", selected_tools):
                 if intent.name != "scheduler_context":
                     return []
                 built: list[tuple[PlannedAction, EventMapping]] = []
-                if self._tool_enabled("pidstat"):
+                if self._tool_enabled(state, "pidstat") and self._tool_selected("pidstat", selected_tools):
                     built.append(self._build_simple_action(state, intent, round_index, "pidstat", "system", "perf 不可用，退化为 pidstat 调度观测。"))
-                if self._tool_enabled("mpstat"):
+                if self._tool_enabled(state, "mpstat") and self._tool_selected("mpstat", selected_tools):
                     built.append(self._build_simple_action(state, intent, round_index, "mpstat", "system", "perf 不可用，退化为 mpstat 系统观测。"))
                 return built
             events, fallback_used, notes = self._select_perf_events(state, config, intent_name=intent.name)
             rationale = self._intent_rationale(intent.name, fallback_used, events)
             built = self._build_perf_stat_actions(state, intent, round_index, events, rationale, fallback_used, notes)
             if intent.name == "scheduler_context" and state.environment.execution_target != "device":
-                if self._tool_enabled("pidstat"):
+                if self._tool_enabled(state, "pidstat") and self._tool_selected("pidstat", selected_tools):
                     built.append(self._build_simple_action(state, intent, round_index, "pidstat", "system", "补充进程级 CPU 与等待拆分。"))
-                if self._tool_enabled("mpstat"):
+                if self._tool_enabled(state, "mpstat") and self._tool_selected("mpstat", selected_tools):
                     built.append(self._build_simple_action(state, intent, round_index, "mpstat", "system", "补充系统级 CPU 与调度上下文。"))
             return built
 
@@ -109,14 +150,14 @@ class EventMapper:
             if state.environment.execution_target == "device":
                 return []
             built = []
-            if self._tool_enabled("pidstat"):
+            if self._tool_enabled(state, "pidstat") and self._tool_selected("pidstat", selected_tools):
                 built.append(self._build_simple_action(state, intent, round_index, "pidstat", "system", "用 pidstat 看进程侧等待与 CPU 时间分布。"))
-            if self._tool_enabled("iostat"):
+            if self._tool_enabled(state, "iostat") and self._tool_selected("iostat", selected_tools):
                 built.append(self._build_simple_action(state, intent, round_index, "iostat", "system", "用 iostat 看设备利用率和等待延迟。"))
             return built
 
         if intent.name in {"hot_function_callgraph", "source_correlation"}:
-            if not self._tool_enabled("perf_record") or not state.environment.perf_available:
+            if not self._tool_enabled(state, "perf_record") or not state.environment.perf_available or not self._tool_selected("perf_record", selected_tools):
                 return []
             mode = self._select_call_graph_mode(state, config)
             rationale = f"使用 perf record 采样热点函数和调用链，调用栈模式为 {mode}。"
@@ -311,6 +352,7 @@ class EventMapper:
         tool_label = tool_display_label(tool_name, select_backend(state))
         intent_label = {
             "baseline_runtime": "运行时基线",
+            "system_cpu_profile": "系统 CPU 画像",
             "instruction_efficiency": "指令效率",
             "temporal_behavior": "时间序列行为",
             "branch_behavior": "分支行为",
@@ -333,6 +375,8 @@ class EventMapper:
     def _intent_rationale(self, intent_name: str, fallback_used: bool, events: list[str]) -> str:
         if intent_name == "instruction_efficiency":
             prefix = "判断 cycles、instructions 和 IPC 的健康度。"
+        elif intent_name == "system_cpu_profile":
+            prefix = "判断主机整体 CPU、iowait 与 busiest core 是否异常。"
         elif intent_name in {"cache_memory_pressure", "frontend_backend_bound"}:
             prefix = "判断 cache miss、内存压力以及前后端停顿。"
         elif intent_name == "temporal_behavior":
@@ -347,8 +391,17 @@ class EventMapper:
         events_text = f" 事件为 {', '.join(events)}。" if events else ""
         return f"{prefix}{suffix}{events_text}"
 
-    def _tool_enabled(self, tool_name: str) -> bool:
-        return self.tool_configs.get(tool_name, ToolConfig()).enabled
+    def _tool_enabled(self, state: AnalysisState, tool_name: str) -> bool:
+        if not self.tool_configs.get(tool_name, ToolConfig()).enabled:
+            return False
+        if state.environment.available_tools:
+            return tool_name in state.environment.available_tools
+        if tool_name in {"perf_stat", "perf_record"}:
+            return state.environment.perf_available
+        return True
+
+    def _tool_selected(self, tool_name: str, selected_tools: set[str] | None) -> bool:
+        return not selected_tools or tool_name in selected_tools
 
     def _resolve_requested_events(
         self,

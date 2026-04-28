@@ -1,1 +1,0 @@
-simpleperf E event_selection_set.cpp:275] Event type 'cpu-cycles' is not supported on the device

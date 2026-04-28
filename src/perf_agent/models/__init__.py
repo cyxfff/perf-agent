@@ -1,1 +1,1 @@
-"""Typed models for state and artifacts."""
+"""Typed models for state, artifacts, and module contracts."""

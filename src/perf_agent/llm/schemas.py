@@ -42,6 +42,29 @@ class AnalyzerOutput(BaseModel):
     hypotheses: list[HypothesisDraft] = Field(default_factory=list)
 
 
+class EvidenceRequestDraft(BaseModel):
+    intent: str
+    question: str
+    phase: str = "baseline"
+    granularity: str = "process"
+    priority: int = 100
+    preferred_tools: list[str] = Field(default_factory=list)
+    rationale: str = ""
+
+
+class StrategistOutput(BaseModel):
+    requests: list[EvidenceRequestDraft] = Field(default_factory=list)
+    note: str = ""
+
+
+class ToolsmithOutput(BaseModel):
+    selected_tools: list[str] = Field(default_factory=list)
+    fallback_tools: list[str] = Field(default_factory=list)
+    rationale: str = ""
+    expected_artifacts: list[str] = Field(default_factory=list)
+    note: str = ""
+
+
 class VerifierOutput(BaseModel):
     evidence_sufficient: bool = False
     evidence_gaps: list[str] = Field(default_factory=list)

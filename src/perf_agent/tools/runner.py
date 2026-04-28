@@ -11,6 +11,7 @@ from perf_agent.tools.mpstat import MpstatTool
 from perf_agent.tools.perf_record import PerfRecordTool
 from perf_agent.tools.perf_stat import PerfStatTool
 from perf_agent.tools.pidstat import PidstatTool
+from perf_agent.tools.sar import SarTool
 from perf_agent.tools.time_tool import TimeTool
 
 
@@ -23,6 +24,7 @@ class ToolRunner:
             "pidstat": PidstatTool(sandbox_manager=sandbox_manager),
             "mpstat": MpstatTool(sandbox_manager=sandbox_manager),
             "iostat": IostatTool(sandbox_manager=sandbox_manager),
+            "sar": SarTool(sandbox_manager=sandbox_manager),
             "flamegraph": FlamegraphTool(sandbox_manager=sandbox_manager),
         }
 

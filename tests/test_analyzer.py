@@ -76,5 +76,5 @@ def test_verifier_requests_follow_up_collection_for_low_confidence_cpu_case() ->
 
     Verifier().run(state)
 
-    assert any(action.tool == "perf_record" for action in state.pending_actions)
+    assert any(request.intent == "hot_function_callgraph" for request in state.pending_evidence_requests())
     assert state.verification_rounds_done == 1

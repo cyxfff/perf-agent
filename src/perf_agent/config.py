@@ -25,6 +25,19 @@ class PromptTemplates(BaseModel):
     analyzer_prompt: str
     verifier_prompt: str
     reporter_prompt: str
+    strategist_prompt: str = (
+        "You are the strategist node in an evidence-driven multi-agent performance analysis system.\n"
+        "Your job is to decide the minimum next evidence requests, not to diagnose directly.\n"
+        "Use only allowed intents and preferred tools from the payload.\n"
+        "Prefer broad cheap evidence before deep profiling unless current evidence clearly justifies it.\n"
+        "Return structured JSON only."
+    )
+    toolsmith_prompt: str = (
+        "You are the toolsmith node in an evidence-driven multi-agent performance analysis system.\n"
+        "Translate one evidence request into a concrete tool selection plan.\n"
+        "Use only the candidate tools from the payload and keep the rationale tied to the evidence goal.\n"
+        "Return structured JSON only."
+    )
     interactive_intake_prompt: str = (
         "You are the interactive intake layer for a performance analysis CLI.\n"
         "Read the current session context, normalized user message, attachments, and compacted recent history.\n"

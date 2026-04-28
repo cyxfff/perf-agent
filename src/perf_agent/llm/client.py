@@ -12,10 +12,13 @@ from perf_agent.config import PromptTemplates, load_prompt_templates
 from perf_agent.interaction.models import InteractiveIntentResult
 from perf_agent.llm.schemas import (
     AnalyzerOutput,
+    EvidenceRequestDraft,
     HypothesisDraft,
     ReporterOutput,
+    StrategistOutput,
     StructuredActionInput,
     StructuredObservationInput,
+    ToolsmithOutput,
     VerifierOutput,
 )
 from perf_agent.models.action import PlannedAction
@@ -30,9 +33,16 @@ class LLMClient:
     def __init__(self, prompt_config_path: str | None = None) -> None:
         self._load_env()
         disabled = os.getenv("PERF_AGENT_DISABLE_LLM", "").lower() in {"1", "true", "yes", "on"}
-        self.api_key = os.getenv("OPENAI_API_KEY") or os.getenv("LLM_API_KEY")
-        self.model = os.getenv("PERF_AGENT_MODEL") or os.getenv("LLM_MODEL_ID") or "gpt-4.1-mini"
-        self.base_url = os.getenv("OPENAI_BASE_URL") or os.getenv("LLM_BASE_URL")
+        self.api_key = os.getenv("OPENAI_API_KEY") or os.getenv("LLM_API_KEY") or os.getenv("DEEPSEEK_API_KEY")
+        self.model = (
+            os.getenv("PERF_AGENT_MODEL")
+            or os.getenv("LLM_MODEL_ID")
+            or os.getenv("DEEPSEEK_MODEL")
+            or "gpt-4.1-mini"
+        )
+        self.base_url = os.getenv("OPENAI_BASE_URL") or os.getenv("LLM_BASE_URL") or os.getenv("DEEPSEEK_BASE_URL")
+        if self.base_url is None and os.getenv("DEEPSEEK_API_KEY"):
+            self.base_url = "https://api.deepseek.com"
         self.timeout_sec = float(os.getenv("PERF_AGENT_TIMEOUT_SEC", "20"))
         self.enabled = bool(self.api_key) and not disabled
         self.client = (
@@ -56,6 +66,8 @@ class LLMClient:
         actions_taken: list[PlannedAction],
         evidence_pack: EvidencePack | None = None,
     ) -> list[Hypothesis]:
+        self.last_error = None
+        self.last_transport = None
         payload = self._build_analyzer_payload(observations, rule_candidates, actions_taken, evidence_pack)
         if self.enabled:
             try:
@@ -111,6 +123,8 @@ class LLMClient:
         actions_taken: list[PlannedAction],
         evidence_pack: EvidencePack | None = None,
     ) -> VerifierOutput:
+        self.last_error = None
+        self.last_transport = None
         payload = self._build_verifier_payload(observations, hypotheses, actions_taken, evidence_pack)
         if self.enabled:
             try:
@@ -159,6 +173,8 @@ class LLMClient:
         draft_report: FinalReport,
         evidence_pack: EvidencePack | None = None,
     ) -> ReporterOutput:
+        self.last_error = None
+        self.last_transport = None
         payload = self._build_reporter_payload(observations, hypotheses, artifacts, evidence_pack)
         if self.enabled:
             try:
@@ -185,6 +201,8 @@ class LLMClient:
         session_context: dict[str, Any],
         query_view: dict[str, Any],
     ) -> InteractiveIntentResult | None:
+        self.last_error = None
+        self.last_transport = None
         if not self.enabled:
             return None
         payload = {
@@ -203,6 +221,34 @@ class LLMClient:
             self.last_error = f"Interactive intake LLM call failed: {exc}"
             return None
         return parsed if isinstance(parsed, InteractiveIntentResult) else None
+
+    def structured_completion(
+        self,
+        schema: type[
+            AnalyzerOutput
+            | VerifierOutput
+            | ReporterOutput
+            | InteractiveIntentResult
+            | StrategistOutput
+            | ToolsmithOutput
+            | EvidenceRequestDraft
+            | Any
+        ],
+        system_prompt: str,
+        user_payload: dict[str, Any],
+        *,
+        max_output_tokens: int = 1200,
+    ) -> Any:
+        self.last_error = None
+        self.last_transport = None
+        if not self.enabled:
+            raise RuntimeError("LLM client is not enabled.")
+        return self._parse_structured_output(
+            schema=schema,
+            system_prompt=system_prompt,
+            user_payload=user_payload,
+            max_output_tokens=max_output_tokens,
+        )
 
     def _build_analyzer_payload(
         self,
@@ -291,7 +337,14 @@ class LLMClient:
 
     def _parse_structured_output(
         self,
-        schema: type[AnalyzerOutput | VerifierOutput | ReporterOutput | InteractiveIntentResult],
+        schema: type[
+            AnalyzerOutput
+            | VerifierOutput
+            | ReporterOutput
+            | InteractiveIntentResult
+            | StrategistOutput
+            | ToolsmithOutput
+        ],
         system_prompt: str,
         user_payload: dict[str, Any],
         max_output_tokens: int,

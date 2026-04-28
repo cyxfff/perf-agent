@@ -22,6 +22,25 @@ class Analyzer:
             actions_taken=state.actions_taken,
             evidence_pack=evidence_pack,
         )
+        if self.llm_client.enabled:
+            if self.llm_client.last_error:
+                state.record_llm_trace(
+                    "analyzer",
+                    "analysis",
+                    "fallback",
+                    self.llm_client.last_error,
+                    model=self.llm_client.model,
+                    transport=self.llm_client.last_transport,
+                )
+            else:
+                state.record_llm_trace(
+                    "analyzer",
+                    "analysis",
+                    "used",
+                    f"Generated {len(state.hypotheses)} hypothesis(es) from structured observations.",
+                    model=self.llm_client.model,
+                    transport=self.llm_client.last_transport,
+                )
         state.add_audit(
             "analyzer",
             "generated hypotheses from rules and structured observations",

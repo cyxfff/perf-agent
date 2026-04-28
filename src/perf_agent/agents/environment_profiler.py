@@ -136,7 +136,10 @@ class EnvironmentProfiler:
         capability.numa_nodes = self._extract_int(lscpu_text, "NUMA node(s)")
 
         perf_version = self._run_command(["perf", "--version"])
-        capability.adb_available = shutil.which("adb") is not None
+        adb_disabled = os.getenv("PERF_AGENT_DISABLE_ADB", "").lower() in {"1", "true", "yes", "on"}
+        capability.adb_available = False if adb_disabled else shutil.which("adb") is not None
+        if adb_disabled:
+            capability.notes.append("ADB 探测已通过 PERF_AGENT_DISABLE_ADB 禁用。")
         if capability.adb_available:
             adb_devices_text = self._run_command(["adb", "devices", "-l"])
             capability.connected_devices = self._discover_connected_devices(adb_devices_text)
@@ -163,6 +166,7 @@ class EnvironmentProfiler:
         capability.profiling_backend_name = backend_info["name"]
         capability.profiling_backend_tool = backend_info["tool"]
         capability.profiling_backend_summary = backend_info["summary"]
+        capability.available_tools = self._detect_available_tools(perf_version)
         perf_list_text = backend_info["event_list"]
         parsed_events, aliases, catalog = self._parse_perf_list(perf_list_text)
         capability.available_events = parsed_events
@@ -236,6 +240,22 @@ class EnvironmentProfiler:
             callgraph_modes=capability.callgraph_modes,
         )
         return state
+
+    def _detect_available_tools(self, perf_version: str) -> list[str]:
+        tools: list[str] = []
+        if shutil.which("/usr/bin/time") or shutil.which("time"):
+            tools.append("time")
+        if perf_version.strip():
+            tools.extend(["perf_stat", "perf_record"])
+        if shutil.which("pidstat"):
+            tools.append("pidstat")
+        if shutil.which("mpstat"):
+            tools.append("mpstat")
+        if shutil.which("iostat"):
+            tools.append("iostat")
+        if shutil.which("sar"):
+            tools.append("sar")
+        return tools
 
     def _discover_connected_devices(self, adb_devices_text: str) -> list[ConnectedDevice]:
         devices: list[ConnectedDevice] = []

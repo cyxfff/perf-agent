@@ -91,12 +91,12 @@ class SandboxManager:
             )
         return SandboxResolution(
             runtime_name="unavailable",
-            enabled=True,=True,
-            available=False,e,
-            applied=False,sed=True,
-            reason="沙箱已启用，但当前平台上没有可用的运行时且不允许回退。",,
-        )   )
-        return SandboxResolution(
+            enabled=True,
+            available=False,
+            applied=False,
+            reason="沙箱已启用，但当前平台上没有可用的运行时且不允许回退。",
+        )
+
     def wrap_target_command(self, command: list[str], state: AnalysisState) -> tuple[list[str], SandboxResolution]:
         if not command:
             return command, SandboxResolution(reason="当前没有目标命令，无需包裹。")

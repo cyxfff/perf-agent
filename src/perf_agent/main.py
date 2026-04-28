@@ -6,6 +6,7 @@ import shlex
 
 from perf_agent.models.state import AnalysisState, AnalysisTask
 from perf_agent.orchestrator.engine import Orchestrator
+from perf_agent.tasks import load_task_note
 from perf_agent.utils.ids import new_run_id
 
 
@@ -32,6 +33,11 @@ def load_task(task_file: str | Path) -> AnalysisTask:
 
 def build_state(task_file: str | Path) -> AnalysisState:
     task = load_task(task_file)
+    return AnalysisState.from_task(task, run_id=new_run_id())
+
+
+def build_state_from_note(task_note: str | Path) -> AnalysisState:
+    task = load_task_note(task_note)
     return AnalysisState.from_task(task, run_id=new_run_id())
 
 

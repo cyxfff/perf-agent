@@ -3,6 +3,12 @@ baseline_runtime:
     - time
   mode: runtime
 
+system_cpu_profile:
+  preferred_tools:
+    - sar
+    - mpstat
+  mode: system
+
 instruction_efficiency:
   preferred_tools:
     - perf_stat

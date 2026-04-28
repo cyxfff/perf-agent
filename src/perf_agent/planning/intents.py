@@ -14,6 +14,11 @@ def build_baseline_intents(state: AnalysisState) -> list[AnalysisIntent]:
             priority=10,
         ),
         AnalysisIntent(
+            name="system_cpu_profile",
+            question="先拿到程序运行期间的系统级 CPU 占用率、iowait 和 busiest core 基线。",
+            priority=15,
+        ),
+        AnalysisIntent(
             name="instruction_efficiency",
             question="判断指令退休效率、cycles 和 IPC 是否异常。",
             priority=20,

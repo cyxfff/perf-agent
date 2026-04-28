@@ -1,1 +1,0 @@
-simpleperf E event_selection_set.cpp:275] Event type 'stalled-cycles-frontend' is not supported on the device

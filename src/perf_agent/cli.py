@@ -6,7 +6,7 @@ import sys
 
 from perf_agent.interaction.models import SessionContext
 from perf_agent.interaction.tool_policy import ToolPolicy
-from perf_agent.main import build_state, build_state_from_inputs, run_interactive_session, run_state
+from perf_agent.main import build_state, build_state_from_inputs, build_state_from_note, run_interactive_session, run_state
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -15,6 +15,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     analyze = subparsers.add_parser("analyze", help="Analyze a task JSON file")
     analyze.add_argument("--task", help="Path to the analysis request JSON file")
+    analyze.add_argument("--task-note", help="Path to a Markdown/text task note")
     analyze.add_argument("--exe", help="Executable file path")
     analyze.add_argument("--cmd", help="Target command as a single shell string")
     analyze.add_argument("--pid", type=int, help="Attach to an existing process id")
@@ -46,12 +47,14 @@ def main() -> None:
     if args.command == "analyze":
         if args.task:
             state = build_state(args.task)
+        elif args.task_note:
+            state = build_state_from_note(args.task_note)
         else:
             remainder = list(args.target_cmd)
             if remainder and remainder[0] == "--":
                 remainder = remainder[1:]
             if not remainder and not args.cmd and args.pid is None and not args.exe:
-                parser.error("provide --task, --exe, --cmd, --pid, or a command after --")
+                parser.error("provide --task, --task-note, --exe, --cmd, --pid, or a command after --")
             state = build_state_from_inputs(
                 executable_path=args.exe,
                 target_args=remainder if args.exe else None,

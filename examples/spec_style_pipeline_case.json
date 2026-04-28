@@ -1,0 +1,15 @@
+{
+  "goal": "分析多文件 spec_style_pipeline_demo 的 CPU / cache 行为",
+  "target": {
+    "executable_path": "examples/bin/spec_style_pipeline_demo",
+    "command": [
+      "examples/bin/spec_style_pipeline_demo",
+      "2600000",
+      "24",
+      "131072"
+    ],
+    "source_dir": "examples/cpp/spec_style_pipeline",
+    "label": "spec_style_pipeline_demo"
+  },
+  "max_iterations": 2
+}

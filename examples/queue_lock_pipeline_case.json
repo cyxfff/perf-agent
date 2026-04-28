@@ -1,0 +1,17 @@
+{
+  "goal": "分析多文件 queue_lock_pipeline_demo 的锁竞争和调度行为",
+  "target": {
+    "executable_path": "examples/bin/queue_lock_pipeline_demo",
+    "command": [
+      "examples/bin/queue_lock_pipeline_demo",
+      "64000",
+      "8",
+      "72",
+      "14",
+      "8"
+    ],
+    "source_dir": "examples/cpp/queue_lock_pipeline",
+    "label": "queue_lock_pipeline_demo"
+  },
+  "max_iterations": 2
+}

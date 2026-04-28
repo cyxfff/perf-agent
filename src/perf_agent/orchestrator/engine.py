@@ -11,6 +11,7 @@ from perf_agent.agents.planner import Planner
 from perf_agent.agents.reporter import Reporter
 from perf_agent.agents.runner import Runner
 from perf_agent.agents.source_analyzer import SourceAnalyzer
+from perf_agent.agents.toolsmith import Toolsmith
 from perf_agent.agents.verifier import Verifier
 from perf_agent.llm.client import LLMClient
 from perf_agent.models.state import AnalysisState
@@ -37,17 +38,22 @@ class Orchestrator:
         self.runner = ToolRunner(sandbox_manager=self.sandbox_manager)
         self.tool_configs = load_tool_configs(tool_config_path)
         self.progress = ConsoleProgress(enabled=show_progress)
+        llm_client = LLMClient(prompt_config_path=prompt_config_path)
         self.planner = Planner(
+            llm_client=llm_client,
+            tool_config_path=tool_config_path,
+            event_config_path=event_config_path,
+        )
+        self.toolsmith = Toolsmith(
+            llm_client=llm_client,
             tool_runner=self.runner,
             tool_config_path=tool_config_path,
             event_config_path=event_config_path,
         )
         self.parser = ParserNode()
-        llm_client = LLMClient(prompt_config_path=prompt_config_path)
         self.analyzer = Analyzer(llm_client=llm_client, rule_config_path=rule_config_path)
         self.verifier = Verifier(
             llm_client=llm_client,
-            tool_runner=self.runner,
             tool_config_path=tool_config_path,
             event_config_path=event_config_path,
         )
@@ -114,13 +120,23 @@ class Orchestrator:
             return state
 
         if state.status == "planning":
-            self.progress.stage("实验规划", "根据环境能力和工作负载特征生成首轮实验计划。")
+            self.progress.stage("证据规划", "根据环境能力和工作负载特征生成首轮证据请求。")
             state = self.planner.run(state)
-            for mapping in state.event_mappings[-len(state.pending_actions):]:
+            for request in state.pending_evidence_requests():
                 self.progress.info(
-                    f"{mapping.display_name or mapping.tool}: {mapping.rationale}"
+                    f"{request.intent}: {request.rationale or request.question}"
                 )
-            state.status = "collecting"
+            state.status = "tool_selecting"
+            return state
+
+        if state.status == "tool_selecting":
+            self.progress.stage("工具规划", "由 Toolsmith 为证据请求选择工具与采样方案。")
+            state = self.toolsmith.run(state)
+            for plan in state.execution_plans[-len(state.pending_evidence_requests()) or None:]:
+                self.progress.info(
+                    f"{', '.join(plan.selected_tools) or '无工具'}: {plan.rationale or '已生成执行计划。'}"
+                )
+            state.status = "failed" if state.error_message else "collecting"
             return state
 
         if state.status == "collecting":
@@ -148,11 +164,11 @@ class Orchestrator:
         if state.status == "verifying":
             self.progress.stage("验证闭环", "判断是否需要追加实验以补齐证据。")
             state = self.verifier.run(state)
-            if state.pending_actions:
-                self.progress.info(f"已追加 {len(state.pending_actions)} 个动作，准备进入下一轮采样。")
+            if state.pending_evidence_requests():
+                self.progress.info(f"已追加 {len(state.pending_evidence_requests())} 个证据请求，准备进入下一轮工具规划。")
             else:
                 self.progress.info("当前证据已经足够，进入源码定位和报告阶段。")
-            state.status = "collecting" if state.pending_actions else "source_analyzing"
+            state.status = "tool_selecting" if state.pending_evidence_requests() else "source_analyzing"
             return state
 
         if state.status == "source_analyzing":
@@ -184,8 +200,11 @@ class Orchestrator:
         store.save_json("observations.json", [item.model_dump(mode="json") for item in state.observations])
         store.save_json("hypotheses.json", [item.model_dump(mode="json") for item in state.hypotheses])
         store.save_json("evidence_packs.json", [item.model_dump(mode="json") for item in state.evidence_packs])
+        store.save_json("evidence_requests.json", [item.model_dump(mode="json") for item in state.evidence_requests])
+        store.save_json("execution_plans.json", [item.model_dump(mode="json") for item in state.execution_plans])
         store.save_json("actions_taken.json", [item.model_dump(mode="json") for item in state.actions_taken])
         store.save_json("pending_actions.json", [item.model_dump(mode="json") for item in state.pending_actions])
+        store.save_json("llm_traces.json", [item.model_dump(mode="json") for item in state.llm_traces])
         for event in state.audit_log:
             if not event.persisted:
                 run_log.append(event)

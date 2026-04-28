@@ -9,6 +9,7 @@ ExecutionTarget = Literal["host", "device", "pid_attach"]
 
 IntentName = Literal[
     "baseline_runtime",
+    "system_cpu_profile",
     "instruction_efficiency",
     "temporal_behavior",
     "branch_behavior",
@@ -75,6 +76,7 @@ class EnvironmentCapability(BaseModel):
     profiling_backend_name: str | None = None
     profiling_backend_tool: str | None = None
     profiling_backend_summary: str | None = None
+    available_tools: list[str] = Field(default_factory=list)
     available_events: list[str] = Field(default_factory=list)
     event_aliases: dict[str, list[str]] = Field(default_factory=dict)
     event_catalog: dict[str, EventDescriptor] = Field(default_factory=dict)
@@ -114,6 +116,7 @@ class EventMapping(BaseModel):
     round_index: int
     phase: str
     intent: str
+    request_id: str | None = None
     tool: str
     mode: Literal["runtime", "stat", "record", "system"]
     selected_events: list[str] = Field(default_factory=list)

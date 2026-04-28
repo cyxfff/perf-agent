@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 
 class PlannedAction(BaseModel):
     id: str
+    request_id: str | None = None
     tool: str
     command: list[str]
     reason: str

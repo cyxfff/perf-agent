@@ -1,0 +1,9 @@
+{
+  "goal": "Diagnose why the demo workload is CPU-bound.",
+  "target": {
+    "command": ["examples/bin/cpu_bound_demo"],
+    "label": "cpu_bound_demo",
+    "source_dir": "examples/cpp"
+  },
+  "max_iterations": 2
+}

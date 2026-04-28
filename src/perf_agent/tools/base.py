@@ -8,6 +8,7 @@ from typing import Protocol
 
 from pydantic import BaseModel, Field
 
+from perf_agent.models.contracts import ExecutionResult
 from perf_agent.models.action import PlannedAction
 from perf_agent.models.state import AnalysisState
 from perf_agent.security.sandbox import SandboxManager
@@ -15,7 +16,7 @@ from perf_agent.storage.artifact_store import ArtifactStore
 from perf_agent.tools.backend import BackendSpec, build_device_shell_command, select_backend
 
 
-class ToolResult(BaseModel):
+class ToolResult(ExecutionResult):
     action_id: str
     exit_code: int
     stdout_path: str | None = None

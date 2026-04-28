@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import os
 from pathlib import Path
 
 from perf_agent.models.state import AnalysisState
-from perf_agent.parsers import generic_parser, perf_record_parser, perf_stat_parser, pidstat_parser, time_parser
+from perf_agent.parsers import generic_parser, perf_record_parser, perf_stat_parser, pidstat_parser, sar_parser, time_parser
 
 
 class ParserNode:
-    def __init__(self) -> None:
+    def __init__(self, parse_workers: int | None = None) -> None:
         self.registry = {
             "time": time_parser.parse_text,
             "perf_stat": perf_stat_parser.parse_text,
@@ -15,27 +17,61 @@ class ParserNode:
             "pidstat": pidstat_parser.parse_text,
             "mpstat": generic_parser.parse_text,
             "iostat": generic_parser.parse_text,
+            "sar": sar_parser.parse_text,
             "flamegraph": generic_parser.parse_text,
         }
+        self.parse_workers = parse_workers or int(os.getenv("PERF_AGENT_PARSE_WORKERS", "1"))
 
     def run(self, state: AnalysisState) -> AnalysisState:
-        for action in state.actions_taken:
-            if action.id in state.parsed_action_ids or action.status not in {"done", "failed"}:
-                continue
+        candidates = [
+            action
+            for action in state.actions_taken
+            if action.id not in state.parsed_action_ids and action.status in {"done", "failed"}
+        ]
+        if self.parse_workers <= 1 or len(candidates) <= 1:
+            for action in candidates:
+                self._parse_action(state, action)
+            return state
 
-            parser = self.registry.get(action.tool, generic_parser.parse_text)
-            payload = self._read_payload(state, action.id, action.tool)
-            observations = parser(payload, source=action.tool, action_id=action.id)
-            state.observations.extend(observations)
-            state.parsed_action_ids.append(action.id)
-            state.add_audit(
-                "parser",
-                "parsed action output",
-                action_id=action.id,
-                tool=action.tool,
-                observation_count=len(observations),
-            )
+        with ThreadPoolExecutor(max_workers=min(self.parse_workers, len(candidates))) as executor:
+            futures = {executor.submit(self._parse_payload, state, action): action for action in candidates}
+            for future in as_completed(futures):
+                action = futures[future]
+                try:
+                    observations = future.result()
+                except Exception as exc:
+                    state.add_audit("parser", "failed to parse action output", action_id=action.id, tool=action.tool, error=str(exc))
+                    state.parsed_action_ids.append(action.id)
+                    continue
+                state.observations.extend(observations)
+                state.parsed_action_ids.append(action.id)
+                state.add_audit(
+                    "parser",
+                    "parsed action output",
+                    action_id=action.id,
+                    tool=action.tool,
+                    observation_count=len(observations),
+                    parse_workers=self.parse_workers,
+                )
         return state
+
+    def _parse_action(self, state: AnalysisState, action) -> None:
+        observations = self._parse_payload(state, action)
+        state.observations.extend(observations)
+        state.parsed_action_ids.append(action.id)
+        state.add_audit(
+            "parser",
+            "parsed action output",
+            action_id=action.id,
+            tool=action.tool,
+            observation_count=len(observations),
+            parse_workers=1,
+        )
+
+    def _parse_payload(self, state: AnalysisState, action):
+        parser = self.registry.get(action.tool, generic_parser.parse_text)
+        payload = self._read_payload(state, action.id, action.tool)
+        return parser(payload, source=action.tool, action_id=action.id)
 
     def _read_payload(self, state: AnalysisState, action_id: str, tool_name: str) -> str:
         if tool_name == "perf_record":

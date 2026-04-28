@@ -36,6 +36,9 @@ class Reporter:
                 runtime_notes=[
                     f"verification_rounds={state.verification_rounds_done}",
                     f"actions_executed={len(state.actions_taken)}",
+                    f"evidence_requests={len(state.evidence_requests)}",
+                    f"execution_plans={len(state.execution_plans)}",
+                    f"llm_traces={len(state.llm_traces)}",
                 ],
             ),
             environment_summary=self._build_environment_summary(state),
@@ -57,6 +60,25 @@ class Reporter:
             draft_report=report,
             evidence_pack=state.evidence_packs[-1] if state.evidence_packs else None,
         )
+        if self.llm_client.enabled:
+            if self.llm_client.last_error:
+                state.record_llm_trace(
+                    "reporter",
+                    "reporting",
+                    "fallback",
+                    self.llm_client.last_error,
+                    model=self.llm_client.model,
+                    transport=self.llm_client.last_transport,
+                )
+            else:
+                state.record_llm_trace(
+                    "reporter",
+                    "reporting",
+                    "used",
+                    "Generated final executive summary from structured report payload.",
+                    model=self.llm_client.model,
+                    transport=self.llm_client.last_transport,
+                )
         state.final_report = report.model_copy(
             update={
                 "executive_summary": reviewed.executive_summary,
